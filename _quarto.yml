@@ -12,10 +12,10 @@ project:
 website:
   page-navigation: true
   title: "Tidy time series & forecasting in R"
-  description: "Homepage for F4SG time series workshop at UM6P in 2024"
-  site-url: "https://workshop.nectric.com.au/f4sg-um6p"
+  description: "Homepage for time series analysis and forecasting workshop at useR! 2024"
+  site-url: "https://workshop.nectric.com.au/user2024"
 
-  repo-url: https://github.com/mitchelloharawild/workshop-f4sg-um6p
+  repo-url: https://github.com/mitchelloharawild/workshop-fable-user2024
   repo-actions: [edit, issue]
 
   # opengraph: true
@@ -47,7 +47,7 @@ website:
       - icon: file-certificate
         href: license.qmd
       - icon: github
-        href: https://github.com/mitchelloharawild/workshop-f4sg-um6p
+        href: https://github.com/mitchelloharawild/workshop-fable-user2024
     # left:
       # - text: Sessions
       #   menu:
