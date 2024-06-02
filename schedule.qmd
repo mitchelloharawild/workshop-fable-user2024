@@ -1,0 +1,47 @@
+---
+title: "Schedule"
+listing:
+  - id: day1
+    contents:
+      - sessions/day1/*.qmd
+    type: table
+    fields: [image, subtitle, title]
+    field-display-names:
+      subtitle: "Time"
+      title: "Session"
+    table-hover: true
+    date-format: "MMMM DD, YYYY"
+    sort: [filename]
+    sort-ui: false
+    filter-ui: false
+    image-height: 75px
+  - id: day2
+    contents:
+      - sessions/day2/*.qmd
+    type: table
+    fields: [image, subtitle, title]
+    field-display-names:
+      subtitle: "Time"
+      title: "Session"
+    table-hover: true
+    date-format: "MMMM DD, YYYY"
+    sort: [filename]
+    sort-ui: false
+    filter-ui: false
+    image-height: 75px
+tbl-colwidths: [5,20,50,25]
+editor: source
+---
+
+<!-- 11-12th July 2023 -->
+<!-- Columbia University -->
+
+## Day 1
+
+::: {#day1}
+:::
+
+## Day 2
+
+::: {#day2}
+:::
