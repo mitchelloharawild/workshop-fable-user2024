@@ -1,0 +1,759 @@
+---
+from: markdown+emoji
+execute:
+  cache: true
+format:
+  letterbox-revealjs:
+    theme: [default]
+    css: [theme.css]
+    progress: false
+    menu: false
+    width: 1280
+    height: 720
+filters:
+  - custom-callouts
+callout-appearance: simple
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| include: false
+library(fpp3)
+pbs_a10 <- PBS |> 
+  filter(ATC2 == "A10") |> 
+  summarise(Scripts = sum(Scripts), Cost = sum(Cost))
+```
+
+## {}
+
+::: columns
+::: {.column width="40%"}
+:::
+::: {.column width="60%"}
+
+::: {.title data-id="title"}
+Tidy time series analysis and forecasting
+:::
+
+::: {.subtitle data-id="subtitle"}
+Accuracy evaluation
+:::
+
+::: {.dateplace}
+10th June 2024 @ R/Medicine 2024
+:::
+
+##### Mitchell O'Hara-Wild, Nectric
+
+::: {.callout-link}
+
+## Useful links
+
+![](resources/forum.svg){.icon} [social.mitchelloharawild.com](https://social.mitchelloharawild.com/)
+
+![](resources/projector-screen-outline.svg){.icon} [workshop.nectric.com.au/user2024/](https://workshop.nectric.com.au/user2024/)
+
+![](resources/github.svg){.icon} [mitchelloharawild/workshop-fable-user2024](https://github.com/mitchelloharawild/workshop-fable-user2024)
+
+:::
+
+:::
+:::
+
+![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Evaluating models
+
+::: {.callout-tip}
+## Inspecting model errors
+
+Accurate models have small errors.
+
+Good models capture all patterns in the data.
+
+[Model errors contain patterns **not** captured by the model!]{.fragment .fade-in}
+:::
+
+::: {.fragment .fade-in}
+```{r}
+#| echo: true
+#| eval: false
+library(fpp3)
+pbs_scripts <- PBS |> 
+  summarise(Scripts = sum(Scripts))
+fit <- pbs_scripts |> 
+  model(
+    ETS(Scripts), 
+    ARIMA(log(Scripts))
+  )
+augment(fit)
+```
+
+:::
+
+:::
+:::
+
+![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Evaluating models
+
+```{r}
+#| echo: false
+#| eval: true
+library(fpp3)
+pbs_scripts <- PBS |> 
+  summarise(Scripts = sum(Scripts))
+fit <- pbs_scripts |> 
+  model(
+    ETS(Scripts), 
+    ARIMA(log(Scripts))
+  )
+augment(fit)
+```
+
+::: {.callout-note}
+## Fitted values and residuals
+
+* $\hat{y}_t$: 1-step in-sample *fits* (forecasts) are in `.fitted`
+* $e_t$: *response* (actual) errors are in `.resid`
+* $\varepsilon_t$: *innovation* (model) errors are in `.innov`
+:::
+
+:::
+:::
+
+![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Plotting in-sample fits
+
+```{r}
+#| echo: true
+#| eval: true
+pbs_scripts |> 
+  autoplot(Scripts) + 
+  autolayer(augment(fit), .fitted)
+```
+
+::: {.callout-tip}
+## Fitted values and response residuals
+
+The response residuals are the difference between actual and predicted values: $e_t = y_t - \hat{y}_t$.
+:::
+
+:::
+:::
+
+![](backgrounds/nasa-1lfI7wkGWZ4-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Summarising model accuracy
+
+Response residuals are often used to calculate accuracy 'measures'.
+
+Common accuracy measures can be calculated with `accuracy()`.
+
+```{r}
+#| echo: true
+#| eval: true
+accuracy(fit)
+```
+
+:::
+:::
+
+![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Summarising model accuracy
+
+These point forecast accuracy measures are:
+
+* ME: Mean error (indicates bias)
+* RMSE: Root mean squared error
+ 
+  (forecast mean accuracy)
+* MAE: Mean absolute error 
+
+  (forecast median accuracy)
+* MPE/MAPE: Percentage errors (problematic, instead use...)
+* MASE: Mean absolute *scaled* error 
+
+  (scaled median accuracy)
+
+:::
+:::
+
+![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Forecasting accuracy
+
+Evaluating out-of-sample forecasts gives more realistic forecast accuracy results.
+
+[For this, we create a training dataset which withholds data for evaluating accuracy.]{.fragment .fade-in}
+
+[Then, we produce forecasts from the model that overlap with the withheld 'test' data.]{.fragment .fade-in}
+
+::: {.fragment .fade-in}
+```{r}
+#| echo: true
+fc <- pbs_scripts |> 
+  # Keep some data for evaluating forecasts
+  filter(Month < yearmonth("2006 Jan")) |> 
+  model(
+    ETS(Scripts), 
+    ARIMA(log(Scripts))
+  ) |> 
+  forecast(h = "2 years")
+```
+:::
+
+:::
+:::
+
+![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+## {}
+
+```{r}
+p1 <- pbs_scripts |> 
+  autoplot(Scripts)
+p2 <- p1 + 
+  autolayer(filter(pbs_scripts, Month < yearmonth("2006 Jan")), colour = "steelblue")
+p3 <- fc |> 
+  autoplot(pbs_scripts) +
+  autolayer(filter(pbs_scripts, Month < yearmonth("2006 Jan")), Scripts, colour = "steelblue")
+p <- patchwork::align_patches(p1, p2, p3)
+p[[1]]
+```
+
+## {}
+
+```{r}
+p[[2]]
+```
+
+## {}
+
+```{r}
+p[[3]]
+```
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Forecasting accuracy
+
+Then we can again use `accuracy()` with our forecasts:
+
+```{r}
+#| echo: true
+accuracy(fc, pbs_scripts)
+```
+
+::: {.callout-tip}
+## Include the data
+
+Unlike model accuracy, forecasts don't know what the actual values are.
+
+You need to pass in the full dataset to `accuracy()`.
+
+i.e. `accuracy(<forecasts>, <full_data>)`.
+:::
+
+:::
+:::
+
+![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Forecasting accuracy
+
+::: {.callout-caution}
+## Your turn
+
+Evaluate ETS and ARIMA forecast accuracy of A10 scripts (`pbs_a10`).
+
+1. Withhold 2 years of data for forecast evaluation,
+2. Estimate ETS and ARIMA models on the filtered data,
+3. Produce forecasts for the 2 years of withheld data,
+4. Evaluate forecast accuracy using `accuracy()`.
+
+Which model is more accurate for forecasting?
+
+Does this differ from the in-sample model accuracy?
+:::
+
+:::
+:::
+
+![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Forecasting accuracy
+
+::: {.callout-important}
+## Small sample problems!
+
+Test sets in time series can be problematic.
+
+Here we're judging the best model based on just the most recent 2 years of data.
+:::
+
+::: {.fragment .fade-in}
+![](resources/plot10.png)
+:::
+
+:::
+:::
+
+![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Cross-validation accuracy
+
+To overcome this, we can use time-series cross-validation.
+
+This creates many training sets from which we produce many forecasts from different starting points.
+
+::: {.fragment .fade-in}
+![](resources/tscv.png)
+:::
+
+:::
+:::
+
+![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Cross-validation accuracy
+
+The `stretch_tsibble()` function can be added after `filter()` to create time-series cross-validation folds of data.
+
+::: {.fragment .fade-in}
+```{r}
+#| echo: true
+fc_cv <- pbs_scripts |> 
+  # Keep some data for evaluating forecasts
+  filter(Month < yearmonth("2006 Jan")) |> 
+  # Cross-validate the remaining data
+  stretch_tsibble(.step = 24, .init = 48) |> 
+  model(
+    ETS(Scripts), 
+    ARIMA(log(Scripts))
+  ) |> 
+  forecast(h = "2 years")
+```
+:::
+
+
+:::
+:::
+
+![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+
+
+## {}
+
+```{r}
+pbs_scripts_cv <- pbs_scripts |> 
+  # Keep some data for evaluating forecasts
+  filter(Month < yearmonth("2006 Jan")) |> 
+  # Cross-validate the remaining data
+  stretch_tsibble(.step = 24, .init = 48) |> 
+  mutate(.id = forcats::fct_rev(factor(.id)))
+p1 <- pbs_scripts |> 
+  autoplot(Scripts)
+p2 <- p1 + 
+  autolayer(pbs_scripts_cv, Scripts)
+p3 <- fc_cv |> 
+  as_fable(key = .model) |> 
+  autoplot(pbs_scripts) +
+  autolayer(filter(pbs_scripts, Month < yearmonth("2006 Jan")), Scripts, colour = "steelblue")
+p <- patchwork::align_patches(p1, p2, p3)
+p[[1]]
+```
+
+## {}
+
+```{r}
+p[[2]]
+```
+
+## {}
+
+```{r}
+p[[3]]
+```
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Cross-validation accuracy
+
+Once more, we again use `accuracy()` with our forecasts:
+
+```{r}
+#| echo: true
+accuracy(fc_cv, pbs_scripts)
+```
+
+::: {.callout-caution}
+## Your turn
+
+Calculate cross-validated forecast accuracy on A10 Scripts (from `pbs_a10`).
+
+How do these results differ from the forecast accuracy calculated earlier?
+:::
+
+:::
+:::
+
+![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Residual diagnostics
+
+```{r}
+#| echo: true
+augment(fit)
+```
+
+Recall the 'innovation' (model) residuals from `augment()`, `.innov`.
+
+:::
+:::
+
+![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Residual diagnostics
+
+::: {.callout-tip}
+## Innovation residuals
+
+Innovation residuals contain patterns that weren't captured by the model.
+
+They aren't so useful for summarising accuracy since they might be transformed.
+:::
+
+[With `.innov`, we can use visualisation to look for patterns. Ideally we don't find any because this means the model captured everything.]{.fragment .fade-in}
+
+:::
+:::
+
+![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Residual diagnostics
+
+Consider a regression model without seasonality.
+
+```{r}
+#| echo: true
+fit <- pbs_scripts |> 
+  model(TSLM(Scripts ~ trend()))
+augment(fit) |> 
+  gg_season(.innov)
+```
+
+:::
+:::
+
+![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Residual diagnostics
+
+::: {.callout-tip}
+## Pattern found - seasonality detected
+
+Here we can see that the seasonality wasn't captured by this model, and can still be found in the residuals.
+:::
+
+::: {.callout-caution}
+## Your turn
+
+Look for any patterns in the residuals from your ARIMA and ETS models on A10 scripts.
+
+```{r}
+#| echo: true
+fit <- pbs_a10 |> 
+  model(
+    ETS(Scripts),
+    ARIMA(log(Scripts))
+  )
+augment(fit)
+```
+
+:::
+
+:::
+:::
+
+![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Residual diagnostics
+
+::: {.callout-note}
+## Checking assumptions
+
+It is good practice to check model assumptions.
+
+All model's we've seen today assume $\varepsilon_t \overset{\mathrm{iid}}{\sim} N(0, \sigma^2)$.
+
+To check this, we can use `gg_tsresiduals()`.
+:::
+
+
+:::
+:::
+
+![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Residual diagnostics
+
+```{r}
+#| echo: true
+fit |> 
+  select(`ETS(Scripts)`) |> 
+  gg_tsresiduals()
+```
+
+
+:::
+:::
+
+![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Residual diagnostics
+
+```{r}
+#| echo: true
+fit |> 
+  select(`ARIMA(log(Scripts))`) |> 
+  gg_tsresiduals()
+```
+
+
+:::
+:::
+
+![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+
+
+## That's all we have time for!
+
+::: columns
+::: {.column width="60%"}
+
+
+::: {.callout-tip}
+## Learn more about forecasting
+
+*  *Forecasting principles and practices* textbook
+
+  Freely available online! <https://otexts.com/fpp3/>
+
+:::
+
+::: {.callout-note}
+## I appreciate your feedback
+
+  Short feedback form: <https://feedback.nectric.com.au/pZ26>
+:::
+
+::: {.callout-link}
+## Useful links
+
+![](resources/forum.svg){.icon} [social.mitchelloharawild.com](https://social.mitchelloharawild.com/)
+
+![](resources/projector-screen-outline.svg){.icon} [workshop.nectric.com.au/user2024/](https://workshop.nectric.com.au/user2024/)
+
+![](resources/github.svg){.icon} [mitchelloharawild/workshop-fable-user2024](https://github.com/mitchelloharawild/workshop-fable-user2024)
+:::
+
+:::
+:::
+
+![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-right}
+
+<!-- Made with :heart: and [Quarto](https://quarto.org/). -->
+
+
+## Unsplash credits
+
+::: {.callout-unsplash}
+
+## Thanks to these Unsplash contributors for their photos
+
+```{r unsplash}
+#| echo: FALSE
+#| cache: TRUE
+library(httr)
+library(purrr)
+unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg$"
+slides <- readLines("index.qmd")
+backgrounds <- slides[grepl("../backgrounds/.+?unsplash.jpg", slides)]
+images <- unique(sub(".*\\(backgrounds/(.+?)\\).*", "\\1", backgrounds))
+images <- images[grepl(unsplash_pattern, images)]
+ids <- sub(unsplash_pattern, "\\1", images)
+
+get_unsplash_credit <- function(id) {
+  unsplash_url <- "https://api.unsplash.com/" 
+  my_response <- httr::GET(unsplash_url, path = c("photos", id), query = list(client_id=Sys.getenv("UNSPLASH_ACCESS")))
+  xml <- content(my_response)
+  
+  name <- xml$user$name
+  desc <- xml$description%||%"Photo"
+  sprintf(
+    "* %s: [%s%s](%s)",
+    name,
+    strtrim(desc,60-nchar(name)),
+    if(nchar(desc)>(60-nchar(name))) "..." else "",
+    modify_url("https://unsplash.com/", path = file.path("photos", xml$id))
+  )
+}
+htmltools::includeMarkdown(paste0(map_chr(ids, get_unsplash_credit), collapse = "\n"))
+```
+
+:::
+
+<!-- ## References -->

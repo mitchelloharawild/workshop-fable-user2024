@@ -2,12 +2,9 @@ project:
   type: website
   resources:
     - "images/twitter-card.png"
-    - "materials/*.pdf"
   render:
     - "*.qmd"
-    - "!materials"
-    - "!README.Rmd"
-  pre-render: zip.R
+    - "!README.qmd"
 
 website:
   page-navigation: true
@@ -34,6 +31,17 @@ website:
     background: "#426D98"
     pinned: true
     align: center
+    left:
+    - text: Slides
+      menu:
+        - text: Time series data and patterns
+          href: slides/analysis/
+        - text: Modelling and forecasting
+          href: slides/modelling/
+        - text: Accuracy evaluation
+          href: slides/accuracy/
+    - text: Feedback
+      href: https://feedback.nectric.com.au/pZ26
     right:
       - icon: download
         text: Downloads

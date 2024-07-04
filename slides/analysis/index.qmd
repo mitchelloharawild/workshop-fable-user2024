@@ -1,0 +1,695 @@
+---
+from: markdown+emoji
+execute:
+  cache: true
+format:
+  letterbox-revealjs:
+    theme: [default]
+    css: [theme.css, hex.css]
+    progress: false
+    menu: false
+    width: 1280
+    height: 720
+filters:
+  - custom-callouts
+callout-appearance: simple
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| include: false
+library(fpp3)
+```
+
+## {}
+
+::: columns
+::: {.column width="40%"}
+:::
+::: {.column width="60%"}
+
+::: {.title data-id="title"}
+Tidy time series analysis and forecasting
+:::
+
+::: {.subtitle data-id="subtitle"}
+Time series data and patterns
+:::
+
+::: {.dateplace}
+10th June 2024 @ R/Medicine 2024
+:::
+
+##### Mitchell O'Hara-Wild, Nectric
+
+::: {.callout-link}
+
+## Useful links
+
+![](resources/forum.svg){.icon} [social.mitchelloharawild.com](https://social.mitchelloharawild.com/)
+
+![](resources/projector-screen-outline.svg){.icon} [workshop.nectric.com.au/user2024/](https://workshop.nectric.com.au/user2024/)
+
+![](resources/github.svg){.icon} [mitchelloharawild/workshop-fable-user2024](https://github.com/mitchelloharawild/workshop-fable-user2024)
+
+:::
+
+:::
+:::
+
+![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-left}
+
+## {}
+
+
+
+::: columns
+::: {.column width="35%"}
+
+### Mitchell O'Hara‑Wild
+
+#### Monash + Nectric
+
+[![](resources/github.svg){.icon} @mitchelloharawild](https://github.com/mitchelloharawild)
+
+[![](resources/linkedin.svg){.icon} @mitchelloharawild](https://www.linkedin.com/in/mitchelloharawild/)
+
+
+:::
+
+::: {.column width="65%"}
+
+### Welcome, who am I?
+
+- :mortar_board: PhD candidate at Monash University
+- :bar_chart: Data consulting and workshops at Nectric
+- :chart_with_upwards_trend: Specialised in time series analysis
+- :package: Develops R packages (**fable**, vitae, etc.)
+- :face_with_thermometer: Produced COVID-19 forecasts for Australia
+- :robot: DIYs IoT devices for home automation
+- :seedling: Permaculturist (:bee:, :hatching_chick:, :mushroom:, :sun_with_face:)
+
+:::
+:::
+
+![](backgrounds/john-fowler-RsRTIofe0HE-unsplash.jpg){.image-left}
+
+## {}
+
+
+::: columns
+::: {.column width="60%"}
+
+::: {.callout}
+## :dart: Today's goals
+
+1. Learn about time series data.
+2. Visualise common time series patterns.
+3. Produce forecasts from a statistical models.
+4. Evaluate the forecasting accuracy.
+:::
+
+::: {.callout .fragment}
+## :sunflower: Expectations
+
+1. Follow the code of conduct.
+2. Ask relevant questions any time, Q&A during breaks.
+3. Be kind and respectful.
+4. Make mistakes and learn!
+:::
+
+:::
+:::
+
+![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+::: {.column width="60%"}
+
+### Tidy time series analysis
+
+This workshop is about **tidy** time series in R.
+
+:::{.fragment .fade-in}
+We'll be using these packages!
+
+:::{.hextile .clr}
+* ![](resources/tsibble.png)
+* ![](resources/fable.svg)
+* ![](resources/feasts.svg)
+* ![](resources/tsibbledata.svg)
+* ![](resources/tidyverse.svg)
+:::
+
+Install them all with `install.packages("fpp3")`
+
+:::
+
+
+:::
+:::
+
+![](backgrounds/david-pisnoy-46juD4zY1XA-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+::: {.column width="60%"}
+
+### Design of the forecast package
+
+:::{.callout-note icon=false}
+![](resources/forecast.svg){style="height:160px;float:right;padding-left:10px"}
+
+* [Forecasting **individual** time series]{.fragment .fade-up fragment-index=1}
+* [**Regular** and **infrequent** observations<br> (monthly, quarterly or annually)]{.fragment .fade-up fragment-index=2}
+* [**Point forecasts** and **intervals**]{.fragment .fade-up fragment-index=3}
+* [Consistent with `ts` models]{.fragment .fade-up fragment-index=4}
+:::
+
+### Design of the fable package
+
+:::{.callout-note icon=false}
+![](resources/fable.svg){style="height:160px;float:right;padding-left:10px"}
+
+* [Forecasting **many** time series]{.fragment .fade-up fragment-index=1}
+* [Observations at **any time**<br> (sub-daily, irregular, monthly, etc.)]{.fragment .fade-up fragment-index=2}
+* [Forecast **distributions**]{.fragment .fade-up fragment-index=3}
+* [Consistent with the `tidyverse`]{.fragment .fade-up fragment-index=4}
+:::
+
+<!-- Both are designed to be easy to use -->
+
+:::
+:::
+
+![](backgrounds/david-pisnoy-46juD4zY1XA-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Time series data
+
+- Four-yearly Olympic winning times
+- Annual Google profits
+- Quarterly Australian beer production
+- Monthly pharmaceutical subsidies
+- Weekly retail sales
+- Daily COVID-19 infections
+- Hourly electricity demand
+- Minutely blood glucose measurements
+- Time-stamped stock transaction data
+
+:::
+:::
+
+![](backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Time series data
+
+Comes in all shapes and sizes!
+
+Like all data, we hope it's tidy :broom:
+
+::: {.callout-tip .fragment}
+## All time series data contain...
+
+* The time of the observation (*index*)
+* One or more observations (*measurements*)
+
+:::{.fragment .fade-in}
+Some datasets have identifying metadata,
+
+* Identifying variables for the series (*key*)
+:::
+:::
+
+:::
+:::
+
+![](backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### The tsibble data format
+
+![](resources/tsibble.png){.sticker-float-right}
+
+A tsibble is a tibble for time series!
+
+The quarterly visitors to Australia are found in the `tourism` dataset.
+
+```{r}
+#| echo: true
+#| message: false
+library(fpp3)
+tourism
+```
+
+
+:::
+:::
+
+![](backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+
+```{r}
+#| message: false
+library(fpp3)
+tourism
+```
+
+:::{.callout-caution}
+## Your turn!
+
+In this dataset, which columns are:
+
+* index variable(s)?
+* key variable(s)?
+* measured variable(s)?
+
+:::
+
+:::
+:::
+
+![](backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Representing time (the index)
+
+Time is surprisingly tricky to represent!
+
+* frequency
+* granularity
+* time zones
+* calendars
+* leap years (and seconds?!)
+* holidays
+* civil/absolute time
+* time periods
+
+:::
+:::
+
+![](backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Representing time (the index)
+
+Common time index variables can be created with these functions:
+
+```{r}
+tribble(
+  ~`Frequency`, ~Function,
+  "Annual", "`start:end`",
+  "Quarterly", "`yearquarter()`",
+  "Monthly", "`yearmonth()`",
+  "Weekly", "`yearweek()`",
+  "Daily", "`as_date()`, `ymd()`",
+  "Sub-daily", "`as_datetime()`"
+) |>
+  knitr::kable(booktabs = TRUE)
+```
+
+
+:::
+:::
+
+![](backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Creating a tsibble
+
+1. Tidy the data into a long format
+2. Appropriately class the time variable
+3. Convert to tsibble with `as_tibble()`, identifying the `index` and `key` variable(s).
+
+::: {.callout-caution}
+## Follow along
+
+Let's convert the PBS dataset into a tsibble.
+
+```{r}
+#| eval: false
+#| echo: true
+library(fpp3)
+readr::read_csv(
+  "https://workshop.nectric.com.au/user2024/data/pbs.csv"
+)
+```
+
+:::
+
+:::
+:::
+
+![](backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Manipulating time series data
+
+Tidy time series data uses tidyverse tools!
+
+::: {.callout-caution}
+## Your turn
+
+Try calculating the total monthly cost of "A10" prescriptions (ATC2 classification) in Australia with dplyr.
+
+How do concessional subsidies compare to general subsidies?
+
+
+:::
+
+:::
+:::
+
+![](backgrounds/randy-fath-R5_1N6ZgCOo-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Manipulating time series data
+
+However there are some differences when working with time...
+
+The time `index` is always preserved (implicit `group_by()`).
+
+::: {.callout-tip}
+## Grouping across time
+
+Sometimes you want to summarise over time.
+
+Summarising over all of time is no longer a time series, so first convert to a tibble with `as_tibble()`.
+
+To re-index by a new variable, use `index_by()`.
+:::
+
+:::
+:::
+
+![](backgrounds/randy-fath-R5_1N6ZgCOo-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Visualising time series
+
+Time series visualisation helps us identify *time series patterns*.
+
+These patterns include:
+
+* trends
+* seasonalities
+* cycles
+* covariates
+* events
+
+They also help identify anomalies/outliers.
+
+:::
+
+:::
+:::
+
+![](backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+::: {.callout}
+## Time plots
+
+The most common time series graphic is the "time plot", created with `autoplot()`.
+
+```{r}
+#| echo: true
+pbs_scripts <- PBS |>
+  summarise(Scripts = sum(Scripts))
+pbs_scripts |>
+  autoplot(Scripts)
+```
+:::
+
+:::
+
+:::
+:::
+
+![](backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+::: {.callout}
+## Seasonal plots
+
+The `gg_season()` plots help identify peaks and troughs in seasonal patterns.
+
+```{r}
+#| echo: true
+pbs_scripts |>
+  gg_season(Scripts)
+```
+:::
+
+:::
+
+:::
+:::
+
+![](backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+::: {.callout}
+## Seasonal sub-series plots
+
+The `gg_subseries()` plots help identify changes in seasonal patterns.
+
+```{r}
+#| echo: true
+pbs_scripts |>
+  gg_subseries(Scripts)
+```
+:::
+
+:::
+
+:::
+:::
+
+![](backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+::: {.callout}
+## ACF plots
+
+The `ACF() |> autoplot()` plots help identify autocorrelations.
+
+```{r}
+#| echo: true
+pbs_scripts |>
+  ACF(Scripts) |> 
+  autoplot()
+```
+:::
+
+:::
+
+:::
+:::
+
+![](backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+
+## Seasonal or Cyclical?
+
+These common patterns are commonly confused, can you tell them apart?
+
+```{r}
+library(patchwork)
+((autoplot(as_tsibble(USAccDeaths), value)+ylab(NULL))/autoplot(ACF(as_tsibble(USAccDeaths), value))) | ((autoplot(pelt, Lynx)+ylab(NULL))/autoplot(ACF(pelt, Lynx)))
+```
+
+## :alarm_clock: Time for a break!
+
+::: columns
+::: {.column width="60%"}
+
+
+::: {.callout-tip}
+## Up next...
+
+* Simplifying patterns with transformations,
+* Specifying time series models,
+* Training models on data,
+* Forecasting the future!
+:::
+
+::: {.callout-link}
+## Useful links
+
+![](resources/forum.svg){.icon} [social.mitchelloharawild.com](https://social.mitchelloharawild.com/)
+
+![](resources/projector-screen-outline.svg){.icon} [workshop.nectric.com.au/user2024/](https://workshop.nectric.com.au/user2024/)
+
+![](resources/github.svg){.icon} [mitchelloharawild/workshop-fable-user2024](https://github.com/mitchelloharawild/workshop-fable-user2024)
+:::
+
+:::
+:::
+
+![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-right}
+
+<!-- Made with :heart: and [Quarto](https://quarto.org/). -->
+
+
+## Unsplash credits
+
+::: {.callout-unsplash}
+
+## Thanks to these Unsplash contributors for their photos
+
+```{r unsplash}
+#| echo: FALSE
+#| cache: TRUE
+library(httr)
+library(purrr)
+unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg$"
+slides <- readLines("index.qmd")
+backgrounds <- slides[grepl("../backgrounds/.+?unsplash.jpg", slides)]
+images <- unique(sub(".*\\(backgrounds/(.+?)\\).*", "\\1", backgrounds))
+images <- images[grepl(unsplash_pattern, images)]
+ids <- sub(unsplash_pattern, "\\1", images)
+
+get_unsplash_credit <- function(id) {
+  unsplash_url <- "https://api.unsplash.com/" 
+  my_response <- httr::GET(unsplash_url, path = c("photos", id), query = list(client_id=Sys.getenv("UNSPLASH_ACCESS")))
+  xml <- content(my_response)
+  
+  name <- xml$user$name
+  desc <- xml$description%||%"Photo"
+  sprintf(
+    "* %s: [%s%s](%s)",
+    name,
+    strtrim(desc,60-nchar(name)),
+    if(nchar(desc)>(60-nchar(name))) "..." else "",
+    modify_url("https://unsplash.com/", path = file.path("photos", xml$id))
+  )
+}
+htmltools::includeMarkdown(paste0(map_chr(ids, get_unsplash_credit), collapse = "\n"))
+```
+
+:::
+
+<!-- ## References -->

@@ -1,0 +1,893 @@
+---
+from: markdown+emoji
+execute:
+  cache: true
+format:
+  letterbox-revealjs:
+    theme: [default]
+    css: [theme.css]
+    progress: false
+    menu: false
+    width: 1280
+    height: 720
+filters:
+  - custom-callouts
+callout-appearance: simple
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| include: false
+library(fpp3)
+```
+
+## {}
+
+::: columns
+::: {.column width="40%"}
+:::
+::: {.column width="60%"}
+
+::: {.title data-id="title"}
+Tidy time series analysis and forecasting
+:::
+
+::: {.subtitle data-id="subtitle"}
+Modelling and forecasting
+:::
+
+::: {.dateplace}
+10th June 2024 @ R/Medicine 2024
+:::
+
+##### Mitchell O'Hara-Wild, Nectric
+
+::: {.callout-link}
+
+## Useful links
+
+![](resources/forum.svg){.icon} [social.mitchelloharawild.com](https://social.mitchelloharawild.com/)
+
+![](resources/projector-screen-outline.svg){.icon} [workshop.nectric.com.au/user2024/](https://workshop.nectric.com.au/user2024/)
+
+![](resources/github.svg){.icon} [mitchelloharawild/workshop-fable-user2024](https://github.com/mitchelloharawild/workshop-fable-user2024)
+
+:::
+
+:::
+:::
+
+![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Forecasting can be difficult!
+
+![](resources/hopecast.png)
+
+Many forecasts are catastrophically wrong, and better described as 'hopecasting'.
+
+:::
+:::
+
+![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Which is easier to forecast?
+
+ 1. daily electricity demand in 3 days time
+ 2. timing of next Halley's comet appearance
+ 3. time of sunrise this day next year
+ 4. Google stock price tomorrow
+ 5. Google stock price in 6 months time
+ 6. maximum temperature tomorrow
+ 7. exchange rate of \$US/AUS next week
+ 8. total sales of drugs in Australian pharmacies next month
+
+:::
+:::
+
+![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Factors affecting forecastability
+
+Something is easier to forecast if...
+
+ - we have a good understanding of the factors that contribute to it,
+ - there is lots of data available,
+ - the forecasts cannot affect the thing we are trying to forecast,
+ - there is relatively low natural/unexplainable random variation,
+ - the future is somewhat similar to the past.
+
+:::
+:::
+
+![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### How are good forecasts made?
+
+[Statistically!]{.fragment} [(or computationally!)]{.fragment .fade-in}
+
+::: {.fragment}
+Consider possible futures for this series:
+
+![](resources/plot1.png)
+:::
+:::
+:::
+
+![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
+
+## {}
+
+![](resources/plot2.png)
+
+## {}
+
+![](resources/plot3.png)
+
+## {}
+
+![](resources/plot4.png)
+
+## {}
+
+![](resources/plot5.png)
+
+## {}
+
+![](resources/plot6.png)
+
+## {}
+
+![](resources/plot7.png)
+
+## {}
+
+![](resources/plot8.png)
+
+## {}
+
+![](resources/plot9.png)
+
+## {}
+
+![](resources/plot10.png)
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### What makes forecasts good?
+
+Good forecasts...
+
+:::{.incremental}
+* Are uncertain (probabilistic)
+* Useful for decision making
+* Capture patterns in the data
+:::
+
+:::{.callout-important .fragment}
+## Good forecasts aren't necessarily accurate!
+
+Usually accuracy is important, but not always.
+
+Forecasts (usually) assume that interventions won't occur, e.g. COVID-19 measures.
+:::
+
+:::
+:::
+
+![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Some simple forecasting models
+
+::: {.callout-caution}
+## Your turn
+
+How would you forecast visitors to Australia?
+
+Put some suggestions in the chat.
+
+*Hint: Consider the patterns seen in the data, and how math can mimic the trend, seasonality, etc.*
+:::
+
+:::
+:::
+
+![](backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Some simple forecasting models
+
+::: {.callout}
+## The naive model
+
+Simply use the most recent observation.
+
+```{r}
+pbs_scripts <- PBS |>
+  summarise(Scripts = sum(Scripts))
+pbs_scripts |> 
+  model(NAIVE(Scripts)) |> 
+  forecast() |> 
+  autoplot(pbs_scripts)
+```
+
+
+:::
+
+:::
+:::
+
+![](backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Some simple forecasting models
+
+::: {.callout}
+## The seasonal naive model
+
+Use the most recent 'seasonal' observation.
+
+```{r}
+pbs_scripts |> 
+  model(SNAIVE(Scripts)) |> 
+  forecast() |> 
+  autoplot(pbs_scripts)
+```
+
+
+:::
+
+:::
+:::
+
+![](backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Some simple forecasting models
+
+::: {.callout}
+## The naive with drift model
+
+Extrapolate a line between the first and last observation.
+
+```{r}
+pbs_scripts |> 
+  model(NAIVE(Scripts ~ drift())) |> 
+  forecast() |> 
+  autoplot(pbs_scripts)
+```
+
+
+:::
+
+:::
+:::
+
+![](backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Some simple forecasting models
+
+::: {.callout}
+## The seasonal naive with drift model
+
+Extrapolate between first and last with seasonality.
+
+```{r}
+pbs_scripts |> 
+  model(SNAIVE(Scripts ~ drift())) |> 
+  forecast() |> 
+  autoplot(pbs_scripts)
+```
+
+
+:::
+
+:::
+:::
+
+![](backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Estimating a model
+
+Models are estimated using `model()`:
+
+```{r}
+#| echo: true
+pbs_scripts |> 
+  model(
+    NAIVE(Scripts),
+    SNAIVE(Scripts),
+    NAIVE(Scripts ~ drift()),
+    SNAIVE(Scripts ~ drift()),
+  )
+```
+
+::: {.callout-tip}
+## The mable
+
+A *mable* (model table) contains 1 row per time series, and 1 column for each specified model.
+:::
+
+:::
+:::
+
+![](backgrounds/rock-n-roll-monkey-FTfjMijq-Ws-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Producing forecasts
+
+Forecasts are made using `forecast()`:
+
+```{r}
+#| echo: true
+pbs_scripts |> 
+  model(
+    NAIVE(Scripts),
+    SNAIVE(Scripts),
+    NAIVE(Scripts ~ drift()),
+    SNAIVE(Scripts ~ drift()),
+  ) |> 
+  forecast(h = "2 years")
+```
+
+:::
+:::
+
+![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Producing forecasts
+
+```{r}
+pbs_scripts |> 
+  model(
+    NAIVE(Scripts),
+    SNAIVE(Scripts),
+    NAIVE(Scripts ~ drift()),
+    SNAIVE(Scripts ~ drift()),
+  ) |> 
+  forecast(h = "2 years")
+```
+
+::: {.callout-tip}
+## The fable
+
+A *fable* (forecast table) is like a *tsibble*, but with distributions for the forecasted variable.
+:::
+
+:::
+:::
+
+![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Visualising forecasts
+
+```{r}
+#| echo: true
+pbs_scripts |> 
+  model(
+    NAIVE(Scripts),
+    SNAIVE(Scripts),
+    NAIVE(Scripts ~ drift()),
+    SNAIVE(Scripts ~ drift()),
+  ) |> 
+  forecast(h = "2 years") |> 
+  autoplot(pbs_scripts)
+```
+
+:::
+:::
+
+![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Forecasting with regression
+
+Regression can also forecast, use time as regressors for the response variable.
+
+* trend via the time index $t$
+* seasonality via seasonal dummies $s_{it}$
+
+$$y_t = \beta_0 + \beta_1 t + \sum_{i=1}^m \beta_{s_i} s_{it} + \varepsilon_t$$
+
+::: {.callout-tip}
+## Specifying time series linear models
+`TSLM(y ~ trend() + season())`
+:::
+
+:::
+:::
+
+![](backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Forecasting with regression
+
+::: {.callout-tip}
+## Specifying time series linear models
+`TSLM(y ~ trend() + season())`
+:::
+
+::: {.callout-caution}
+## Your turn!
+
+Produce forecasts for A10 scripts using regression.
+
+```{r}
+#| echo: true
+library(fpp3)
+pbs_a10 <- PBS |> 
+  filter(ATC2 == "A10") |> 
+  summarise(Scripts = sum(Scripts), Cost = sum(Cost))
+```
+
+:::
+
+:::
+:::
+
+![](backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Forecasting with regression
+
+Regression can also incorporate other covariates. For example:
+
+```{r}
+#| echo: true
+pbs_a10 |>
+  model(
+    TSLM(Cost ~ trend() + season() + Scripts)
+  )
+```
+
+::: {.callout-important}
+## Difficult to forecast
+
+Forecasting with regressors requires you to forecast the regressors too! Useful regressors are easily known, predictable, or controllable.
+:::
+
+:::
+:::
+
+![](backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Exponential smoothing
+
+Time series patterns often change over time.
+
+The fixed coefficients of regression is unsuitable for most time series.
+
+Exponential smoothing (ETS) is *similar* to regression, but allows the 'coefficients' (states) to vary over time.
+
+$$y_t = \ell_{t-1} + b_{t-1} + s_{t-m} + \varepsilon_t$$
+
+::: {.callout-tip}
+## Specifying ETS models
+`ETS(y ~ error("A") + trend("A") + season("A"))`
+:::
+
+:::
+:::
+
+![](backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Exponential smoothing
+
+Exponential smoothing also works for 'multiplicative' patterns.
+
+This is where the variation grows proportionately to $\ell_t$.
+
+For example, multiplicative seasonality:
+
+$$y_t = (\ell_{t-1} + b_{t-1})s_{t-m} + \varepsilon_t$$
+
+::: {.callout-tip}
+## Specifying ETS models
+`ETS(y ~ error("A") + trend("A") + season("M"))`
+:::
+
+:::
+:::
+
+![](backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Exponential smoothing
+
+The best ETS model can be chosen automatically.
+
+Simply not specify the right side of the formula.
+
+::: {.callout-tip}
+## Specifying ETS models
+`ETS(y)`
+:::
+
+::: {.callout-caution}
+## Your turn
+
+Estimate an ETS model for the `pbs_a10` Scripts.
+
+Does the automatic ETS model match the patterns you see in a time plot?
+:::
+
+:::
+:::
+
+![](backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### ARIMA
+
+Unlike earlier models which directly describe trends and seasonality, ARIMA forecasts patterns using autocorrelations (ACFs).
+
+::: {.callout-note}
+## Recall the ACF plot
+
+```{r}
+#| echo: true
+pbs_scripts |> 
+  ACF(Scripts) |> 
+  autoplot()
+```
+:::
+
+:::
+:::
+
+![](backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### ARIMA
+
+Unlike ETS, ARIMA can't directly handle multiplicative patterns.
+
+This isn't a problem though, since we have a *transformational* trick :magic_wand:
+
+::: {.fragment .fade-in}
+
+$$\log(x \times y) = \log(x) + \log(y)$$
+
+Before we can use ARIMA, we need to transform our data to be additive.
+
+:::
+
+:::
+:::
+
+![](backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### ARIMA
+
+Log transform the data to make multiplicative patterns additive.
+
+```{r}
+#| echo: true
+pbs_scripts |> 
+  autoplot(log(Scripts))
+```
+
+:::
+:::
+
+![](backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### ARIMA
+
+With the appropriate transformation, we can now estimate an ARIMA model:
+
+::: {.callout-tip}
+## Specifying ARIMA models
+
+These will use automatic ARIMA selection (often described as `auto.arima()`).
+
+`ARIMA(y)`, or `ARIMA(log(y))`
+:::
+
+::: {.callout-tip}
+## Other transformations
+
+Multiplicative patterns aren't always *exactly* multiplicative - for this we often use power transformations via `box_cox(y, lambda)`.
+
+More information: <https://otexts.com/fpp3/transformations.html>
+:::
+
+:::
+:::
+
+![](backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### ARIMA
+
+::: {.callout-caution}
+## Your turn
+
+Identify if a transformation is necessary for the `pbs_a10` scripts.
+
+Then estimate an automatically selected ARIMA model for this data.
+
+Compare ARIMA forecasts with the automatic ETS model, how do they differ? 
+:::
+
+:::
+:::
+
+![](backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### ETS vs ARIMA
+
+Which model is better?
+
+[It depends!]{.fragment .fade-in}
+
+::: {.callout-note .fragment .fade-in}
+## Capturing patterns
+
+* Both handle time varying trends and seasonality.
+* ETS directly captures multiplicative patterns.
+* ARIMA can forecast cyclical patterns.
+:::
+
+:::
+:::
+
+![](backgrounds/amjd-rdwan--MDJDYKQz6E-unsplash.jpg){.image-right}
+
+## :alarm_clock: Time for a break!
+
+::: columns
+::: {.column width="60%"}
+
+
+::: {.callout-tip}
+## Up next...
+
+* Looking for patterns in residuals
+* Evaluating forecast accuracy
+* Choosing the best forecasts
+:::
+
+::: {.callout-link}
+## Useful links
+
+![](resources/forum.svg){.icon} [social.mitchelloharawild.com](https://social.mitchelloharawild.com/)
+
+![](resources/projector-screen-outline.svg){.icon} [workshop.nectric.com.au/user2024/](https://workshop.nectric.com.au/user2024/)
+
+![](resources/github.svg){.icon} [mitchelloharawild/workshop-fable-user2024](https://github.com/mitchelloharawild/workshop-fable-user2024)
+:::
+
+:::
+:::
+
+![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-right}
+
+<!-- Made with :heart: and [Quarto](https://quarto.org/). -->
+
+
+## Unsplash credits
+
+::: {.callout-unsplash}
+
+## Thanks to these Unsplash contributors for their photos
+
+```{r unsplash}
+#| echo: FALSE
+#| cache: TRUE
+library(httr)
+library(purrr)
+unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg$"
+slides <- readLines("index.qmd")
+backgrounds <- slides[grepl("../backgrounds/.+?unsplash.jpg", slides)]
+images <- unique(sub(".*\\(backgrounds/(.+?)\\).*", "\\1", backgrounds))
+images <- images[grepl(unsplash_pattern, images)]
+ids <- sub(unsplash_pattern, "\\1", images)
+
+get_unsplash_credit <- function(id) {
+  unsplash_url <- "https://api.unsplash.com/" 
+  my_response <- httr::GET(unsplash_url, path = c("photos", id), query = list(client_id=Sys.getenv("UNSPLASH_ACCESS")))
+  xml <- content(my_response)
+  
+  name <- xml$user$name
+  desc <- xml$description%||%"Photo"
+  sprintf(
+    "* %s: [%s%s](%s)",
+    name,
+    strtrim(desc,60-nchar(name)),
+    if(nchar(desc)>(60-nchar(name))) "..." else "",
+    modify_url("https://unsplash.com/", path = file.path("photos", xml$id))
+  )
+}
+htmltools::includeMarkdown(paste0(map_chr(ids, get_unsplash_credit), collapse = "\n"))
+```
+
+:::
+
+<!-- ## References -->
