@@ -38,7 +38,7 @@ Time series data and patterns
 :::
 
 ::: {.dateplace}
-10th June 2024 @ R/Medicine 2024
+10th June 2024 @ UseR! 2024
 :::
 
 ##### Mitchell O'Hara-Wild, Nectric
@@ -58,7 +58,7 @@ Time series data and patterns
 :::
 :::
 
-![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-left}
+![](../backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -93,7 +93,7 @@ Time series data and patterns
 :::
 :::
 
-![](backgrounds/john-fowler-RsRTIofe0HE-unsplash.jpg){.image-left}
+![](../backgrounds/john-fowler-RsRTIofe0HE-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -122,7 +122,7 @@ Time series data and patterns
 :::
 :::
 
-![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -153,7 +153,7 @@ Install them all with `install.packages("fpp3")`
 :::
 :::
 
-![](backgrounds/david-pisnoy-46juD4zY1XA-unsplash.jpg){.image-right}
+![](../backgrounds/david-pisnoy-46juD4zY1XA-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -188,7 +188,7 @@ Install them all with `install.packages("fpp3")`
 :::
 :::
 
-![](backgrounds/david-pisnoy-46juD4zY1XA-unsplash.jpg){.image-right}
+![](../backgrounds/david-pisnoy-46juD4zY1XA-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -215,7 +215,7 @@ Install them all with `install.packages("fpp3")`
 :::
 :::
 
-![](backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
+![](../backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -248,7 +248,7 @@ Some datasets have identifying metadata,
 :::
 :::
 
-![](backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
+![](../backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -279,7 +279,7 @@ tourism
 :::
 :::
 
-![](backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
+![](../backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -311,7 +311,7 @@ In this dataset, which columns are:
 :::
 :::
 
-![](backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
+![](../backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -338,7 +338,7 @@ Time is surprisingly tricky to represent!
 :::
 :::
 
-![](backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
+![](../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -371,7 +371,7 @@ tribble(
 :::
 :::
 
-![](backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
+![](../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -408,7 +408,7 @@ readr::read_csv(
 :::
 :::
 
-![](backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
+![](../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -434,7 +434,7 @@ How do concessional subsidies compare to general subsidies?
 :::
 :::
 
-![](backgrounds/randy-fath-R5_1N6ZgCOo-unsplash.jpg){.image-right}
+![](../backgrounds/randy-fath-R5_1N6ZgCOo-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -461,7 +461,7 @@ To re-index by a new variable, use `index_by()`.
 :::
 :::
 
-![](backgrounds/randy-fath-R5_1N6ZgCOo-unsplash.jpg){.image-right}
+![](../backgrounds/randy-fath-R5_1N6ZgCOo-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -492,7 +492,7 @@ They also help identify anomalies/outliers.
 :::
 :::
 
-![](backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+![](../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -523,7 +523,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+![](../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -551,7 +551,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+![](../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -580,7 +580,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+![](../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -610,7 +610,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+![](../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
 
 ## Seasonal or Cyclical?
 
@@ -649,7 +649,7 @@ library(patchwork)
 :::
 :::
 
-![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-right}
+![](../backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-right}
 
 <!-- Made with :heart: and [Quarto](https://quarto.org/). -->
 
@@ -665,7 +665,7 @@ library(patchwork)
 #| cache: TRUE
 library(httr)
 library(purrr)
-unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg$"
+unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg.*"
 slides <- readLines("index.qmd")
 backgrounds <- slides[grepl("../backgrounds/.+?unsplash.jpg", slides)]
 images <- unique(sub(".*\\(backgrounds/(.+?)\\).*", "\\1", backgrounds))

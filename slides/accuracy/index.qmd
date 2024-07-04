@@ -41,7 +41,7 @@ Accuracy evaluation
 :::
 
 ::: {.dateplace}
-10th June 2024 @ R/Medicine 2024
+10th June 2024 @ UseR! 2024
 :::
 
 ##### Mitchell O'Hara-Wild, Nectric
@@ -61,7 +61,7 @@ Accuracy evaluation
 :::
 :::
 
-![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-left}
+![](../backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -104,7 +104,7 @@ augment(fit)
 :::
 :::
 
-![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+![](../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -142,7 +142,7 @@ augment(fit)
 :::
 :::
 
-![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+![](../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -172,7 +172,7 @@ The response residuals are the difference between actual and predicted values: $
 :::
 :::
 
-![](backgrounds/nasa-1lfI7wkGWZ4-unsplash.jpg){.image-left}
+![](../backgrounds/nasa-1lfI7wkGWZ4-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -196,7 +196,7 @@ accuracy(fit)
 :::
 :::
 
-![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -223,7 +223,7 @@ These point forecast accuracy measures are:
 :::
 :::
 
-![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -256,7 +256,7 @@ fc <- pbs_scripts |>
 :::
 :::
 
-![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -313,7 +313,7 @@ i.e. `accuracy(<forecasts>, <full_data>)`.
 :::
 :::
 
-![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -342,7 +342,7 @@ Does this differ from the in-sample model accuracy?
 :::
 :::
 
-![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -367,7 +367,7 @@ Here we're judging the best model based on just the most recent 2 years of data.
 :::
 :::
 
-![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -388,7 +388,7 @@ This creates many training sets from which we produce many forecasts from differ
 :::
 :::
 
-![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -421,7 +421,7 @@ fc_cv <- pbs_scripts |>
 :::
 :::
 
-![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
 
 
@@ -485,7 +485,7 @@ How do these results differ from the forecast accuracy calculated earlier?
 :::
 :::
 
-![](backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -508,7 +508,7 @@ Recall the 'innovation' (model) residuals from `augment()`, `.innov`.
 :::
 :::
 
-![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+![](../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -534,7 +534,7 @@ They aren't so useful for summarising accuracy since they might be transformed.
 :::
 :::
 
-![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+![](../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -560,7 +560,7 @@ augment(fit) |>
 :::
 :::
 
-![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+![](../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -600,7 +600,7 @@ augment(fit)
 :::
 :::
 
-![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+![](../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -627,7 +627,7 @@ To check this, we can use `gg_tsresiduals()`.
 :::
 :::
 
-![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+![](../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -651,7 +651,7 @@ fit |>
 :::
 :::
 
-![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+![](../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -676,7 +676,7 @@ fit |>
 :::
 :::
 
-![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+![](../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
 
 
 ## That's all we have time for!
@@ -713,7 +713,7 @@ fit |>
 :::
 :::
 
-![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-right}
+![](../backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-right}
 
 <!-- Made with :heart: and [Quarto](https://quarto.org/). -->
 
@@ -729,7 +729,7 @@ fit |>
 #| cache: TRUE
 library(httr)
 library(purrr)
-unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg$"
+unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg.*"
 slides <- readLines("index.qmd")
 backgrounds <- slides[grepl("../backgrounds/.+?unsplash.jpg", slides)]
 images <- unique(sub(".*\\(backgrounds/(.+?)\\).*", "\\1", backgrounds))

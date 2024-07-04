@@ -38,7 +38,7 @@ Modelling and forecasting
 :::
 
 ::: {.dateplace}
-10th June 2024 @ R/Medicine 2024
+10th June 2024 @ UseR! 2024
 :::
 
 ##### Mitchell O'Hara-Wild, Nectric
@@ -58,7 +58,7 @@ Modelling and forecasting
 :::
 :::
 
-![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-left}
+![](../backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -78,7 +78,7 @@ Many forecasts are catastrophically wrong, and better described as 'hopecasting'
 :::
 :::
 
-![](backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
+![](../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -100,7 +100,7 @@ Many forecasts are catastrophically wrong, and better described as 'hopecasting'
 :::
 :::
 
-![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
+![](../backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -121,7 +121,7 @@ Something is easier to forecast if...
 :::
 :::
 
-![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
+![](../backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -142,7 +142,7 @@ Consider possible futures for this series:
 :::
 :::
 
-![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
+![](../backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -207,7 +207,7 @@ Forecasts (usually) assume that interventions won't occur, e.g. COVID-19 measure
 :::
 :::
 
-![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
+![](../backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -231,7 +231,7 @@ Put some suggestions in the chat.
 :::
 :::
 
-![](backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
+![](../backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -261,7 +261,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
+![](../backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -290,7 +290,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
+![](../backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -318,7 +318,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
+![](../backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -347,7 +347,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
+![](../backgrounds/david-becker-crs2vlkSe98-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -383,7 +383,7 @@ A *mable* (model table) contains 1 row per time series, and 1 column for each sp
 :::
 :::
 
-![](backgrounds/rock-n-roll-monkey-FTfjMijq-Ws-unsplash.jpg){.image-left}
+![](../backgrounds/rock-n-roll-monkey-FTfjMijq-Ws-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -413,7 +413,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-left}
+![](../backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -446,7 +446,7 @@ A *fable* (forecast table) is like a *tsibble*, but with distributions for the f
 :::
 :::
 
-![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-left}
+![](../backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -476,7 +476,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-left}
+![](../backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -502,7 +502,7 @@ $$y_t = \beta_0 + \beta_1 t + \sum_{i=1}^m \beta_{s_i} s_{it} + \varepsilon_t$$
 :::
 :::
 
-![](backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg){.image-right}
+![](../backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -536,7 +536,7 @@ pbs_a10 <- PBS |>
 :::
 :::
 
-![](backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg){.image-right}
+![](../backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -566,7 +566,7 @@ Forecasting with regressors requires you to forecast the regressors too! Useful 
 :::
 :::
 
-![](backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg){.image-right}
+![](../backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -593,7 +593,7 @@ $$y_t = \ell_{t-1} + b_{t-1} + s_{t-m} + \varepsilon_t$$
 :::
 :::
 
-![](backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg){.image-right}
+![](../backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -619,7 +619,7 @@ $$y_t = (\ell_{t-1} + b_{t-1})s_{t-m} + \varepsilon_t$$
 :::
 :::
 
-![](backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg){.image-right}
+![](../backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg){.image-right}
 
 
 ## {}
@@ -650,7 +650,7 @@ Does the automatic ETS model match the patterns you see in a time plot?
 :::
 :::
 
-![](backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg){.image-right}
+![](../backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -679,7 +679,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
+![](../backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -707,7 +707,7 @@ Before we can use ARIMA, we need to transform our data to be additive.
 :::
 :::
 
-![](backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
+![](../backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -731,7 +731,7 @@ pbs_scripts |>
 :::
 :::
 
-![](backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
+![](../backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -765,7 +765,7 @@ More information: <https://otexts.com/fpp3/transformations.html>
 :::
 :::
 
-![](backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
+![](../backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -792,7 +792,7 @@ Compare ARIMA forecasts with the automatic ETS model, how do they differ?
 :::
 :::
 
-![](backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
+![](../backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -818,7 +818,7 @@ Which model is better?
 :::
 :::
 
-![](backgrounds/amjd-rdwan--MDJDYKQz6E-unsplash.jpg){.image-right}
+![](../backgrounds/amjd-rdwan--MDJDYKQz6E-unsplash.jpg){.image-right}
 
 ## :alarm_clock: Time for a break!
 
@@ -847,7 +847,7 @@ Which model is better?
 :::
 :::
 
-![](backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-right}
+![](../backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-right}
 
 <!-- Made with :heart: and [Quarto](https://quarto.org/). -->
 
@@ -863,7 +863,7 @@ Which model is better?
 #| cache: TRUE
 library(httr)
 library(purrr)
-unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg$"
+unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg.*"
 slides <- readLines("index.qmd")
 backgrounds <- slides[grepl("../backgrounds/.+?unsplash.jpg", slides)]
 images <- unique(sub(".*\\(backgrounds/(.+?)\\).*", "\\1", backgrounds))
