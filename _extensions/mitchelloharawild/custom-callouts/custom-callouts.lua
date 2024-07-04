@@ -2,7 +2,7 @@ local function ensure_html_deps()
   quarto.doc.add_html_dependency({
     name = "custom-callouts",
     version = "0.1.0",
-    stylesheets = {"resources/css/custom-callouts.scss"}
+    stylesheets = {"resources/css/custom-callouts.css"}
   })
 end
 if quarto.doc.is_format('html:js') then
