@@ -1,10 +1,311 @@
 [
   {
-    "objectID": "license.html",
-    "href": "license.html",
-    "title": "License",
+    "objectID": "slides/accuracy/index.html#section",
+    "href": "slides/accuracy/index.html#section",
+    "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "This work is licensed under a Creative Commons Attribution 4.0 International License."
+    "text": "Tidy time series analysis and forecasting\n\n\nAccuracy evaluation\n\n\n10th June 2024 @ R/Medicine 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-1",
+    "href": "slides/accuracy/index.html#section-1",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Evaluating models\n\n\n\n\n\n\nInspecting model errors\n\n\nAccurate models have small errors.\nGood models capture all patterns in the data.\nModel errors contain patterns not captured by the model!\n\n\n\n\n\nlibrary(fpp3)\npbs_scripts &lt;- PBS |&gt; \n  summarise(Scripts = sum(Scripts))\nfit &lt;- pbs_scripts |&gt; \n  model(\n    ETS(Scripts), \n    ARIMA(log(Scripts))\n  )\naugment(fit)"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-2",
+    "href": "slides/accuracy/index.html#section-2",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Evaluating models\n\n\n# A tsibble: 408 x 6 [1M]\n# Key:       .model [2]\n   .model          Month Scripts  .fitted   .resid  .innov\n   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;\n 1 ETS(Scripts) 1991 Jul 8090395 7730981.  359414.  0.0465\n 2 ETS(Scripts) 1991 Aug 7308118 8049721. -741603. -0.0921\n 3 ETS(Scripts) 1991 Sep 7614644 7923794. -309150. -0.0390\n 4 ETS(Scripts) 1991 Oct 8206248 8303919.  -97671. -0.0118\n 5 ETS(Scripts) 1991 Nov 7686634 8196083. -509449. -0.0622\n 6 ETS(Scripts) 1991 Dec 8954872 9171153. -216281. -0.0236\n 7 ETS(Scripts) 1992 Jan 9616464 9247886.  368578.  0.0399\n 8 ETS(Scripts) 1992 Feb 6291465 5807309.  484156.  0.0834\n 9 ETS(Scripts) 1992 Mar 6806613 7047332. -240719. -0.0342\n10 ETS(Scripts) 1992 Apr 7651435 7110362.  541073.  0.0761\n# ℹ 398 more rows\n\n\n\n\n\n\n\n\nFitted values and residuals\n\n\n\n\\(\\hat{y}_t\\): 1-step in-sample fits (forecasts) are in .fitted\n\\(e_t\\): response (actual) errors are in .resid\n\\(\\varepsilon_t\\): innovation (model) errors are in .innov"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-3",
+    "href": "slides/accuracy/index.html#section-3",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Plotting in-sample fits\n\npbs_scripts |&gt; \n  autoplot(Scripts) + \n  autolayer(augment(fit), .fitted)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFitted values and response residuals\n\n\nThe response residuals are the difference between actual and predicted values: \\(e_t = y_t - \\hat{y}_t\\)."
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-4",
+    "href": "slides/accuracy/index.html#section-4",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Summarising model accuracy\nResponse residuals are often used to calculate accuracy ‘measures’.\nCommon accuracy measures can be calculated with accuracy().\n\naccuracy(fit)\n\n# A tibble: 2 × 10\n  .model           .type      ME   RMSE    MAE     MPE  MAPE  MASE RMSSE    ACF1\n  &lt;chr&gt;            &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;\n1 ETS(Scripts)     Trai…  26545. 6.11e5 4.71e5  0.0216  4.03 0.674 0.701 -0.324 \n2 ARIMA(log(Scrip… Trai… -76599. 6.15e5 4.46e5 -0.761   3.73 0.638 0.705 -0.0738"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-5",
+    "href": "slides/accuracy/index.html#section-5",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Summarising model accuracy\nThese point forecast accuracy measures are:\n\nME: Mean error (indicates bias)\nRMSE: Root mean squared error\n(forecast mean accuracy)\nMAE: Mean absolute error\n(forecast median accuracy)\nMPE/MAPE: Percentage errors (problematic, instead use…)\nMASE: Mean absolute scaled error\n(scaled median accuracy)"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-6",
+    "href": "slides/accuracy/index.html#section-6",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Forecasting accuracy\nEvaluating out-of-sample forecasts gives more realistic forecast accuracy results.\nFor this, we create a training dataset which withholds data for evaluating accuracy.\nThen, we produce forecasts from the model that overlap with the withheld ‘test’ data.\n\n\nfc &lt;- pbs_scripts |&gt; \n  # Keep some data for evaluating forecasts\n  filter(Month &lt; yearmonth(\"2006 Jan\")) |&gt; \n  model(\n    ETS(Scripts), \n    ARIMA(log(Scripts))\n  ) |&gt; \n  forecast(h = \"2 years\")"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-10",
+    "href": "slides/accuracy/index.html#section-10",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Forecasting accuracy\nThen we can again use accuracy() with our forecasts:\n\naccuracy(fc, pbs_scripts)\n\n# A tibble: 2 × 10\n  .model             .type      ME   RMSE    MAE    MPE  MAPE  MASE RMSSE   ACF1\n  &lt;chr&gt;              &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;\n1 ARIMA(log(Scripts… Test   -1915. 8.32e5 6.88e5 -0.309  4.98  1.05  1.03 -0.453\n2 ETS(Scripts)       Test  -11280. 8.56e5 7.14e5 -0.539  5.19  1.09  1.06 -0.523\n\n\n\n\n\n\n\n\nInclude the data\n\n\nUnlike model accuracy, forecasts don’t know what the actual values are.\nYou need to pass in the full dataset to accuracy().\ni.e. accuracy(&lt;forecasts&gt;, &lt;full_data&gt;)."
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-11",
+    "href": "slides/accuracy/index.html#section-11",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Forecasting accuracy\n\n\n\n\n\n\nYour turn\n\n\nEvaluate ETS and ARIMA forecast accuracy of A10 scripts (pbs_a10).\n\nWithhold 2 years of data for forecast evaluation,\nEstimate ETS and ARIMA models on the filtered data,\nProduce forecasts for the 2 years of withheld data,\nEvaluate forecast accuracy using accuracy().\n\nWhich model is more accurate for forecasting?\nDoes this differ from the in-sample model accuracy?"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-12",
+    "href": "slides/accuracy/index.html#section-12",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Forecasting accuracy\n\n\n\n\n\n\nSmall sample problems!\n\n\nTest sets in time series can be problematic.\nHere we’re judging the best model based on just the most recent 2 years of data."
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-13",
+    "href": "slides/accuracy/index.html#section-13",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Cross-validation accuracy\nTo overcome this, we can use time-series cross-validation.\nThis creates many training sets from which we produce many forecasts from different starting points."
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-14",
+    "href": "slides/accuracy/index.html#section-14",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Cross-validation accuracy\nThe stretch_tsibble() function can be added after filter() to create time-series cross-validation folds of data.\n\n\nfc_cv &lt;- pbs_scripts |&gt; \n  # Keep some data for evaluating forecasts\n  filter(Month &lt; yearmonth(\"2006 Jan\")) |&gt; \n  # Cross-validate the remaining data\n  stretch_tsibble(.step = 24, .init = 48) |&gt; \n  model(\n    ETS(Scripts), \n    ARIMA(log(Scripts))\n  ) |&gt; \n  forecast(h = \"2 years\")"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-18",
+    "href": "slides/accuracy/index.html#section-18",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Cross-validation accuracy\nOnce more, we again use accuracy() with our forecasts:\n\naccuracy(fc_cv, pbs_scripts)\n\n# A tibble: 2 × 10\n  .model             .type      ME   RMSE    MAE    MPE  MAPE  MASE RMSSE   ACF1\n  &lt;chr&gt;              &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;\n1 ARIMA(log(Scripts… Test  -88074. 7.53e5 5.76e5 -0.739  4.81 0.874 0.929 0.0810\n2 ETS(Scripts)       Test  125950. 8.11e5 6.22e5  0.827  5.06 0.944 1.00  0.185 \n\n\n\n\n\n\n\n\nYour turn\n\n\nCalculate cross-validated forecast accuracy on A10 Scripts (from pbs_a10).\nHow do these results differ from the forecast accuracy calculated earlier?"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-19",
+    "href": "slides/accuracy/index.html#section-19",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Residual diagnostics\n\naugment(fit)\n\n# A tsibble: 408 x 6 [1M]\n# Key:       .model [2]\n   .model          Month Scripts  .fitted   .resid  .innov\n   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;\n 1 ETS(Scripts) 1991 Jul 8090395 7730981.  359414.  0.0465\n 2 ETS(Scripts) 1991 Aug 7308118 8049721. -741603. -0.0921\n 3 ETS(Scripts) 1991 Sep 7614644 7923794. -309150. -0.0390\n 4 ETS(Scripts) 1991 Oct 8206248 8303919.  -97671. -0.0118\n 5 ETS(Scripts) 1991 Nov 7686634 8196083. -509449. -0.0622\n 6 ETS(Scripts) 1991 Dec 8954872 9171153. -216281. -0.0236\n 7 ETS(Scripts) 1992 Jan 9616464 9247886.  368578.  0.0399\n 8 ETS(Scripts) 1992 Feb 6291465 5807309.  484156.  0.0834\n 9 ETS(Scripts) 1992 Mar 6806613 7047332. -240719. -0.0342\n10 ETS(Scripts) 1992 Apr 7651435 7110362.  541073.  0.0761\n# ℹ 398 more rows\n\n\nRecall the ‘innovation’ (model) residuals from augment(), .innov."
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-20",
+    "href": "slides/accuracy/index.html#section-20",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Residual diagnostics\n\n\n\n\n\n\nInnovation residuals\n\n\nInnovation residuals contain patterns that weren’t captured by the model.\nThey aren’t so useful for summarising accuracy since they might be transformed.\n\n\n\nWith .innov, we can use visualisation to look for patterns. Ideally we don’t find any because this means the model captured everything."
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-21",
+    "href": "slides/accuracy/index.html#section-21",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Residual diagnostics\nConsider a regression model without seasonality.\n\nfit &lt;- pbs_scripts |&gt; \n  model(TSLM(Scripts ~ trend()))\naugment(fit) |&gt; \n  gg_season(.innov)"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-22",
+    "href": "slides/accuracy/index.html#section-22",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Residual diagnostics\n\n\n\n\n\n\nPattern found - seasonality detected\n\n\nHere we can see that the seasonality wasn’t captured by this model, and can still be found in the residuals.\n\n\n\n\n\n\n\n\n\nYour turn\n\n\nLook for any patterns in the residuals from your ARIMA and ETS models on A10 scripts.\n\nfit &lt;- pbs_a10 |&gt; \n  model(\n    ETS(Scripts),\n    ARIMA(log(Scripts))\n  )\naugment(fit)\n\n# A tsibble: 408 x 6 [1M]\n# Key:       .model [2]\n   .model          Month Scripts .fitted  .resid   .innov\n   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;\n 1 ETS(Scripts) 1991 Jul  113347 109098.   4249.  0.0389 \n 2 ETS(Scripts) 1991 Aug  103530 109333.  -5803. -0.0531 \n 3 ETS(Scripts) 1991 Sep  108772 112456.  -3684. -0.0328 \n 4 ETS(Scripts) 1991 Oct  121924 121089.    835.  0.00689\n 5 ETS(Scripts) 1991 Nov  120961 124109.  -3148. -0.0254 \n 6 ETS(Scripts) 1991 Dec  147928 159202. -11274. -0.0708 \n 7 ETS(Scripts) 1992 Jan  175199 165065.  10134.  0.0614 \n 8 ETS(Scripts) 1992 Feb   95018  93161.   1857.  0.0199 \n 9 ETS(Scripts) 1992 Mar   99984 103161.  -3177. -0.0308 \n10 ETS(Scripts) 1992 Apr  108356 106067.   2289.  0.0216 \n# ℹ 398 more rows"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-23",
+    "href": "slides/accuracy/index.html#section-23",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Residual diagnostics\n\n\n\n\n\n\nChecking assumptions\n\n\nIt is good practice to check model assumptions.\nAll model’s we’ve seen today assume \\(\\varepsilon_t \\overset{\\mathrm{iid}}{\\sim} N(0, \\sigma^2)\\).\nTo check this, we can use gg_tsresiduals()."
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-24",
+    "href": "slides/accuracy/index.html#section-24",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Residual diagnostics\n\nfit |&gt; \n  select(`ETS(Scripts)`) |&gt; \n  gg_tsresiduals()"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#section-25",
+    "href": "slides/accuracy/index.html#section-25",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Residual diagnostics\n\nfit |&gt; \n  select(`ARIMA(log(Scripts))`) |&gt; \n  gg_tsresiduals()"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#thats-all-we-have-time-for",
+    "href": "slides/accuracy/index.html#thats-all-we-have-time-for",
+    "title": "Tidy time series & forecasting in R",
+    "section": "That’s all we have time for!",
+    "text": "That’s all we have time for!\n\n\n\n\n\n\n\n\nLearn more about forecasting\n\n\n\nForecasting principles and practices textbook\n\nFreely available online! https://otexts.com/fpp3/\n\n\n\n\n\n\n\n\n\nI appreciate your feedback\n\n\nShort feedback form: https://feedback.nectric.com.au/pZ26\n\n\n\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+  },
+  {
+    "objectID": "slides/accuracy/index.html#unsplash-credits",
+    "href": "slides/accuracy/index.html#unsplash-credits",
+    "title": "Tidy time series & forecasting in R",
+    "section": "Unsplash credits",
+    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section",
+    "href": "slides/analysis/index.html#section",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Tidy time series analysis and forecasting\n\n\nTime series data and patterns\n\n\n10th June 2024 @ R/Medicine 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-1",
+    "href": "slides/analysis/index.html#section-1",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Mitchell O’Hara‑Wild\nMonash + Nectric\n @mitchelloharawild\n @mitchelloharawild\n\nWelcome, who am I?\n\n🎓 PhD candidate at Monash University\n📊 Data consulting and workshops at Nectric\n📈 Specialised in time series analysis\n📦 Develops R packages (fable, vitae, etc.)\n🤒 Produced COVID-19 forecasts for Australia\n🤖 DIYs IoT devices for home automation\n🌱 Permaculturist (🐝, 🐣, 🍄, 🌞)"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-2",
+    "href": "slides/analysis/index.html#section-2",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "🎯 Today’s goals\n\n\n\nLearn about time series data.\nVisualise common time series patterns.\nProduce forecasts from a statistical models.\nEvaluate the forecasting accuracy.\n\n\n\n\n\n\n\n\n🌻 Expectations\n\n\n\nFollow the code of conduct.\nAsk relevant questions any time, Q&A during breaks.\nBe kind and respectful.\nMake mistakes and learn!"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-3",
+    "href": "slides/analysis/index.html#section-3",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Tidy time series analysis\nThis workshop is about tidy time series in R.\n\nWe’ll be using these packages!\n\n\n\n\n\n\n\n\n\nInstall them all with install.packages(\"fpp3\")"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-4",
+    "href": "slides/analysis/index.html#section-4",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Design of the forecast package\n\n\n\n\n\nForecasting individual time series\nRegular and infrequent observations (monthly, quarterly or annually)\nPoint forecasts and intervals\nConsistent with ts models\n\n\n\n\nDesign of the fable package\n\n\n\n\n\nForecasting many time series\nObservations at any time (sub-daily, irregular, monthly, etc.)\nForecast distributions\nConsistent with the tidyverse"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-5",
+    "href": "slides/analysis/index.html#section-5",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Time series data\n\nFour-yearly Olympic winning times\nAnnual Google profits\nQuarterly Australian beer production\nMonthly pharmaceutical subsidies\nWeekly retail sales\nDaily COVID-19 infections\nHourly electricity demand\nMinutely blood glucose measurements\nTime-stamped stock transaction data"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-6",
+    "href": "slides/analysis/index.html#section-6",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Time series data\nComes in all shapes and sizes!\nLike all data, we hope it’s tidy 🧹\n\n\n\n\n\n\n\nAll time series data contain…\n\n\n\nThe time of the observation (index)\nOne or more observations (measurements)\n\n\nSome datasets have identifying metadata,\n\nIdentifying variables for the series (key)"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-7",
+    "href": "slides/analysis/index.html#section-7",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "The tsibble data format\n\nA tsibble is a tibble for time series!\nThe quarterly visitors to Australia are found in the tourism dataset.\n\nlibrary(fpp3)\ntourism\n\n# A tsibble: 24,320 x 5 [1Q]\n# Key:       Region, State, Purpose [304]\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# ℹ 24,310 more rows"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-8",
+    "href": "slides/analysis/index.html#section-8",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "# A tsibble: 24,320 x 5 [1Q]\n# Key:       Region, State, Purpose [304]\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# ℹ 24,310 more rows\n\n\n\n\n\n\n\n\nYour turn!\n\n\nIn this dataset, which columns are:\n\nindex variable(s)?\nkey variable(s)?\nmeasured variable(s)?"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-9",
+    "href": "slides/analysis/index.html#section-9",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Representing time (the index)\nTime is surprisingly tricky to represent!\n\nfrequency\ngranularity\ntime zones\ncalendars\nleap years (and seconds?!)\nholidays\ncivil/absolute time\ntime periods"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-10",
+    "href": "slides/analysis/index.html#section-10",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Representing time (the index)\nCommon time index variables can be created with these functions:\n\n\n\n\n\nFrequency\nFunction\n\n\n\n\nAnnual\nstart:end\n\n\nQuarterly\nyearquarter()\n\n\nMonthly\nyearmonth()\n\n\nWeekly\nyearweek()\n\n\nDaily\nas_date(), ymd()\n\n\nSub-daily\nas_datetime()"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-11",
+    "href": "slides/analysis/index.html#section-11",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Creating a tsibble\n\nTidy the data into a long format\nAppropriately class the time variable\nConvert to tsibble with as_tibble(), identifying the index and key variable(s).\n\n\n\n\n\n\n\nFollow along\n\n\nLet’s convert the PBS dataset into a tsibble.\n\nlibrary(fpp3)\nreadr::read_csv(\n  \"https://workshop.nectric.com.au/user2024/data/pbs.csv\"\n)"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-12",
+    "href": "slides/analysis/index.html#section-12",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Manipulating time series data\nTidy time series data uses tidyverse tools!\n\n\n\n\n\n\nYour turn\n\n\nTry calculating the total monthly cost of “A10” prescriptions (ATC2 classification) in Australia with dplyr.\nHow do concessional subsidies compare to general subsidies?"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-13",
+    "href": "slides/analysis/index.html#section-13",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Manipulating time series data\nHowever there are some differences when working with time…\nThe time index is always preserved (implicit group_by()).\n\n\n\n\n\n\nGrouping across time\n\n\nSometimes you want to summarise over time.\nSummarising over all of time is no longer a time series, so first convert to a tibble with as_tibble().\nTo re-index by a new variable, use index_by()."
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-14",
+    "href": "slides/analysis/index.html#section-14",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Visualising time series\nTime series visualisation helps us identify time series patterns.\nThese patterns include:\n\ntrends\nseasonalities\ncycles\ncovariates\nevents\n\nThey also help identify anomalies/outliers.\n\n:::"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-15",
+    "href": "slides/analysis/index.html#section-15",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Time plots\n\n\nThe most common time series graphic is the “time plot”, created with autoplot().\n\npbs_scripts &lt;- PBS |&gt;\n  summarise(Scripts = sum(Scripts))\npbs_scripts |&gt;\n  autoplot(Scripts)\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-16",
+    "href": "slides/analysis/index.html#section-16",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Seasonal plots\n\n\nThe gg_season() plots help identify peaks and troughs in seasonal patterns.\n\npbs_scripts |&gt;\n  gg_season(Scripts)\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-17",
+    "href": "slides/analysis/index.html#section-17",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Seasonal sub-series plots\n\n\nThe gg_subseries() plots help identify changes in seasonal patterns.\n\npbs_scripts |&gt;\n  gg_subseries(Scripts)\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-18",
+    "href": "slides/analysis/index.html#section-18",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "ACF plots\n\n\nThe ACF() |&gt; autoplot() plots help identify autocorrelations.\n\npbs_scripts |&gt;\n  ACF(Scripts) |&gt; \n  autoplot()\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
+  },
+  {
+    "objectID": "slides/analysis/index.html#seasonal-or-cyclical",
+    "href": "slides/analysis/index.html#seasonal-or-cyclical",
+    "title": "Tidy time series & forecasting in R",
+    "section": "Seasonal or Cyclical?",
+    "text": "Seasonal or Cyclical?\nThese common patterns are commonly confused, can you tell them apart?"
+  },
+  {
+    "objectID": "slides/analysis/index.html#time-for-a-break",
+    "href": "slides/analysis/index.html#time-for-a-break",
+    "title": "Tidy time series & forecasting in R",
+    "section": "⏰ Time for a break!",
+    "text": "⏰ Time for a break!\n\n\n\n\n\n\n\n\nUp next…\n\n\n\nSimplifying patterns with transformations,\nSpecifying time series models,\nTraining models on data,\nForecasting the future!\n\n\n\n\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+  },
+  {
+    "objectID": "slides/analysis/index.html#unsplash-credits",
+    "href": "slides/analysis/index.html#unsplash-credits",
+    "title": "Tidy time series & forecasting in R",
+    "section": "Unsplash credits",
+    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos"
   },
   {
     "objectID": "index.html#course-overview",
@@ -40,5 +341,215 @@
     "title": "Tidy time series analysis and forecasting",
     "section": "Required software",
     "text": "Required software\nTo be able to complete the exercises of this workshop, please install a suitable IDE (such as RStudio), a recent version of R (4.1+) and the following packages.\n\nTime series packages and extensions\n\nfpp3\n\n\nThe following code will install the main packages needed for the workshop.\ninstall.packages(c(\"fpp3\"))\nPlease have the required software installed and pre-work completed before attending the workshop."
+  },
+  {
+    "objectID": "license.html",
+    "href": "license.html",
+    "title": "License",
+    "section": "",
+    "text": "This work is licensed under a Creative Commons Attribution 4.0 International License."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section",
+    "href": "slides/modelling/index.html#section",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Tidy time series analysis and forecasting\n\n\nModelling and forecasting\n\n\n10th June 2024 @ R/Medicine 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-1",
+    "href": "slides/modelling/index.html#section-1",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Forecasting can be difficult!\n\nMany forecasts are catastrophically wrong, and better described as ‘hopecasting’."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-2",
+    "href": "slides/modelling/index.html#section-2",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Which is easier to forecast?\n\ndaily electricity demand in 3 days time\ntiming of next Halley’s comet appearance\ntime of sunrise this day next year\nGoogle stock price tomorrow\nGoogle stock price in 6 months time\nmaximum temperature tomorrow\nexchange rate of $US/AUS next week\ntotal sales of drugs in Australian pharmacies next month"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-3",
+    "href": "slides/modelling/index.html#section-3",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Factors affecting forecastability\nSomething is easier to forecast if…\n\nwe have a good understanding of the factors that contribute to it,\nthere is lots of data available,\nthe forecasts cannot affect the thing we are trying to forecast,\nthere is relatively low natural/unexplainable random variation,\nthe future is somewhat similar to the past."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-4",
+    "href": "slides/modelling/index.html#section-4",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "How are good forecasts made?\nStatistically! (or computationally!)\n\nConsider possible futures for this series:"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-14",
+    "href": "slides/modelling/index.html#section-14",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "What makes forecasts good?\nGood forecasts…\n\n\nAre uncertain (probabilistic)\nUseful for decision making\nCapture patterns in the data\n\n\n\n\n\n\n\n\n\nGood forecasts aren’t necessarily accurate!\n\n\nUsually accuracy is important, but not always.\nForecasts (usually) assume that interventions won’t occur, e.g. COVID-19 measures."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-15",
+    "href": "slides/modelling/index.html#section-15",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Some simple forecasting models\n\n\n\n\n\n\nYour turn\n\n\nHow would you forecast visitors to Australia?\nPut some suggestions in the chat.\nHint: Consider the patterns seen in the data, and how math can mimic the trend, seasonality, etc."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-16",
+    "href": "slides/modelling/index.html#section-16",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Some simple forecasting models\n\n\n\nThe naive model\n\n\nSimply use the most recent observation."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-17",
+    "href": "slides/modelling/index.html#section-17",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Some simple forecasting models\n\n\n\nThe seasonal naive model\n\n\nUse the most recent ‘seasonal’ observation."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-18",
+    "href": "slides/modelling/index.html#section-18",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Some simple forecasting models\n\n\n\nThe naive with drift model\n\n\nExtrapolate a line between the first and last observation."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-19",
+    "href": "slides/modelling/index.html#section-19",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Some simple forecasting models\n\n\n\nThe seasonal naive with drift model\n\n\nExtrapolate between first and last with seasonality."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-20",
+    "href": "slides/modelling/index.html#section-20",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Estimating a model\nModels are estimated using model():\n\npbs_scripts |&gt; \n  model(\n    NAIVE(Scripts),\n    SNAIVE(Scripts),\n    NAIVE(Scripts ~ drift()),\n    SNAIVE(Scripts ~ drift()),\n  )\n\n# A mable: 1 x 4\n  `NAIVE(Scripts)` `SNAIVE(Scripts)` `NAIVE(Scripts ~ drift())`\n           &lt;model&gt;           &lt;model&gt;                    &lt;model&gt;\n1          &lt;NAIVE&gt;          &lt;SNAIVE&gt;              &lt;RW w/ drift&gt;\n# ℹ 1 more variable: `SNAIVE(Scripts ~ drift())` &lt;model&gt;\n\n\n\n\n\n\n\n\nThe mable\n\n\nA mable (model table) contains 1 row per time series, and 1 column for each specified model."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-21",
+    "href": "slides/modelling/index.html#section-21",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Producing forecasts\nForecasts are made using forecast():\n\npbs_scripts |&gt; \n  model(\n    NAIVE(Scripts),\n    SNAIVE(Scripts),\n    NAIVE(Scripts ~ drift()),\n    SNAIVE(Scripts ~ drift()),\n  ) |&gt; \n  forecast(h = \"2 years\")\n\n# A fable: 96 x 4 [1M]\n# Key:     .model [4]\n   .model            Month             Scripts    .mean\n   &lt;chr&gt;             &lt;mth&gt;              &lt;dist&gt;    &lt;dbl&gt;\n 1 NAIVE(Scripts) 2008 Jul N(1.2e+07, 2.2e+12) 12123769\n 2 NAIVE(Scripts) 2008 Aug N(1.2e+07, 4.4e+12) 12123769\n 3 NAIVE(Scripts) 2008 Sep N(1.2e+07, 6.6e+12) 12123769\n 4 NAIVE(Scripts) 2008 Oct N(1.2e+07, 8.8e+12) 12123769\n 5 NAIVE(Scripts) 2008 Nov N(1.2e+07, 1.1e+13) 12123769\n 6 NAIVE(Scripts) 2008 Dec N(1.2e+07, 1.3e+13) 12123769\n 7 NAIVE(Scripts) 2009 Jan N(1.2e+07, 1.5e+13) 12123769\n 8 NAIVE(Scripts) 2009 Feb N(1.2e+07, 1.8e+13) 12123769\n 9 NAIVE(Scripts) 2009 Mar   N(1.2e+07, 2e+13) 12123769\n10 NAIVE(Scripts) 2009 Apr N(1.2e+07, 2.2e+13) 12123769\n# ℹ 86 more rows"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-22",
+    "href": "slides/modelling/index.html#section-22",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Producing forecasts\n\n\n# A fable: 96 x 4 [1M]\n# Key:     .model [4]\n   .model            Month             Scripts    .mean\n   &lt;chr&gt;             &lt;mth&gt;              &lt;dist&gt;    &lt;dbl&gt;\n 1 NAIVE(Scripts) 2008 Jul N(1.2e+07, 2.2e+12) 12123769\n 2 NAIVE(Scripts) 2008 Aug N(1.2e+07, 4.4e+12) 12123769\n 3 NAIVE(Scripts) 2008 Sep N(1.2e+07, 6.6e+12) 12123769\n 4 NAIVE(Scripts) 2008 Oct N(1.2e+07, 8.8e+12) 12123769\n 5 NAIVE(Scripts) 2008 Nov N(1.2e+07, 1.1e+13) 12123769\n 6 NAIVE(Scripts) 2008 Dec N(1.2e+07, 1.3e+13) 12123769\n 7 NAIVE(Scripts) 2009 Jan N(1.2e+07, 1.5e+13) 12123769\n 8 NAIVE(Scripts) 2009 Feb N(1.2e+07, 1.8e+13) 12123769\n 9 NAIVE(Scripts) 2009 Mar   N(1.2e+07, 2e+13) 12123769\n10 NAIVE(Scripts) 2009 Apr N(1.2e+07, 2.2e+13) 12123769\n# ℹ 86 more rows\n\n\n\n\n\n\n\n\nThe fable\n\n\nA fable (forecast table) is like a tsibble, but with distributions for the forecasted variable."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-23",
+    "href": "slides/modelling/index.html#section-23",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Visualising forecasts\n\npbs_scripts |&gt; \n  model(\n    NAIVE(Scripts),\n    SNAIVE(Scripts),\n    NAIVE(Scripts ~ drift()),\n    SNAIVE(Scripts ~ drift()),\n  ) |&gt; \n  forecast(h = \"2 years\") |&gt; \n  autoplot(pbs_scripts)"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-24",
+    "href": "slides/modelling/index.html#section-24",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Forecasting with regression\nRegression can also forecast, use time as regressors for the response variable.\n\ntrend via the time index \\(t\\)\nseasonality via seasonal dummies \\(s_{it}\\)\n\n\\[y_t = \\beta_0 + \\beta_1 t + \\sum_{i=1}^m \\beta_{s_i} s_{it} + \\varepsilon_t\\]\n\n\n\n\n\n\nSpecifying time series linear models\n\n\nTSLM(y ~ trend() + season())"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-25",
+    "href": "slides/modelling/index.html#section-25",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Forecasting with regression\n\n\n\n\n\n\nSpecifying time series linear models\n\n\nTSLM(y ~ trend() + season())\n\n\n\n\n\n\n\n\n\nYour turn!\n\n\nProduce forecasts for A10 scripts using regression.\n\nlibrary(fpp3)\npbs_a10 &lt;- PBS |&gt; \n  filter(ATC2 == \"A10\") |&gt; \n  summarise(Scripts = sum(Scripts), Cost = sum(Cost))"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-26",
+    "href": "slides/modelling/index.html#section-26",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Forecasting with regression\nRegression can also incorporate other covariates. For example:\n\npbs_a10 |&gt;\n  model(\n    TSLM(Cost ~ trend() + season() + Scripts)\n  )\n\n# A mable: 1 x 1\n  `TSLM(Cost ~ trend() + season() + Scripts)`\n                                      &lt;model&gt;\n1                                      &lt;TSLM&gt;\n\n\n\n\n\n\n\n\nDifficult to forecast\n\n\nForecasting with regressors requires you to forecast the regressors too! Useful regressors are easily known, predictable, or controllable."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-27",
+    "href": "slides/modelling/index.html#section-27",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Exponential smoothing\nTime series patterns often change over time.\nThe fixed coefficients of regression is unsuitable for most time series.\nExponential smoothing (ETS) is similar to regression, but allows the ‘coefficients’ (states) to vary over time.\n\\[y_t = \\ell_{t-1} + b_{t-1} + s_{t-m} + \\varepsilon_t\\]\n\n\n\n\n\n\nSpecifying ETS models\n\n\nETS(y ~ error(\"A\") + trend(\"A\") + season(\"A\"))"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-28",
+    "href": "slides/modelling/index.html#section-28",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Exponential smoothing\nExponential smoothing also works for ‘multiplicative’ patterns.\nThis is where the variation grows proportionately to \\(\\ell_t\\).\nFor example, multiplicative seasonality:\n\\[y_t = (\\ell_{t-1} + b_{t-1})s_{t-m} + \\varepsilon_t\\]\n\n\n\n\n\n\nSpecifying ETS models\n\n\nETS(y ~ error(\"A\") + trend(\"A\") + season(\"M\"))"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-29",
+    "href": "slides/modelling/index.html#section-29",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Exponential smoothing\nThe best ETS model can be chosen automatically.\nSimply not specify the right side of the formula.\n\n\n\n\n\n\nSpecifying ETS models\n\n\nETS(y)\n\n\n\n\n\n\n\n\n\nYour turn\n\n\nEstimate an ETS model for the pbs_a10 Scripts.\nDoes the automatic ETS model match the patterns you see in a time plot?"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-30",
+    "href": "slides/modelling/index.html#section-30",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "ARIMA\nUnlike earlier models which directly describe trends and seasonality, ARIMA forecasts patterns using autocorrelations (ACFs).\n\n\n\n\n\n\nRecall the ACF plot\n\n\n\npbs_scripts |&gt; \n  ACF(Scripts) |&gt; \n  autoplot()"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-31",
+    "href": "slides/modelling/index.html#section-31",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "ARIMA\nUnlike ETS, ARIMA can’t directly handle multiplicative patterns.\nThis isn’t a problem though, since we have a transformational trick 🪄\n\n\\[\\log(x \\times y) = \\log(x) + \\log(y)\\]\nBefore we can use ARIMA, we need to transform our data to be additive."
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-32",
+    "href": "slides/modelling/index.html#section-32",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "ARIMA\nLog transform the data to make multiplicative patterns additive.\n\npbs_scripts |&gt; \n  autoplot(log(Scripts))"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-33",
+    "href": "slides/modelling/index.html#section-33",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "ARIMA\nWith the appropriate transformation, we can now estimate an ARIMA model:\n\n\n\n\n\n\nSpecifying ARIMA models\n\n\nThese will use automatic ARIMA selection (often described as auto.arima()).\nARIMA(y), or ARIMA(log(y))\n\n\n\n\n\n\n\n\n\nOther transformations\n\n\nMultiplicative patterns aren’t always exactly multiplicative - for this we often use power transformations via box_cox(y, lambda).\nMore information: https://otexts.com/fpp3/transformations.html"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-34",
+    "href": "slides/modelling/index.html#section-34",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "ARIMA\n\n\n\n\n\n\nYour turn\n\n\nIdentify if a transformation is necessary for the pbs_a10 scripts.\nThen estimate an automatically selected ARIMA model for this data.\nCompare ARIMA forecasts with the automatic ETS model, how do they differ?"
+  },
+  {
+    "objectID": "slides/modelling/index.html#section-35",
+    "href": "slides/modelling/index.html#section-35",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "ETS vs ARIMA\nWhich model is better?\nIt depends!\n\n\n\n\n\n\n\nCapturing patterns\n\n\n\nBoth handle time varying trends and seasonality.\nETS directly captures multiplicative patterns.\nARIMA can forecast cyclical patterns."
+  },
+  {
+    "objectID": "slides/modelling/index.html#time-for-a-break",
+    "href": "slides/modelling/index.html#time-for-a-break",
+    "title": "Tidy time series & forecasting in R",
+    "section": "⏰ Time for a break!",
+    "text": "⏰ Time for a break!\n\n\n\n\n\n\n\n\nUp next…\n\n\n\nLooking for patterns in residuals\nEvaluating forecast accuracy\nChoosing the best forecasts\n\n\n\n\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+  },
+  {
+    "objectID": "slides/modelling/index.html#unsplash-credits",
+    "href": "slides/modelling/index.html#unsplash-credits",
+    "title": "Tidy time series & forecasting in R",
+    "section": "Unsplash credits",
+    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos"
   }
 ]

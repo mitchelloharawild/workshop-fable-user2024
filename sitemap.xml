@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://workshop.nectric.com.au/user2024/license.html</loc>
-    <lastmod>2024-06-02T03:27:31.723Z</lastmod>
+    <loc>https://workshop.nectric.com.au/user2024/slides/accuracy/index.html</loc>
+    <lastmod>2024-07-04T20:59:17.907Z</lastmod>
+  </url>
+  <url>
+    <loc>https://workshop.nectric.com.au/user2024/slides/analysis/index.html</loc>
+    <lastmod>2024-07-04T20:59:17.935Z</lastmod>
   </url>
   <url>
     <loc>https://workshop.nectric.com.au/user2024/index.html</loc>
-    <lastmod>2024-06-02T03:27:31.723Z</lastmod>
+    <lastmod>2024-07-04T20:59:17.879Z</lastmod>
+  </url>
+  <url>
+    <loc>https://workshop.nectric.com.au/user2024/license.html</loc>
+    <lastmod>2024-07-04T20:59:17.879Z</lastmod>
+  </url>
+  <url>
+    <loc>https://workshop.nectric.com.au/user2024/slides/modelling/index.html</loc>
+    <lastmod>2024-07-04T20:59:17.959Z</lastmod>
   </url>
 </urlset>
