@@ -4,7 +4,7 @@
     "href": "slides/accuracy/index.html#section",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Tidy time series analysis and forecasting\n\n\nAccuracy evaluation\n\n\n10th June 2024 @ R/Medicine 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+    "text": "Tidy time series analysis and forecasting\n\n\nAccuracy evaluation\n\n\n10th June 2024 @ UseR! 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
   },
   {
     "objectID": "slides/accuracy/index.html#section-1",
@@ -18,7 +18,7 @@
     "href": "slides/accuracy/index.html#section-2",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Evaluating models\n\n\n# A tsibble: 408 x 6 [1M]\n# Key:       .model [2]\n   .model          Month Scripts  .fitted   .resid  .innov\n   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;\n 1 ETS(Scripts) 1991 Jul 8090395 7730981.  359414.  0.0465\n 2 ETS(Scripts) 1991 Aug 7308118 8049721. -741603. -0.0921\n 3 ETS(Scripts) 1991 Sep 7614644 7923794. -309150. -0.0390\n 4 ETS(Scripts) 1991 Oct 8206248 8303919.  -97671. -0.0118\n 5 ETS(Scripts) 1991 Nov 7686634 8196083. -509449. -0.0622\n 6 ETS(Scripts) 1991 Dec 8954872 9171153. -216281. -0.0236\n 7 ETS(Scripts) 1992 Jan 9616464 9247886.  368578.  0.0399\n 8 ETS(Scripts) 1992 Feb 6291465 5807309.  484156.  0.0834\n 9 ETS(Scripts) 1992 Mar 6806613 7047332. -240719. -0.0342\n10 ETS(Scripts) 1992 Apr 7651435 7110362.  541073.  0.0761\n# ℹ 398 more rows\n\n\n\n\n\n\n\n\nFitted values and residuals\n\n\n\n\\(\\hat{y}_t\\): 1-step in-sample fits (forecasts) are in .fitted\n\\(e_t\\): response (actual) errors are in .resid\n\\(\\varepsilon_t\\): innovation (model) errors are in .innov"
+    "text": "Evaluating models\n\n\n# A tsibble: 408 x 6 [1M]\n# Key:       .model [2]\n   .model          Month Scripts  .fitted   .resid  .innov\n   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;\n 1 ETS(Scripts) 1991 Jul 8090395 7730981.  359414.  0.0465\n 2 ETS(Scripts) 1991 Aug 7308118 8049721. -741603. -0.0921\n 3 ETS(Scripts) 1991 Sep 7614644 7923794. -309150. -0.0390\n 4 ETS(Scripts) 1991 Oct 8206248 8303919.  -97671. -0.0118\n 5 ETS(Scripts) 1991 Nov 7686634 8196083. -509449. -0.0622\n 6 ETS(Scripts) 1991 Dec 8954872 9171153. -216281. -0.0236\n 7 ETS(Scripts) 1992 Jan 9616464 9247886.  368578.  0.0399\n 8 ETS(Scripts) 1992 Feb 6291465 5807309.  484156.  0.0834\n 9 ETS(Scripts) 1992 Mar 6806613 7047332. -240719. -0.0342\n10 ETS(Scripts) 1992 Apr 7651435 7110362.  541073.  0.0761\n# i 398 more rows\n\n\n\n\n\n\n\n\nFitted values and residuals\n\n\n\n\\(\\hat{y}_t\\): 1-step in-sample fits (forecasts) are in .fitted\n\\(e_t\\): response (actual) errors are in .resid\n\\(\\varepsilon_t\\): innovation (model) errors are in .innov"
   },
   {
     "objectID": "slides/accuracy/index.html#section-3",
@@ -32,7 +32,7 @@
     "href": "slides/accuracy/index.html#section-4",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Summarising model accuracy\nResponse residuals are often used to calculate accuracy ‘measures’.\nCommon accuracy measures can be calculated with accuracy().\n\naccuracy(fit)\n\n# A tibble: 2 × 10\n  .model           .type      ME   RMSE    MAE     MPE  MAPE  MASE RMSSE    ACF1\n  &lt;chr&gt;            &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;\n1 ETS(Scripts)     Trai…  26545. 6.11e5 4.71e5  0.0216  4.03 0.674 0.701 -0.324 \n2 ARIMA(log(Scrip… Trai… -76599. 6.15e5 4.46e5 -0.761   3.73 0.638 0.705 -0.0738"
+    "text": "Summarising model accuracy\nResponse residuals are often used to calculate accuracy ‘measures’.\nCommon accuracy measures can be calculated with accuracy().\n\naccuracy(fit)\n\n# A tibble: 2 x 10\n  .model           .type      ME   RMSE    MAE     MPE  MAPE  MASE RMSSE    ACF1\n  &lt;chr&gt;            &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;\n1 ETS(Scripts)     Trai~  26545. 6.11e5 4.71e5  0.0216  4.03 0.674 0.701 -0.324 \n2 ARIMA(log(Scrip~ Trai~ -76599. 6.15e5 4.46e5 -0.761   3.73 0.638 0.705 -0.0738"
   },
   {
     "objectID": "slides/accuracy/index.html#section-5",
@@ -53,7 +53,7 @@
     "href": "slides/accuracy/index.html#section-10",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Forecasting accuracy\nThen we can again use accuracy() with our forecasts:\n\naccuracy(fc, pbs_scripts)\n\n# A tibble: 2 × 10\n  .model             .type      ME   RMSE    MAE    MPE  MAPE  MASE RMSSE   ACF1\n  &lt;chr&gt;              &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;\n1 ARIMA(log(Scripts… Test   -1915. 8.32e5 6.88e5 -0.309  4.98  1.05  1.03 -0.453\n2 ETS(Scripts)       Test  -11280. 8.56e5 7.14e5 -0.539  5.19  1.09  1.06 -0.523\n\n\n\n\n\n\n\n\nInclude the data\n\n\nUnlike model accuracy, forecasts don’t know what the actual values are.\nYou need to pass in the full dataset to accuracy().\ni.e. accuracy(&lt;forecasts&gt;, &lt;full_data&gt;)."
+    "text": "Forecasting accuracy\nThen we can again use accuracy() with our forecasts:\n\naccuracy(fc, pbs_scripts)\n\n# A tibble: 2 x 10\n  .model             .type      ME   RMSE    MAE    MPE  MAPE  MASE RMSSE   ACF1\n  &lt;chr&gt;              &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;\n1 ARIMA(log(Scripts~ Test   -1915. 8.32e5 6.88e5 -0.309  4.98  1.05  1.03 -0.453\n2 ETS(Scripts)       Test  -11280. 8.56e5 7.14e5 -0.539  5.19  1.09  1.06 -0.523\n\n\n\n\n\n\n\n\nInclude the data\n\n\nUnlike model accuracy, forecasts don’t know what the actual values are.\nYou need to pass in the full dataset to accuracy().\ni.e. accuracy(&lt;forecasts&gt;, &lt;full_data&gt;)."
   },
   {
     "objectID": "slides/accuracy/index.html#section-11",
@@ -88,14 +88,14 @@
     "href": "slides/accuracy/index.html#section-18",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Cross-validation accuracy\nOnce more, we again use accuracy() with our forecasts:\n\naccuracy(fc_cv, pbs_scripts)\n\n# A tibble: 2 × 10\n  .model             .type      ME   RMSE    MAE    MPE  MAPE  MASE RMSSE   ACF1\n  &lt;chr&gt;              &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;\n1 ARIMA(log(Scripts… Test  -88074. 7.53e5 5.76e5 -0.739  4.81 0.874 0.929 0.0810\n2 ETS(Scripts)       Test  125950. 8.11e5 6.22e5  0.827  5.06 0.944 1.00  0.185 \n\n\n\n\n\n\n\n\nYour turn\n\n\nCalculate cross-validated forecast accuracy on A10 Scripts (from pbs_a10).\nHow do these results differ from the forecast accuracy calculated earlier?"
+    "text": "Cross-validation accuracy\nOnce more, we again use accuracy() with our forecasts:\n\naccuracy(fc_cv, pbs_scripts)\n\n# A tibble: 2 x 10\n  .model             .type      ME   RMSE    MAE    MPE  MAPE  MASE RMSSE   ACF1\n  &lt;chr&gt;              &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;\n1 ARIMA(log(Scripts~ Test  -88074. 7.53e5 5.76e5 -0.739  4.81 0.874 0.929 0.0810\n2 ETS(Scripts)       Test  125950. 8.11e5 6.22e5  0.827  5.06 0.944 1.00  0.185 \n\n\n\n\n\n\n\n\nYour turn\n\n\nCalculate cross-validated forecast accuracy on A10 Scripts (from pbs_a10).\nHow do these results differ from the forecast accuracy calculated earlier?"
   },
   {
     "objectID": "slides/accuracy/index.html#section-19",
     "href": "slides/accuracy/index.html#section-19",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Residual diagnostics\n\naugment(fit)\n\n# A tsibble: 408 x 6 [1M]\n# Key:       .model [2]\n   .model          Month Scripts  .fitted   .resid  .innov\n   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;\n 1 ETS(Scripts) 1991 Jul 8090395 7730981.  359414.  0.0465\n 2 ETS(Scripts) 1991 Aug 7308118 8049721. -741603. -0.0921\n 3 ETS(Scripts) 1991 Sep 7614644 7923794. -309150. -0.0390\n 4 ETS(Scripts) 1991 Oct 8206248 8303919.  -97671. -0.0118\n 5 ETS(Scripts) 1991 Nov 7686634 8196083. -509449. -0.0622\n 6 ETS(Scripts) 1991 Dec 8954872 9171153. -216281. -0.0236\n 7 ETS(Scripts) 1992 Jan 9616464 9247886.  368578.  0.0399\n 8 ETS(Scripts) 1992 Feb 6291465 5807309.  484156.  0.0834\n 9 ETS(Scripts) 1992 Mar 6806613 7047332. -240719. -0.0342\n10 ETS(Scripts) 1992 Apr 7651435 7110362.  541073.  0.0761\n# ℹ 398 more rows\n\n\nRecall the ‘innovation’ (model) residuals from augment(), .innov."
+    "text": "Residual diagnostics\n\naugment(fit)\n\n# A tsibble: 408 x 6 [1M]\n# Key:       .model [2]\n   .model          Month Scripts  .fitted   .resid  .innov\n   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;\n 1 ETS(Scripts) 1991 Jul 8090395 7730981.  359414.  0.0465\n 2 ETS(Scripts) 1991 Aug 7308118 8049721. -741603. -0.0921\n 3 ETS(Scripts) 1991 Sep 7614644 7923794. -309150. -0.0390\n 4 ETS(Scripts) 1991 Oct 8206248 8303919.  -97671. -0.0118\n 5 ETS(Scripts) 1991 Nov 7686634 8196083. -509449. -0.0622\n 6 ETS(Scripts) 1991 Dec 8954872 9171153. -216281. -0.0236\n 7 ETS(Scripts) 1992 Jan 9616464 9247886.  368578.  0.0399\n 8 ETS(Scripts) 1992 Feb 6291465 5807309.  484156.  0.0834\n 9 ETS(Scripts) 1992 Mar 6806613 7047332. -240719. -0.0342\n10 ETS(Scripts) 1992 Apr 7651435 7110362.  541073.  0.0761\n# i 398 more rows\n\n\nRecall the ‘innovation’ (model) residuals from augment(), .innov."
   },
   {
     "objectID": "slides/accuracy/index.html#section-20",
@@ -116,7 +116,7 @@
     "href": "slides/accuracy/index.html#section-22",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Residual diagnostics\n\n\n\n\n\n\nPattern found - seasonality detected\n\n\nHere we can see that the seasonality wasn’t captured by this model, and can still be found in the residuals.\n\n\n\n\n\n\n\n\n\nYour turn\n\n\nLook for any patterns in the residuals from your ARIMA and ETS models on A10 scripts.\n\nfit &lt;- pbs_a10 |&gt; \n  model(\n    ETS(Scripts),\n    ARIMA(log(Scripts))\n  )\naugment(fit)\n\n# A tsibble: 408 x 6 [1M]\n# Key:       .model [2]\n   .model          Month Scripts .fitted  .resid   .innov\n   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;\n 1 ETS(Scripts) 1991 Jul  113347 109098.   4249.  0.0389 \n 2 ETS(Scripts) 1991 Aug  103530 109333.  -5803. -0.0531 \n 3 ETS(Scripts) 1991 Sep  108772 112456.  -3684. -0.0328 \n 4 ETS(Scripts) 1991 Oct  121924 121089.    835.  0.00689\n 5 ETS(Scripts) 1991 Nov  120961 124109.  -3148. -0.0254 \n 6 ETS(Scripts) 1991 Dec  147928 159202. -11274. -0.0708 \n 7 ETS(Scripts) 1992 Jan  175199 165065.  10134.  0.0614 \n 8 ETS(Scripts) 1992 Feb   95018  93161.   1857.  0.0199 \n 9 ETS(Scripts) 1992 Mar   99984 103161.  -3177. -0.0308 \n10 ETS(Scripts) 1992 Apr  108356 106067.   2289.  0.0216 \n# ℹ 398 more rows"
+    "text": "Residual diagnostics\n\n\n\n\n\n\nPattern found - seasonality detected\n\n\nHere we can see that the seasonality wasn’t captured by this model, and can still be found in the residuals.\n\n\n\n\n\n\n\n\n\nYour turn\n\n\nLook for any patterns in the residuals from your ARIMA and ETS models on A10 scripts.\n\nfit &lt;- pbs_a10 |&gt; \n  model(\n    ETS(Scripts),\n    ARIMA(log(Scripts))\n  )\naugment(fit)\n\n# A tsibble: 408 x 6 [1M]\n# Key:       .model [2]\n   .model          Month Scripts .fitted  .resid   .innov\n   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;\n 1 ETS(Scripts) 1991 Jul  113347 109098.   4249.  0.0389 \n 2 ETS(Scripts) 1991 Aug  103530 109333.  -5803. -0.0531 \n 3 ETS(Scripts) 1991 Sep  108772 112456.  -3684. -0.0328 \n 4 ETS(Scripts) 1991 Oct  121924 121089.    835.  0.00689\n 5 ETS(Scripts) 1991 Nov  120961 124109.  -3148. -0.0254 \n 6 ETS(Scripts) 1991 Dec  147928 159202. -11274. -0.0708 \n 7 ETS(Scripts) 1992 Jan  175199 165065.  10134.  0.0614 \n 8 ETS(Scripts) 1992 Feb   95018  93161.   1857.  0.0199 \n 9 ETS(Scripts) 1992 Mar   99984 103161.  -3177. -0.0308 \n10 ETS(Scripts) 1992 Apr  108356 106067.   2289.  0.0216 \n# i 398 more rows"
   },
   {
     "objectID": "slides/accuracy/index.html#section-23",
@@ -151,14 +151,14 @@
     "href": "slides/accuracy/index.html#unsplash-credits",
     "title": "Tidy time series & forecasting in R",
     "section": "Unsplash credits",
-    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos"
+    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos\n\n\n\n\n\nSander Weeteling: Photo\nKasia Gajek: Photo\nNASA: United States seen from orbit\nBalint Mendlik: Photo\nSander Weeteling: Photo"
   },
   {
     "objectID": "slides/analysis/index.html#section",
     "href": "slides/analysis/index.html#section",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Tidy time series analysis and forecasting\n\n\nTime series data and patterns\n\n\n10th June 2024 @ R/Medicine 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+    "text": "Tidy time series analysis and forecasting\n\n\nTime series data and patterns\n\n\n10th June 2024 @ UseR! 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
   },
   {
     "objectID": "slides/analysis/index.html#section-1",
@@ -207,14 +207,14 @@
     "href": "slides/analysis/index.html#section-7",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "The tsibble data format\n\nA tsibble is a tibble for time series!\nThe quarterly visitors to Australia are found in the tourism dataset.\n\nlibrary(fpp3)\ntourism\n\n# A tsibble: 24,320 x 5 [1Q]\n# Key:       Region, State, Purpose [304]\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# ℹ 24,310 more rows"
+    "text": "The tsibble data format\n\nA tsibble is a tibble for time series!\nThe quarterly visitors to Australia are found in the tourism dataset.\n\nlibrary(fpp3)\ntourism\n\n# A tsibble: 24,320 x 5 [1Q]\n# Key:       Region, State, Purpose [304]\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# i 24,310 more rows"
   },
   {
     "objectID": "slides/analysis/index.html#section-8",
     "href": "slides/analysis/index.html#section-8",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "# A tsibble: 24,320 x 5 [1Q]\n# Key:       Region, State, Purpose [304]\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# ℹ 24,310 more rows\n\n\n\n\n\n\n\n\nYour turn!\n\n\nIn this dataset, which columns are:\n\nindex variable(s)?\nkey variable(s)?\nmeasured variable(s)?"
+    "text": "# A tsibble: 24,320 x 5 [1Q]\n# Key:       Region, State, Purpose [304]\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# i 24,310 more rows\n\n\n\n\n\n\n\n\nYour turn!\n\n\nIn this dataset, which columns are:\n\nindex variable(s)?\nkey variable(s)?\nmeasured variable(s)?"
   },
   {
     "objectID": "slides/analysis/index.html#section-9",
@@ -305,7 +305,7 @@
     "href": "slides/analysis/index.html#unsplash-credits",
     "title": "Tidy time series & forecasting in R",
     "section": "Unsplash credits",
-    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos"
+    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos\n\n\n\n\n\nSander Weeteling: Photo\nJohn Fowler: Taken near sunset at White Sands National Monumen…\nBalint Mendlik: Photo\nDavid Pisnoy: Photo\nChris Lee: Behind the leaves.\nJon Tyson: Photo\nRandy Fath: Photo\nNathan Dumlao: Photo\nSander Weeteling: Photo"
   },
   {
     "objectID": "index.html#course-overview",
@@ -354,7 +354,7 @@
     "href": "slides/modelling/index.html#section",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Tidy time series analysis and forecasting\n\n\nModelling and forecasting\n\n\n10th June 2024 @ R/Medicine 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+    "text": "Tidy time series analysis and forecasting\n\n\nModelling and forecasting\n\n\n10th June 2024 @ UseR! 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
   },
   {
     "objectID": "slides/modelling/index.html#section-1",
@@ -431,21 +431,21 @@
     "href": "slides/modelling/index.html#section-20",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Estimating a model\nModels are estimated using model():\n\npbs_scripts |&gt; \n  model(\n    NAIVE(Scripts),\n    SNAIVE(Scripts),\n    NAIVE(Scripts ~ drift()),\n    SNAIVE(Scripts ~ drift()),\n  )\n\n# A mable: 1 x 4\n  `NAIVE(Scripts)` `SNAIVE(Scripts)` `NAIVE(Scripts ~ drift())`\n           &lt;model&gt;           &lt;model&gt;                    &lt;model&gt;\n1          &lt;NAIVE&gt;          &lt;SNAIVE&gt;              &lt;RW w/ drift&gt;\n# ℹ 1 more variable: `SNAIVE(Scripts ~ drift())` &lt;model&gt;\n\n\n\n\n\n\n\n\nThe mable\n\n\nA mable (model table) contains 1 row per time series, and 1 column for each specified model."
+    "text": "Estimating a model\nModels are estimated using model():\n\npbs_scripts |&gt; \n  model(\n    NAIVE(Scripts),\n    SNAIVE(Scripts),\n    NAIVE(Scripts ~ drift()),\n    SNAIVE(Scripts ~ drift()),\n  )\n\n# A mable: 1 x 4\n  `NAIVE(Scripts)` `SNAIVE(Scripts)` `NAIVE(Scripts ~ drift())`\n           &lt;model&gt;           &lt;model&gt;                    &lt;model&gt;\n1          &lt;NAIVE&gt;          &lt;SNAIVE&gt;              &lt;RW w/ drift&gt;\n# i 1 more variable: `SNAIVE(Scripts ~ drift())` &lt;model&gt;\n\n\n\n\n\n\n\n\nThe mable\n\n\nA mable (model table) contains 1 row per time series, and 1 column for each specified model."
   },
   {
     "objectID": "slides/modelling/index.html#section-21",
     "href": "slides/modelling/index.html#section-21",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Producing forecasts\nForecasts are made using forecast():\n\npbs_scripts |&gt; \n  model(\n    NAIVE(Scripts),\n    SNAIVE(Scripts),\n    NAIVE(Scripts ~ drift()),\n    SNAIVE(Scripts ~ drift()),\n  ) |&gt; \n  forecast(h = \"2 years\")\n\n# A fable: 96 x 4 [1M]\n# Key:     .model [4]\n   .model            Month             Scripts    .mean\n   &lt;chr&gt;             &lt;mth&gt;              &lt;dist&gt;    &lt;dbl&gt;\n 1 NAIVE(Scripts) 2008 Jul N(1.2e+07, 2.2e+12) 12123769\n 2 NAIVE(Scripts) 2008 Aug N(1.2e+07, 4.4e+12) 12123769\n 3 NAIVE(Scripts) 2008 Sep N(1.2e+07, 6.6e+12) 12123769\n 4 NAIVE(Scripts) 2008 Oct N(1.2e+07, 8.8e+12) 12123769\n 5 NAIVE(Scripts) 2008 Nov N(1.2e+07, 1.1e+13) 12123769\n 6 NAIVE(Scripts) 2008 Dec N(1.2e+07, 1.3e+13) 12123769\n 7 NAIVE(Scripts) 2009 Jan N(1.2e+07, 1.5e+13) 12123769\n 8 NAIVE(Scripts) 2009 Feb N(1.2e+07, 1.8e+13) 12123769\n 9 NAIVE(Scripts) 2009 Mar   N(1.2e+07, 2e+13) 12123769\n10 NAIVE(Scripts) 2009 Apr N(1.2e+07, 2.2e+13) 12123769\n# ℹ 86 more rows"
+    "text": "Producing forecasts\nForecasts are made using forecast():\n\npbs_scripts |&gt; \n  model(\n    NAIVE(Scripts),\n    SNAIVE(Scripts),\n    NAIVE(Scripts ~ drift()),\n    SNAIVE(Scripts ~ drift()),\n  ) |&gt; \n  forecast(h = \"2 years\")\n\n# A fable: 96 x 4 [1M]\n# Key:     .model [4]\n   .model            Month             Scripts    .mean\n   &lt;chr&gt;             &lt;mth&gt;              &lt;dist&gt;    &lt;dbl&gt;\n 1 NAIVE(Scripts) 2008 Jul N(1.2e+07, 2.2e+12) 12123769\n 2 NAIVE(Scripts) 2008 Aug N(1.2e+07, 4.4e+12) 12123769\n 3 NAIVE(Scripts) 2008 Sep N(1.2e+07, 6.6e+12) 12123769\n 4 NAIVE(Scripts) 2008 Oct N(1.2e+07, 8.8e+12) 12123769\n 5 NAIVE(Scripts) 2008 Nov N(1.2e+07, 1.1e+13) 12123769\n 6 NAIVE(Scripts) 2008 Dec N(1.2e+07, 1.3e+13) 12123769\n 7 NAIVE(Scripts) 2009 Jan N(1.2e+07, 1.5e+13) 12123769\n 8 NAIVE(Scripts) 2009 Feb N(1.2e+07, 1.8e+13) 12123769\n 9 NAIVE(Scripts) 2009 Mar   N(1.2e+07, 2e+13) 12123769\n10 NAIVE(Scripts) 2009 Apr N(1.2e+07, 2.2e+13) 12123769\n# i 86 more rows"
   },
   {
     "objectID": "slides/modelling/index.html#section-22",
     "href": "slides/modelling/index.html#section-22",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Producing forecasts\n\n\n# A fable: 96 x 4 [1M]\n# Key:     .model [4]\n   .model            Month             Scripts    .mean\n   &lt;chr&gt;             &lt;mth&gt;              &lt;dist&gt;    &lt;dbl&gt;\n 1 NAIVE(Scripts) 2008 Jul N(1.2e+07, 2.2e+12) 12123769\n 2 NAIVE(Scripts) 2008 Aug N(1.2e+07, 4.4e+12) 12123769\n 3 NAIVE(Scripts) 2008 Sep N(1.2e+07, 6.6e+12) 12123769\n 4 NAIVE(Scripts) 2008 Oct N(1.2e+07, 8.8e+12) 12123769\n 5 NAIVE(Scripts) 2008 Nov N(1.2e+07, 1.1e+13) 12123769\n 6 NAIVE(Scripts) 2008 Dec N(1.2e+07, 1.3e+13) 12123769\n 7 NAIVE(Scripts) 2009 Jan N(1.2e+07, 1.5e+13) 12123769\n 8 NAIVE(Scripts) 2009 Feb N(1.2e+07, 1.8e+13) 12123769\n 9 NAIVE(Scripts) 2009 Mar   N(1.2e+07, 2e+13) 12123769\n10 NAIVE(Scripts) 2009 Apr N(1.2e+07, 2.2e+13) 12123769\n# ℹ 86 more rows\n\n\n\n\n\n\n\n\nThe fable\n\n\nA fable (forecast table) is like a tsibble, but with distributions for the forecasted variable."
+    "text": "Producing forecasts\n\n\n# A fable: 96 x 4 [1M]\n# Key:     .model [4]\n   .model            Month             Scripts    .mean\n   &lt;chr&gt;             &lt;mth&gt;              &lt;dist&gt;    &lt;dbl&gt;\n 1 NAIVE(Scripts) 2008 Jul N(1.2e+07, 2.2e+12) 12123769\n 2 NAIVE(Scripts) 2008 Aug N(1.2e+07, 4.4e+12) 12123769\n 3 NAIVE(Scripts) 2008 Sep N(1.2e+07, 6.6e+12) 12123769\n 4 NAIVE(Scripts) 2008 Oct N(1.2e+07, 8.8e+12) 12123769\n 5 NAIVE(Scripts) 2008 Nov N(1.2e+07, 1.1e+13) 12123769\n 6 NAIVE(Scripts) 2008 Dec N(1.2e+07, 1.3e+13) 12123769\n 7 NAIVE(Scripts) 2009 Jan N(1.2e+07, 1.5e+13) 12123769\n 8 NAIVE(Scripts) 2009 Feb N(1.2e+07, 1.8e+13) 12123769\n 9 NAIVE(Scripts) 2009 Mar   N(1.2e+07, 2e+13) 12123769\n10 NAIVE(Scripts) 2009 Apr N(1.2e+07, 2.2e+13) 12123769\n# i 86 more rows\n\n\n\n\n\n\n\n\nThe fable\n\n\nA fable (forecast table) is like a tsibble, but with distributions for the forecasted variable."
   },
   {
     "objectID": "slides/modelling/index.html#section-23",
@@ -550,6 +550,6 @@
     "href": "slides/modelling/index.html#unsplash-credits",
     "title": "Tidy time series & forecasting in R",
     "section": "Unsplash credits",
-    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos"
+    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos\n\n\n\n\n\nSander Weeteling: Photo\nKasia Gajek: Photo\nNicole Avagliano: Photo\nDavid Becker: This was one of my first startrails. I took abou…\nRock’n Roll Monkey: Photo\nNicole Avagliano: Photo\nIsabela Kronemberger: set of tools\nVruyr Martirosyan: Painted Ripples\nDaryan Shamkhali: View from Shibuya Scramble Square Jan 2020\namjd rdwan: beautiful colors\nSander Weeteling: Photo"
   }
 ]
