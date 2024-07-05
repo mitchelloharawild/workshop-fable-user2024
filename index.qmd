@@ -10,6 +10,12 @@ Organisations of all types collect vast amounts of time series data, and there i
 
 This workshop will run in-person at [useR! 2024](https://user2024.r-project.org/) in Salzburg, Australia on July 8th 2024.
 
+## Registration
+
+If you're attending UseR! 2024 in person, there is still time to register - it's free!
+
+To add this tutorial to your registration, [log in](https://cvent.me/rWgxq0) to your existing registration, click the `Modify Registration` button, and navigate to the `Reg Options` page (page 4). Finally, select the tutorial you want to attend (this one!).
+
 ## Learning objectives
 
 Participants will learn how to:
