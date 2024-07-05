@@ -308,11 +308,25 @@
     "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos\n\n\n\n\n\nSander Weeteling: Photo\nJohn Fowler: Taken near sunset at White Sands National Monumen…\nBalint Mendlik: Photo\nDavid Pisnoy: Photo\nChris Lee: Behind the leaves.\nJon Tyson: Photo\nRandy Fath: Photo\nNathan Dumlao: Photo\nSander Weeteling: Photo"
   },
   {
+    "objectID": "license.html",
+    "href": "license.html",
+    "title": "License",
+    "section": "",
+    "text": "This work is licensed under a Creative Commons Attribution 4.0 International License."
+  },
+  {
     "objectID": "index.html#course-overview",
     "href": "index.html#course-overview",
     "title": "Tidy time series analysis and forecasting",
     "section": "Course Overview",
     "text": "Course Overview\nOrganisations of all types collect vast amounts of time series data, and there is a growing need for time series analytics to understand how things change in our fast-moving world. This tutorial provides a practical introduction to time series analytics and forecasting using R, utilising the tidyverse and tidy time series tools to enable analysis across many time series. Attendees will learn about commonly seen time series patterns, and how to find them with specialised time series graphics created with ggplot2. Then we will use fable to capture these patterns with statistical time series models, and produce probabilistic forecasts. Finally, participants will gain insights into evaluating model performance, ensuring the accuracy and reliability of their forecasts. Through a combination of foundational concepts and practical demonstrations, this tutorial equips participants with the skills to extract meaningful insights from time series data for informed decision-making in various domains.\nThis workshop will run in-person at useR! 2024 in Salzburg, Australia on July 8th 2024."
+  },
+  {
+    "objectID": "index.html#registration",
+    "href": "index.html#registration",
+    "title": "Tidy time series analysis and forecasting",
+    "section": "Registration",
+    "text": "Registration\nIf you’re attending UseR! 2024 in person, there is still time to register - it’s free!\nTo add this tutorial to your registration, log in to your existing registration, click the Modify Registration button, and navigate to the Reg Options page (page 4). Finally, select the tutorial you want to attend (this one!)."
   },
   {
     "objectID": "index.html#learning-objectives",
@@ -343,11 +357,18 @@
     "text": "Required software\nTo be able to complete the exercises of this workshop, please install a suitable IDE (such as RStudio), a recent version of R (4.1+) and the following packages.\n\nTime series packages and extensions\n\nfpp3\n\n\nThe following code will install the main packages needed for the workshop.\ninstall.packages(c(\"fpp3\"))\nPlease have the required software installed and pre-work completed before attending the workshop."
   },
   {
-    "objectID": "license.html",
-    "href": "license.html",
-    "title": "License",
+    "objectID": "exercises.html",
+    "href": "exercises.html",
+    "title": "Exercises",
     "section": "",
-    "text": "This work is licensed under a Creative Commons Attribution 4.0 International License."
+    "text": "library(feasts)\n\nLoading required package: fabletools\n\n\nRegistered S3 method overwritten by 'tsibble':\n  method               from \n  as_tibble.grouped_df dplyr\n\nas_tsibble(USAccDeaths) |&gt; \n  autoplot(value)\n\n\n\n\n\n\n\n\n\n  🟡 Loading\n    webR...\n  💡 Check answer\n  ✅ Show solution\n  💥 Reset code"
+  },
+  {
+    "objectID": "exercises.html#exercise-1",
+    "href": "exercises.html#exercise-1",
+    "title": "Exercises",
+    "section": "",
+    "text": "library(feasts)\n\nLoading required package: fabletools\n\n\nRegistered S3 method overwritten by 'tsibble':\n  method               from \n  as_tibble.grouped_df dplyr\n\nas_tsibble(USAccDeaths) |&gt; \n  autoplot(value)\n\n\n\n\n\n\n\n\n\n  🟡 Loading\n    webR...\n  💡 Check answer\n  ✅ Show solution\n  💥 Reset code"
   },
   {
     "objectID": "slides/modelling/index.html#section",
