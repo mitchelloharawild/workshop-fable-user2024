@@ -557,7 +557,7 @@
     "href": "slides/analysis/index.html#section-15",
     "title": "Tidy time series & forecasting in R",
     "section": "",
-    "text": "Creating a tsibble\n\nTidy the data into a long format\nAppropriately class the time variable\nConvert to tsibble with as_tibble(), identifying the index and key variable(s).\n\n\n\n\n\n\n\nFollow along\n\n\nLet’s convert the PBS dataset into a tsibble.\n\nlibrary(fpp3)\nreadr::read_csv(\n  \"https://workshop.nectric.com.au/user2024/data/pbs.csv\"\n)"
+    "text": "Creating a tsibble\n\nTidy the data into a long format\nAppropriately class the time variable\nConvert to tsibble with as_tibble(), identifying the index and key variable(s).\n\n\n\n\n\n\n\nFollow along\n\n\nLet’s convert the tourism dataset into a tsibble.\n\nlibrary(fpp3)\nreadr::read_csv(\n  \"https://workshop.nectric.com.au/user2024/data/tourism.csv\"\n)"
   },
   {
     "objectID": "slides/analysis/index.html#section-16",
