@@ -473,6 +473,7 @@
 </div>
 </div>
 </div>
+<p><span class="fragment"><a href="https://workshop.nectric.com.au/user2024/" class="uri">https://workshop.nectric.com.au/user2024/</a></span></p>
 </div></div>
 
 <img data-src="../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg" class="image-right r-stretch"></section>
@@ -689,7 +690,7 @@
  8 1999 Q4 Adelaide South Australia Business  134.
  9 2000 Q1 Adelaide South Australia Business  154.
 10 2000 Q2 Adelaide South Australia Business  169.
-# i 24,310 more rows</code></pre>
+# ℹ 24,310 more rows</code></pre>
 </div>
 </div>
 </div></div>
@@ -751,7 +752,7 @@
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 66,037 x 5
+<pre><code># A tibble: 66,037 × 5
    Sensor         Date_Time           Date        Time Count
    &lt;chr&gt;          &lt;dttm&gt;              &lt;date&gt;     &lt;int&gt; &lt;int&gt;
  1 Birrarung Marr 2015-01-01 00:00:00 2015-01-01     0  1630
@@ -764,7 +765,7 @@
  8 Birrarung Marr 2015-01-01 07:00:00 2015-01-01     7    56
  9 Birrarung Marr 2015-01-01 08:00:00 2015-01-01     8   113
 10 Birrarung Marr 2015-01-01 09:00:00 2015-01-01     9   166
-# i 66,027 more rows</code></pre>
+# ℹ 66,027 more rows</code></pre>
 </div>
 </div>
 <div class="callout callout-caution callout-titled callout-style-simple">
@@ -796,8 +797,13 @@
 </div><div class="column" style="width:60%;">
 <h3 id="our-first-tsibble">Our first tsibble</h3>
 <p>A <strong>ts</strong>ibble is a <em><strong>t</strong>ime <strong>s</strong>eries</em> tibble.</p>
-<p>It is most commonly created using <code>as_tsibble()</code>.</p>
+<p>It is created with <code>as_tsibble()</code>.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>tourism <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a></a>  <span class="fu">as_tsibble</span>(</span>
+<span id="cb8-3"><a></a>    <span class="at">key =</span> <span class="fu">c</span>(Region, State, Purpose),</span>
+<span id="cb8-4"><a></a>    <span class="at">index =</span> Quarter</span>
+<span id="cb8-5"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tsibble: 24,320 x 5 [1Q]
 # Key:       Region, State, Purpose [304]
@@ -816,6 +822,16 @@
 # ℹ 24,310 more rows</code></pre>
 </div>
 </div>
+</div></div>
+
+<img data-src="../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg" class="image-left r-stretch"></section>
+<section id="section-13" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+
+</div><div class="column" style="width:60%;">
+<h3 id="our-first-tsibble-1">Our first tsibble</h3>
 <div class="callout callout-caution callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
@@ -825,12 +841,13 @@
 <p><strong>Exercise 2</strong></p>
 </div>
 <div class="callout-content">
-<p>Identify the <code>index</code> and <code>key</code> variables of the <code>aus_accommodation</code> dataset, then convert it into a tsibble with <code>as_tsibble()</code>.</p>
+<p>Identify the <code>index</code> and <code>key</code> variables of the <code>aus_accommodation</code> dataset.</p>
+<p>Then use <code>as_tsibble()</code> to convert it into a tsibble.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">library</span>(fpp3)</span>
-<span id="cb9-2"><a></a>readr<span class="sc">::</span><span class="fu">read_csv</span>(</span>
-<span id="cb9-3"><a></a>  <span class="st">"https://workshop.nectric.com.au/user2024/data/aus_accommodation.csv"</span></span>
-<span id="cb9-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">library</span>(fpp3)</span>
+<span id="cb10-2"><a></a><span class="fu">read.csv</span>(</span>
+<span id="cb10-3"><a></a>  <span class="st">"https://workshop.nectric.com.au/user2024/data/aus_accommodation.csv"</span></span>
+<span id="cb10-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -838,7 +855,7 @@
 </div></div>
 
 <img data-src="../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-13" class="slide level2">
+<section id="section-14" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -859,7 +876,7 @@
 </div></div>
 
 <img data-src="../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-14" class="slide level2">
+<section id="section-15" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -908,7 +925,7 @@
 </div></div>
 
 <img data-src="../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-15" class="slide level2">
+<section id="section-16" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -931,10 +948,10 @@
 <div class="callout-content">
 <p>Let’s convert the tourism dataset into a tsibble.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">library</span>(fpp3)</span>
-<span id="cb10-2"><a></a>readr<span class="sc">::</span><span class="fu">read_csv</span>(</span>
-<span id="cb10-3"><a></a>  <span class="st">"https://workshop.nectric.com.au/user2024/data/tourism.csv"</span></span>
-<span id="cb10-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">library</span>(fpp3)</span>
+<span id="cb11-2"><a></a><span class="fu">read.csv</span>(</span>
+<span id="cb11-3"><a></a>  <span class="st">"https://workshop.nectric.com.au/user2024/data/tourism.csv"</span></span>
+<span id="cb11-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -942,7 +959,36 @@
 </div></div>
 
 <img data-src="../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-16" class="slide level2">
+<section id="section-17" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+
+</div><div class="column" style="width:60%;">
+<h3 id="creating-a-tsibble-1">Creating a tsibble</h3>
+<ol type="1">
+<li>Tidy the data into a long format</li>
+<li>Appropriately class the time variable</li>
+<li>Convert to tsibble with <code>as_tibble()</code>, identifying the <code>index</code> and <code>key</code> variable(s).</li>
+</ol>
+<div class="callout callout-caution callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Exercise 3</strong></p>
+</div>
+<div class="callout-content">
+<p>Redo the previous exercise, but this time use the appropriate time class for the index variable.</p>
+<p>You should see the frequency of the tsibble matches the quarterly frequency of the measurements.</p>
+</div>
+</div>
+</div>
+</div></div>
+
+<img data-src="../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg" class="image-left r-stretch"></section>
+<section id="section-18" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -954,19 +1000,18 @@
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Your turn</strong></p>
+<p><strong>Exercise 4</strong></p>
 </div>
 <div class="callout-content">
-<p>Try calculating the total monthly cost of “A10” prescriptions (ATC2 classification) in Australia with dplyr.</p>
-<p><em>Hint: use <code>filter()</code> to keep only “A10” prescriptions, then <code>summarise()</code> to calculate the total cost.</em></p>
-<p><span class="fragment fade-in">How do concessional subsidies compare to general subsidies?</span></p>
+<p>Try calculating the total tourists visiting Victoria from the <code>tourism</code> dataset.</p>
+<p><em>Hint: use <code>filter()</code> to keep only visitors to “Victoria”, then <code>summarise()</code> to calculate the total trips.</em></p>
 </div>
 </div>
 </div>
 </div></div>
 
 <img data-src="../backgrounds/randy-fath-R5_1N6ZgCOo-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-17" class="slide level2">
+<section id="section-19" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -991,7 +1036,7 @@
 </div></div>
 
 <img data-src="../backgrounds/randy-fath-R5_1N6ZgCOo-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-18" class="slide level2">
+<section id="section-20" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -1012,7 +1057,7 @@
 <p>:::</p>
 
 <img data-src="../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-19" class="slide level2">
+<section id="section-21" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -1026,76 +1071,14 @@
 <div class="callout-content">
 <p>The most common time series graphic is the “time plot”, created with <code>autoplot()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>pbs_scripts <span class="ot">&lt;-</span> PBS <span class="sc">|&gt;</span></span>
-<span id="cb11-2"><a></a>  <span class="fu">summarise</span>(<span class="at">Scripts =</span> <span class="fu">sum</span>(Scripts))</span>
-<span id="cb11-3"><a></a>pbs_scripts <span class="sc">|&gt;</span></span>
-<span id="cb11-4"><a></a>  <span class="fu">autoplot</span>(Scripts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>pbs_scripts <span class="ot">&lt;-</span> PBS <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a></a>  <span class="fu">summarise</span>(<span class="at">Scripts =</span> <span class="fu">sum</span>(Scripts))</span>
+<span id="cb12-3"><a></a>pbs_scripts <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a></a>  <span class="fu">autoplot</span>(Scripts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-10-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div></div>
-<p>:::</p>
-<p><img data-src="../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg" class="image-left"></p>
-</section>
-<section id="section-20" class="slide level2">
-<h2></h2>
-<div class="columns">
-<div class="column" style="width:40%;">
-
-</div><div class="column" style="width:60%;">
-<div class="callout callout-none no-icon callout-titled callout-style-simple">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Seasonal plots</strong></p>
-</div>
-<div class="callout-content">
-<p>The <code>gg_season()</code> plots help identify peaks and troughs in seasonal patterns.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>pbs_scripts <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a></a>  <span class="fu">gg_season</span>(Scripts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div></div>
-<p>:::</p>
-<p><img data-src="../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg" class="image-left"></p>
-</section>
-<section id="section-21" class="slide level2">
-<h2></h2>
-<div class="columns">
-<div class="column" style="width:40%;">
-
-</div><div class="column" style="width:60%;">
-<div class="callout callout-none no-icon callout-titled callout-style-simple">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Seasonal sub-series plots</strong></p>
-</div>
-<div class="callout-content">
-<p>The <code>gg_subseries()</code> plots help identify changes in seasonal patterns.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>pbs_scripts <span class="sc">|&gt;</span></span>
-<span id="cb13-2"><a></a>  <span class="fu">gg_subseries</span>(Scripts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1116,14 +1099,76 @@
 <div class="callout callout-none no-icon callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
+<p><strong>Seasonal plots</strong></p>
+</div>
+<div class="callout-content">
+<p>The <code>gg_season()</code> plots help identify peaks and troughs in seasonal patterns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>pbs_scripts <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a></a>  <span class="fu">gg_season</span>(Scripts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<p>:::</p>
+<p><img data-src="../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg" class="image-left"></p>
+</section>
+<section id="section-23" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+
+</div><div class="column" style="width:60%;">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Seasonal sub-series plots</strong></p>
+</div>
+<div class="callout-content">
+<p>The <code>gg_subseries()</code> plots help identify changes in seasonal patterns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>pbs_scripts <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a></a>  <span class="fu">gg_subseries</span>(Scripts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<p>:::</p>
+<p><img data-src="../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg" class="image-left"></p>
+</section>
+<section id="section-24" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+
+</div><div class="column" style="width:60%;">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
 <p><strong>ACF plots</strong></p>
 </div>
 <div class="callout-content">
-<p>The <code>ACF() |&gt; autoplot()</code> plots help identify autocorrelations.</p>
+<p>The <code>ACF() |&gt; autoplot()</code> plots show autocorrelations, helping to identify trends, seasons and cycles.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>pbs_scripts <span class="sc">|&gt;</span></span>
-<span id="cb14-2"><a></a>  <span class="fu">ACF</span>(Scripts) <span class="sc">|&gt;</span> </span>
-<span id="cb14-3"><a></a>  <span class="fu">autoplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>pbs_scripts <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a></a>  <span class="fu">ACF</span>(Scripts) <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a></a>  <span class="fu">autoplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1139,11 +1184,90 @@
 <p>:::</p>
 <p><img data-src="../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg" class="image-left"></p>
 </section>
+<section id="section-25" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+
+</div><div class="column" style="width:60%;">
+<h3 id="visualising-time-series-1">Visualising time series</h3>
+<div class="callout callout-caution callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Exercise 5</strong></p>
+</div>
+<div class="callout-content">
+<p>Visualise and describe the temporal patterns of visitors to Victoria in the <code>tourism</code> dataset.</p>
+<p>Here’s some code to get you started:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>vic_tourism <span class="ot">&lt;-</span> tourism <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a></a>  <span class="fu">filter</span>(State <span class="sc">==</span> <span class="st">"Victoria"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-3"><a></a>  <span class="fu">summarise</span>(<span class="at">Trips =</span> <span class="fu">sum</span>(Trips))</span>
+<span id="cb16-4"><a></a>vic_tourism <span class="sc">|&gt;</span> </span>
+<span id="cb16-5"><a></a>  <span class="fu">autoplot</span>(Trips)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<p><img data-src="../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg" class="image-left"></p>
+</section>
 <section id="seasonal-or-cyclical" class="slide level2">
 <h2>Seasonal or Cyclical?</h2>
 <p>These common patterns are commonly confused, can you tell them apart?</p>
+<div class="callout callout-tip callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>What’s the difference?</strong></p>
+</div>
+<div class="callout-content">
+<p>Seasonal patterns have…</p>
+<ul>
+<li><strong>Consistent</strong> and predictable shape,</li>
+<li>Repeats with a <strong>fixed time period</strong></li>
+</ul>
+<p>Cyclical patterns have…</p>
+<ul>
+<li><strong>Inconsistent</strong> shape and amplitude,</li>
+<li>Repeats with a <strong>variable time period</strong></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="seasonal-or-cyclical-1" class="slide level2">
+<h2>Seasonal or Cyclical?</h2>
+<p>These common patterns are commonly confused, can you tell them apart?</p>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" width="960" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" width="960" class="r-stretch"></section>
+<section id="seasonal-or-cyclical-2" class="slide level2">
+<h2>Seasonal or Cyclical?</h2>
+<p>These common patterns are commonly confused, can you tell them apart?</p>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"></section>
+<section id="seasonal-or-cyclical-3" class="slide level2">
+<h2>Seasonal or Cyclical?</h2>
+<p>These common patterns are commonly confused, can you tell them apart?</p>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
+<section id="seasonal-or-cyclical-4" class="slide level2">
+<h2>Seasonal or Cyclical?</h2>
+<p>These common patterns are commonly confused, can you tell them apart?</p>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
 <section id="time-for-a-break" class="slide level2">
 <h2><span class="emoji" data-emoji="alarm_clock">⏰</span> Time for a break!</h2>
 <div class="columns">
@@ -1203,8 +1327,8 @@
 <div class="cell-output-display">
 <ul>
 <li>Sander Weeteling: <a href="https://unsplash.com/photos/KABfjuSOx74">Photo</a></li>
-<li>John Fowler: <a href="https://unsplash.com/photos/RsRTIofe0HE">Taken near sunset at White Sands National Monumen…</a></li>
 <li>Balint Mendlik: <a href="https://unsplash.com/photos/4-ORHffEh3I">Photo</a></li>
+<li>John Fowler: <a href="https://unsplash.com/photos/RsRTIofe0HE">Taken near sunset at White Sands National Monumen…</a></li>
 <li>David Pisnoy: <a href="https://unsplash.com/photos/46juD4zY1XA">Photo</a></li>
 <li>Chris Lee: <a href="https://unsplash.com/photos/70l1tDAI6rM">Behind the leaves.</a></li>
 <li>Jon Tyson: <a href="https://unsplash.com/photos/FlHdnPO6dlw">Photo</a></li>

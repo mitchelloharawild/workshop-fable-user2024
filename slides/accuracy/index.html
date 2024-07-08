@@ -461,14 +461,15 @@
 <div class="fragment fade-in">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(fpp3)</span>
-<span id="cb1-2"><a></a>pbs_scripts <span class="ot">&lt;-</span> PBS <span class="sc">|&gt;</span> </span>
-<span id="cb1-3"><a></a>  <span class="fu">summarise</span>(<span class="at">Scripts =</span> <span class="fu">sum</span>(Scripts))</span>
-<span id="cb1-4"><a></a>fit <span class="ot">&lt;-</span> pbs_scripts <span class="sc">|&gt;</span> </span>
-<span id="cb1-5"><a></a>  <span class="fu">model</span>(</span>
-<span id="cb1-6"><a></a>    <span class="fu">ETS</span>(Scripts), </span>
-<span id="cb1-7"><a></a>    <span class="fu">ARIMA</span>(<span class="fu">log</span>(Scripts))</span>
-<span id="cb1-8"><a></a>  )</span>
-<span id="cb1-9"><a></a><span class="fu">augment</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a></a>vic_tourism <span class="ot">&lt;-</span> tourism <span class="sc">|&gt;</span> </span>
+<span id="cb1-3"><a></a>  <span class="fu">filter</span>(State <span class="sc">==</span> <span class="st">"Victoria"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-4"><a></a>  <span class="fu">summarise</span>(<span class="at">Trips =</span> <span class="fu">sum</span>(Trips))</span>
+<span id="cb1-5"><a></a>fit <span class="ot">&lt;-</span> vic_tourism <span class="sc">|&gt;</span> </span>
+<span id="cb1-6"><a></a>  <span class="fu">model</span>(</span>
+<span id="cb1-7"><a></a>    <span class="fu">ETS</span>(Trips), </span>
+<span id="cb1-8"><a></a>    <span class="fu">ARIMA</span>(<span class="fu">log</span>(Trips))</span>
+<span id="cb1-9"><a></a>  )</span>
+<span id="cb1-10"><a></a><span class="fu">augment</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div></div>
@@ -483,21 +484,21 @@
 <h3 id="evaluating-models-1">Evaluating models</h3>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tsibble: 408 x 6 [1M]
+<pre><code># A tsibble: 160 x 6 [1Q]
 # Key:       .model [2]
-   .model          Month Scripts  .fitted   .resid  .innov
-   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
- 1 ETS(Scripts) 1991 Jul 8090395 7730981.  359414.  0.0465
- 2 ETS(Scripts) 1991 Aug 7308118 8049721. -741603. -0.0921
- 3 ETS(Scripts) 1991 Sep 7614644 7923794. -309150. -0.0390
- 4 ETS(Scripts) 1991 Oct 8206248 8303919.  -97671. -0.0118
- 5 ETS(Scripts) 1991 Nov 7686634 8196083. -509449. -0.0622
- 6 ETS(Scripts) 1991 Dec 8954872 9171153. -216281. -0.0236
- 7 ETS(Scripts) 1992 Jan 9616464 9247886.  368578.  0.0399
- 8 ETS(Scripts) 1992 Feb 6291465 5807309.  484156.  0.0834
- 9 ETS(Scripts) 1992 Mar 6806613 7047332. -240719. -0.0342
-10 ETS(Scripts) 1992 Apr 7651435 7110362.  541073.  0.0761
-# i 398 more rows</code></pre>
+   .model     Quarter Trips .fitted .resid   .innov
+   &lt;chr&gt;        &lt;qtr&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+ 1 ETS(Trips) 1998 Q1 6010.   5457.  554.   0.101  
+ 2 ETS(Trips) 1998 Q2 4795.   4824.  -28.6 -0.00594
+ 3 ETS(Trips) 1998 Q3 4317.   4370.  -52.8 -0.0121 
+ 4 ETS(Trips) 1998 Q4 4675.   4841. -167.  -0.0344 
+ 5 ETS(Trips) 1999 Q1 5304.   5599. -295.  -0.0526 
+ 6 ETS(Trips) 1999 Q2 4562.   4545.   16.8  0.00369
+ 7 ETS(Trips) 1999 Q3 3784.   4139. -356.  -0.0859 
+ 8 ETS(Trips) 1999 Q4 4201.   4395. -194.  -0.0441 
+ 9 ETS(Trips) 2000 Q1 5567.   5055.  512.   0.101  
+10 ETS(Trips) 2000 Q2 4502.   4468.   33.8  0.00757
+# ℹ 150 more rows</code></pre>
 </div>
 </div>
 <div class="callout callout-note callout-titled callout-style-simple">
@@ -528,8 +529,8 @@
 </div><div class="column" style="width:60%;">
 <h3 id="plotting-in-sample-fits">Plotting in-sample fits</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>pbs_scripts <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a></a>  <span class="fu">autoplot</span>(Scripts) <span class="sc">+</span> </span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>vic_tourism <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a></a>  <span class="fu">autoplot</span>(Trips) <span class="sc">+</span> </span>
 <span id="cb3-3"><a></a>  <span class="fu">autolayer</span>(<span class="fu">augment</span>(fit), .fitted)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -565,11 +566,11 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">accuracy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 x 10
-  .model           .type      ME   RMSE    MAE     MPE  MAPE  MASE RMSSE    ACF1
-  &lt;chr&gt;            &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
-1 ETS(Scripts)     Trai~  26545. 6.11e5 4.71e5  0.0216  4.03 0.674 0.701 -0.324 
-2 ARIMA(log(Scrip~ Trai~ -76599. 6.15e5 4.46e5 -0.761   3.73 0.638 0.705 -0.0738</code></pre>
+<pre><code># A tibble: 2 × 10
+  .model            .type       ME  RMSE   MAE   MPE  MAPE  MASE RMSSE    ACF1
+  &lt;chr&gt;             &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1 ETS(Trips)        Training  45.0  247.  194. 0.611  3.98 0.712 0.697  0.0259
+2 ARIMA(log(Trips)) Training  57.8  243.  193. 1.02   3.99 0.705 0.685 -0.0253</code></pre>
 </div>
 </div>
 </div></div>
@@ -598,20 +599,18 @@
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
-<h3 id="forecasting-accuracy">Forecasting accuracy</h3>
-<p>Evaluating out-of-sample forecasts gives more realistic forecast accuracy results.</p>
-<p><span class="fragment fade-in">For this, we create a training dataset which withholds data for evaluating accuracy.</span></p>
-<p><span class="fragment fade-in">Then, we produce forecasts from the model that overlap with the withheld ‘test’ data.</span></p>
-<div class="fragment fade-in">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>fc <span class="ot">&lt;-</span> pbs_scripts <span class="sc">|&gt;</span> </span>
-<span id="cb6-2"><a></a>  <span class="co"># Keep some data for evaluating forecasts</span></span>
-<span id="cb6-3"><a></a>  <span class="fu">filter</span>(Month <span class="sc">&lt;</span> <span class="fu">yearmonth</span>(<span class="st">"2006 Jan"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb6-4"><a></a>  <span class="fu">model</span>(</span>
-<span id="cb6-5"><a></a>    <span class="fu">ETS</span>(Scripts), </span>
-<span id="cb6-6"><a></a>    <span class="fu">ARIMA</span>(<span class="fu">log</span>(Scripts))</span>
-<span id="cb6-7"><a></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb6-8"><a></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="st">"2 years"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h3 id="summarising-model-accuracy-2">Summarising model accuracy</h3>
+<div class="callout callout-caution callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Exercise 10</strong></p>
+</div>
+<div class="callout-content">
+<p>Evaluate ETS and ARIMA forecast accuracy for total Takings of Australian tourist accommodation (<code>aus_accommodation_total</code>).</p>
+</div>
 </div>
 </div>
 </div></div>
@@ -619,8 +618,27 @@
 <img data-src="../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg" class="image-right r-stretch"></section>
 <section id="section-7" class="slide level2">
 <h2></h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<h3 id="forecasting-accuracy">Forecasting accuracy</h3>
+<p>Evaluating out-of-sample forecasts gives more realistic forecast accuracy results.</p>
+<p><span class="fragment fade-in">For this, we create a training dataset which withholds data for evaluating accuracy.</span></p>
+<p><span class="fragment fade-in">Then, we produce forecasts from the model that overlap with the withheld ‘test’ data.</span></p>
+<div class="fragment fade-in">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>fc <span class="ot">&lt;-</span> vic_tourism <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a></a>  <span class="co"># Keep some data for evaluating forecasts</span></span>
+<span id="cb6-3"><a></a>  <span class="fu">filter</span>(Quarter <span class="sc">&lt;</span> <span class="fu">yearquarter</span>(<span class="st">"2016 Q1"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a></a>  <span class="fu">model</span>(</span>
+<span id="cb6-5"><a></a>    <span class="fu">ETS</span>(Trips), </span>
+<span id="cb6-6"><a></a>    <span class="fu">ARIMA</span>(<span class="fu">log</span>(Trips))</span>
+<span id="cb6-7"><a></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb6-8"><a></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="st">"2 years"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div></div>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section>
+<img data-src="../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg" class="image-right r-stretch"></section>
 <section id="section-8" class="slide level2">
 <h2></h2>
 
@@ -631,18 +649,22 @@
 <img data-src="index_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"></section>
 <section id="section-10" class="slide level2">
 <h2></h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
+<section id="section-11" class="slide level2">
+<h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <h3 id="forecasting-accuracy-1">Forecasting accuracy</h3>
 <p>Then we can again use <code>accuracy()</code> with our forecasts:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">accuracy</span>(fc, pbs_scripts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">accuracy</span>(fc, vic_tourism)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 x 10
-  .model             .type      ME   RMSE    MAE    MPE  MAPE  MASE RMSSE   ACF1
-  &lt;chr&gt;              &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1 ARIMA(log(Scripts~ Test   -1915. 8.32e5 6.88e5 -0.309  4.98  1.05  1.03 -0.453
-2 ETS(Scripts)       Test  -11280. 8.56e5 7.14e5 -0.539  5.19  1.09  1.06 -0.523</code></pre>
+<pre><code># A tibble: 2 × 10
+  .model            .type    ME  RMSE   MAE   MPE  MAPE  MASE RMSSE  ACF1
+  &lt;chr&gt;             &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 ARIMA(log(Trips)) Test   604.  756.  626.  9.47  9.88  2.53  2.31 0.438
+2 ETS(Trips)        Test   571.  725.  596.  8.94  9.43  2.41  2.22 0.432</code></pre>
 </div>
 </div>
 <div class="callout callout-tip callout-titled callout-style-simple">
@@ -663,7 +685,7 @@
 </div></div>
 
 <img data-src="../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-11" class="slide level2">
+<section id="section-12" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -674,14 +696,14 @@
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Your turn</strong></p>
+<p><strong>Exercise 11</strong></p>
 </div>
 <div class="callout-content">
-<p>Evaluate ETS and ARIMA forecast accuracy of A10 scripts (<code>pbs_a10</code>).</p>
+<p>Evaluate ETS and ARIMA forecast accuracy for total Takings of Australian tourist accommodation (<code>aus_accommodation_total</code>).</p>
 <ol type="1">
-<li>Withhold 2 years of data for forecast evaluation,</li>
+<li>Withhold 4 years of data for forecast evaluation,</li>
 <li>Estimate ETS and ARIMA models on the filtered data,</li>
-<li>Produce forecasts for the 2 years of withheld data,</li>
+<li>Produce forecasts for the 4 years of withheld data,</li>
 <li>Evaluate forecast accuracy using <code>accuracy()</code>.</li>
 </ol>
 <p>Which model is more accurate for forecasting?</p>
@@ -692,7 +714,7 @@
 </div></div>
 
 <img data-src="../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-12" class="slide level2">
+<section id="section-13" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -717,7 +739,7 @@
 </div></div>
 <p><img data-src="../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg" class="image-right"></p>
 </section>
-<section id="section-13" class="slide level2">
+<section id="section-14" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -730,7 +752,7 @@
 </div></div>
 <p><img data-src="../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg" class="image-right"></p>
 </section>
-<section id="section-14" class="slide level2">
+<section id="section-15" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -738,14 +760,14 @@
 <p>The <code>stretch_tsibble()</code> function can be added after <code>filter()</code> to create time-series cross-validation folds of data.</p>
 <div class="fragment fade-in">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>fc_cv <span class="ot">&lt;-</span> pbs_scripts <span class="sc">|&gt;</span> </span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>fc_cv <span class="ot">&lt;-</span> vic_tourism <span class="sc">|&gt;</span> </span>
 <span id="cb9-2"><a></a>  <span class="co"># Keep some data for evaluating forecasts</span></span>
-<span id="cb9-3"><a></a>  <span class="fu">filter</span>(Month <span class="sc">&lt;</span> <span class="fu">yearmonth</span>(<span class="st">"2006 Jan"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a></a>  <span class="fu">filter</span>(Quarter <span class="sc">&lt;</span> <span class="fu">yearquarter</span>(<span class="st">"2016 Q1"</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb9-4"><a></a>  <span class="co"># Cross-validate the remaining data</span></span>
-<span id="cb9-5"><a></a>  <span class="fu">stretch_tsibble</span>(<span class="at">.step =</span> <span class="dv">24</span>, <span class="at">.init =</span> <span class="dv">48</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-5"><a></a>  <span class="fu">stretch_tsibble</span>(<span class="at">.step =</span> <span class="dv">4</span><span class="sc">*</span><span class="dv">2</span>, <span class="at">.init =</span> <span class="dv">4</span><span class="sc">*</span><span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb9-6"><a></a>  <span class="fu">model</span>(</span>
-<span id="cb9-7"><a></a>    <span class="fu">ETS</span>(Scripts), </span>
-<span id="cb9-8"><a></a>    <span class="fu">ARIMA</span>(<span class="fu">log</span>(Scripts))</span>
+<span id="cb9-7"><a></a>    <span class="fu">ETS</span>(Trips), </span>
+<span id="cb9-8"><a></a>    <span class="fu">ARIMA</span>(<span class="fu">log</span>(Trips))</span>
 <span id="cb9-9"><a></a>  ) <span class="sc">|&gt;</span> </span>
 <span id="cb9-10"><a></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="st">"2 years"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -753,10 +775,6 @@
 </div></div>
 
 <img data-src="../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-15" class="slide level2">
-<h2></h2>
-
-<img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
 <section id="section-16" class="slide level2">
 <h2></h2>
 
@@ -767,18 +785,22 @@
 <img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" width="960" class="r-stretch"></section>
 <section id="section-18" class="slide level2">
 <h2></h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" width="960" class="r-stretch"></section>
+<section id="section-19" class="slide level2">
+<h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <h3 id="cross-validation-accuracy-2">Cross-validation accuracy</h3>
 <p>Once more, we again use <code>accuracy()</code> with our forecasts:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">accuracy</span>(fc_cv, pbs_scripts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">accuracy</span>(fc_cv, vic_tourism)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 x 10
-  .model             .type      ME   RMSE    MAE    MPE  MAPE  MASE RMSSE   ACF1
-  &lt;chr&gt;              &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1 ARIMA(log(Scripts~ Test  -88074. 7.53e5 5.76e5 -0.739  4.81 0.874 0.929 0.0810
-2 ETS(Scripts)       Test  125950. 8.11e5 6.22e5  0.827  5.06 0.944 1.00  0.185 </code></pre>
+<pre><code># A tibble: 2 × 10
+  .model            .type    ME  RMSE   MAE   MPE  MAPE  MASE RMSSE  ACF1
+  &lt;chr&gt;             &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 ARIMA(log(Trips)) Test   219.  471.  370.  3.62  6.98  1.49  1.44 0.614
+2 ETS(Trips)        Test   191.  456.  351.  3.06  6.66  1.42  1.39 0.589</code></pre>
 </div>
 </div>
 <div class="callout callout-caution callout-titled callout-style-simple">
@@ -787,10 +809,10 @@
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Your turn</strong></p>
+<p><strong>Exercise 12</strong></p>
 </div>
 <div class="callout-content">
-<p>Calculate cross-validated forecast accuracy on A10 Scripts (from <code>pbs_a10</code>).</p>
+<p>Calculate cross-validated forecast accuracy for total Takings of Australian tourist accommodation (<code>aus_accommodation_total</code>).</p>
 <p>How do these results differ from the forecast accuracy calculated earlier?</p>
 </div>
 </div>
@@ -798,7 +820,7 @@
 </div></div>
 
 <img data-src="../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-19" class="slide level2">
+<section id="section-20" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -808,28 +830,28 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">augment</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tsibble: 408 x 6 [1M]
+<pre><code># A tsibble: 160 x 6 [1Q]
 # Key:       .model [2]
-   .model          Month Scripts  .fitted   .resid  .innov
-   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
- 1 ETS(Scripts) 1991 Jul 8090395 7730981.  359414.  0.0465
- 2 ETS(Scripts) 1991 Aug 7308118 8049721. -741603. -0.0921
- 3 ETS(Scripts) 1991 Sep 7614644 7923794. -309150. -0.0390
- 4 ETS(Scripts) 1991 Oct 8206248 8303919.  -97671. -0.0118
- 5 ETS(Scripts) 1991 Nov 7686634 8196083. -509449. -0.0622
- 6 ETS(Scripts) 1991 Dec 8954872 9171153. -216281. -0.0236
- 7 ETS(Scripts) 1992 Jan 9616464 9247886.  368578.  0.0399
- 8 ETS(Scripts) 1992 Feb 6291465 5807309.  484156.  0.0834
- 9 ETS(Scripts) 1992 Mar 6806613 7047332. -240719. -0.0342
-10 ETS(Scripts) 1992 Apr 7651435 7110362.  541073.  0.0761
-# i 398 more rows</code></pre>
+   .model     Quarter Trips .fitted .resid   .innov
+   &lt;chr&gt;        &lt;qtr&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+ 1 ETS(Trips) 1998 Q1 6010.   5457.  554.   0.101  
+ 2 ETS(Trips) 1998 Q2 4795.   4824.  -28.6 -0.00594
+ 3 ETS(Trips) 1998 Q3 4317.   4370.  -52.8 -0.0121 
+ 4 ETS(Trips) 1998 Q4 4675.   4841. -167.  -0.0344 
+ 5 ETS(Trips) 1999 Q1 5304.   5599. -295.  -0.0526 
+ 6 ETS(Trips) 1999 Q2 4562.   4545.   16.8  0.00369
+ 7 ETS(Trips) 1999 Q3 3784.   4139. -356.  -0.0859 
+ 8 ETS(Trips) 1999 Q4 4201.   4395. -194.  -0.0441 
+ 9 ETS(Trips) 2000 Q1 5567.   5055.  512.   0.101  
+10 ETS(Trips) 2000 Q2 4502.   4468.   33.8  0.00757
+# ℹ 150 more rows</code></pre>
 </div>
 </div>
 <p>Recall the ‘innovation’ (model) residuals from <code>augment()</code>, <code>.innov</code>.</p>
 </div></div>
 
 <img data-src="../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-20" class="slide level2">
+<section id="section-21" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -854,7 +876,7 @@
 </div></div>
 
 <img data-src="../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-21" class="slide level2">
+<section id="section-22" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -863,14 +885,14 @@
 <h3 id="residual-diagnostics-2">Residual diagnostics</h3>
 <p>Consider a regression model without seasonality.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>fit <span class="ot">&lt;-</span> pbs_scripts <span class="sc">|&gt;</span> </span>
-<span id="cb14-2"><a></a>  <span class="fu">model</span>(<span class="fu">TSLM</span>(Scripts <span class="sc">~</span> <span class="fu">trend</span>()))</span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>fit <span class="ot">&lt;-</span> vic_tourism <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a></a>  <span class="fu">model</span>(<span class="fu">TSLM</span>(Trips <span class="sc">~</span> <span class="fu">trend</span>()))</span>
 <span id="cb14-3"><a></a><span class="fu">augment</span>(fit) <span class="sc">|&gt;</span> </span>
 <span id="cb14-4"><a></a>  <span class="fu">gg_season</span>(.innov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-17-1.png" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-18-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -878,7 +900,7 @@
 </div></div>
 <p><img data-src="../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg" class="image-left"></p>
 </section>
-<section id="section-22" class="slide level2">
+<section id="section-23" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -898,48 +920,25 @@
 </div>
 </div>
 </div>
-<div class="callout callout-caution callout-titled callout-style-simple">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Your turn</strong></p>
-</div>
-<div class="callout-content">
-<p>Look for any patterns in the residuals from your ARIMA and ETS models on A10 scripts.</p>
+<div class="fragment fade-in">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>fit <span class="ot">&lt;-</span> pbs_a10 <span class="sc">|&gt;</span> </span>
-<span id="cb15-2"><a></a>  <span class="fu">model</span>(</span>
-<span id="cb15-3"><a></a>    <span class="fu">ETS</span>(Scripts),</span>
-<span id="cb15-4"><a></a>    <span class="fu">ARIMA</span>(<span class="fu">log</span>(Scripts))</span>
-<span id="cb15-5"><a></a>  )</span>
-<span id="cb15-6"><a></a><span class="fu">augment</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tsibble: 408 x 6 [1M]
-# Key:       .model [2]
-   .model          Month Scripts .fitted  .resid   .innov
-   &lt;chr&gt;           &lt;mth&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
- 1 ETS(Scripts) 1991 Jul  113347 109098.   4249.  0.0389 
- 2 ETS(Scripts) 1991 Aug  103530 109333.  -5803. -0.0531 
- 3 ETS(Scripts) 1991 Sep  108772 112456.  -3684. -0.0328 
- 4 ETS(Scripts) 1991 Oct  121924 121089.    835.  0.00689
- 5 ETS(Scripts) 1991 Nov  120961 124109.  -3148. -0.0254 
- 6 ETS(Scripts) 1991 Dec  147928 159202. -11274. -0.0708 
- 7 ETS(Scripts) 1992 Jan  175199 165065.  10134.  0.0614 
- 8 ETS(Scripts) 1992 Feb   95018  93161.   1857.  0.0199 
- 9 ETS(Scripts) 1992 Mar   99984 103161.  -3177. -0.0308 
-10 ETS(Scripts) 1992 Apr  108356 106067.   2289.  0.0216 
-# i 398 more rows</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>fit <span class="ot">&lt;-</span> vic_tourism <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a></a>  <span class="fu">model</span>(<span class="fu">TSLM</span>(Trips <span class="sc">~</span> <span class="fu">trend</span>() <span class="sc">+</span> <span class="fu">season</span>()))</span>
+<span id="cb15-3"><a></a><span class="fu">augment</span>(fit) <span class="sc">|&gt;</span> </span>
+<span id="cb15-4"><a></a>  <span class="fu">gg_season</span>(.innov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" width="960"></p>
+</figure>
 </div>
 </div>
 </div>
 </div>
 </div></div>
-
-<img data-src="../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-23" class="slide level2">
+<p><img data-src="../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg" class="image-left"></p>
+</section>
+<section id="section-24" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -961,10 +960,31 @@
 </div>
 </div>
 </div>
+<div class="callout callout-caution callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Exercise 13</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Follow along</strong></p>
+<p>Let’s check the model assumptions for our ETS and ARIMA models on total Australian accommodation Takings.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>fit <span class="ot">&lt;-</span> aus_accommodation_total <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a></a>  <span class="fu">model</span>(</span>
+<span id="cb16-3"><a></a>    <span class="fu">ETS</span>(Takings),</span>
+<span id="cb16-4"><a></a>    <span class="fu">ARIMA</span>(<span class="fu">log</span>(Takings))</span>
+<span id="cb16-5"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
 </div></div>
 
 <img data-src="../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-24" class="slide level2">
+<section id="section-25" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -973,12 +993,12 @@
 <h3 id="residual-diagnostics-5">Residual diagnostics</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>fit <span class="sc">|&gt;</span> </span>
-<span id="cb17-2"><a></a>  <span class="fu">select</span>(<span class="st">`</span><span class="at">ETS(Scripts)</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a></a>  <span class="fu">select</span>(<span class="st">`</span><span class="at">ETS(Takings)</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb17-3"><a></a>  <span class="fu">gg_tsresiduals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-21-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -986,7 +1006,7 @@
 </div></div>
 <p><img data-src="../backgrounds/kasia-gajek-UMne1WKuesY-unsplash.jpg" class="image-left"></p>
 </section>
-<section id="section-25" class="slide level2">
+<section id="section-26" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -995,12 +1015,12 @@
 <h3 id="residual-diagnostics-6">Residual diagnostics</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>fit <span class="sc">|&gt;</span> </span>
-<span id="cb18-2"><a></a>  <span class="fu">select</span>(<span class="st">`</span><span class="at">ARIMA(log(Scripts))</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a></a>  <span class="fu">select</span>(<span class="st">`</span><span class="at">ARIMA(log(Takings))</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb18-3"><a></a>  <span class="fu">gg_tsresiduals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-20-1.png" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-22-1.png" width="960"></p>
 </figure>
 </div>
 </div>

@@ -434,7 +434,7 @@
 </div>
 </div>
 </div></div>
-<p><img data-src="../backgrounds/muhammad-irfan-rr1l8zXPX64-unsplash.jpg" class="image-left"></p>
+<p><img data-src="../backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg" class="image-left"></p>
 </section>
 <section id="section-1" class="slide level2">
 <h2></h2>
@@ -578,8 +578,7 @@
 </div>
 <div class="callout-content">
 <p>How would you forecast visitors to Australia?</p>
-<p>Put some suggestions in the chat.</p>
-<p><em>Hint: Consider the patterns seen in the data, and how math can mimic the trend, seasonality, etc.</em></p>
+<p><em>Hint: Consider the patterns seen in the data, and how statistics/code can mimic the trend, seasonality, etc.</em></p>
 </div>
 </div>
 </div>
@@ -715,7 +714,7 @@
   `NAIVE(Scripts)` `SNAIVE(Scripts)` `NAIVE(Scripts ~ drift())`
            &lt;model&gt;           &lt;model&gt;                    &lt;model&gt;
 1          &lt;NAIVE&gt;          &lt;SNAIVE&gt;              &lt;RW w/ drift&gt;
-# i 1 more variable: `SNAIVE(Scripts ~ drift())` &lt;model&gt;</code></pre>
+# ℹ 1 more variable: `SNAIVE(Scripts ~ drift())` &lt;model&gt;</code></pre>
 </div>
 </div>
 <div class="callout callout-tip callout-titled callout-style-simple">
@@ -743,14 +742,16 @@
 <h3 id="producing-forecasts">Producing forecasts</h3>
 <p>Forecasts are made using <code>forecast()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>pbs_scripts <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a></a>  <span class="fu">model</span>(</span>
-<span id="cb3-3"><a></a>    <span class="fu">NAIVE</span>(Scripts),</span>
-<span id="cb3-4"><a></a>    <span class="fu">SNAIVE</span>(Scripts),</span>
-<span id="cb3-5"><a></a>    <span class="fu">NAIVE</span>(Scripts <span class="sc">~</span> <span class="fu">drift</span>()),</span>
-<span id="cb3-6"><a></a>    <span class="fu">SNAIVE</span>(Scripts <span class="sc">~</span> <span class="fu">drift</span>()),</span>
-<span id="cb3-7"><a></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb3-8"><a></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="st">"2 years"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>pbs_scripts <span class="ot">&lt;-</span> PBS <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a></a>  <span class="fu">summarise</span>(<span class="at">Scripts =</span> <span class="fu">sum</span>(Scripts))</span>
+<span id="cb3-3"><a></a>pbs_scripts <span class="sc">|&gt;</span> </span>
+<span id="cb3-4"><a></a>  <span class="fu">model</span>(</span>
+<span id="cb3-5"><a></a>    <span class="fu">NAIVE</span>(Scripts),</span>
+<span id="cb3-6"><a></a>    <span class="fu">SNAIVE</span>(Scripts),</span>
+<span id="cb3-7"><a></a>    <span class="fu">NAIVE</span>(Scripts <span class="sc">~</span> <span class="fu">drift</span>()),</span>
+<span id="cb3-8"><a></a>    <span class="fu">SNAIVE</span>(Scripts <span class="sc">~</span> <span class="fu">drift</span>()),</span>
+<span id="cb3-9"><a></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb3-10"><a></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="st">"2 years"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A fable: 96 x 4 [1M]
 # Key:     .model [4]
@@ -766,7 +767,7 @@
  8 NAIVE(Scripts) 2009 Feb N(1.2e+07, 1.8e+13) 12123769
  9 NAIVE(Scripts) 2009 Mar   N(1.2e+07, 2e+13) 12123769
 10 NAIVE(Scripts) 2009 Apr N(1.2e+07, 2.2e+13) 12123769
-# i 86 more rows</code></pre>
+# ℹ 86 more rows</code></pre>
 </div>
 </div>
 </div></div>
@@ -795,7 +796,7 @@
  8 NAIVE(Scripts) 2009 Feb N(1.2e+07, 1.8e+13) 12123769
  9 NAIVE(Scripts) 2009 Mar   N(1.2e+07, 2e+13) 12123769
 10 NAIVE(Scripts) 2009 Apr N(1.2e+07, 2.2e+13) 12123769
-# i 86 more rows</code></pre>
+# ℹ 86 more rows</code></pre>
 </div>
 </div>
 <div class="callout callout-tip callout-titled callout-style-simple">
@@ -845,6 +846,44 @@
 <section id="section-24" class="slide level2">
 <h2></h2>
 <div class="columns">
+<div class="column" style="width:40%;">
+
+</div><div class="column" style="width:60%;">
+<h3 id="the-forecasting-workflow">The forecasting workflow</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="co"># Tidied / prepared data here, e.g.</span></span>
+<span id="cb7-2"><a></a>vic_tourism <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a></a>  <span class="co"># Estimate the models using the data</span></span>
+<span id="cb7-4"><a></a>  <span class="fu">model</span>(</span>
+<span id="cb7-5"><a></a>    <span class="co"># Model specifications here, e.g.</span></span>
+<span id="cb7-6"><a></a>    <span class="fu">SNAIVE</span>(Trips)</span>
+<span id="cb7-7"><a></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb7-8"><a></a>  <span class="co"># Produce forecasts</span></span>
+<span id="cb7-9"><a></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="st">"2 years"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-10"><a></a>  <span class="co"># Visualise forecasts</span></span>
+<span id="cb7-11"><a></a>  <span class="fu">autoplot</span>(pbs_scripts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-caution callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Exercise 6</strong></p>
+</div>
+<div class="callout-content">
+<p>Specify appropriate model(s) for the total number of tourists arriving in Victoria.</p>
+<p>Estimate them with <code>model()</code> and produce forecasts for the next 5 years with <code>forecast()</code>.</p>
+<p>Plot the forecasts, and visually evaluate their suitability.</p>
+</div>
+</div>
+</div>
+</div></div>
+
+<img data-src="../backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg" class="image-left r-stretch"></section>
+<section id="section-25" class="slide level2">
+<h2></h2>
+<div class="columns">
 <div class="column" style="width:60%;">
 <h3 id="forecasting-with-regression">Forecasting with regression</h3>
 <p>Regression can also forecast, use time as regressors for the response variable.</p>
@@ -869,7 +908,7 @@
 </div></div>
 
 <img data-src="../backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-25" class="slide level2">
+<section id="section-26" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -893,15 +932,14 @@
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Your turn!</strong></p>
+<p><strong>Exercise 7</strong></p>
 </div>
 <div class="callout-content">
-<p>Produce forecasts for A10 scripts using regression.</p>
+<p>Produce forecasts for total Takings of Australian tourist accommodation from <code>aus_accommodation</code> using linear regression.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">library</span>(fpp3)</span>
-<span id="cb7-2"><a></a>pbs_a10 <span class="ot">&lt;-</span> PBS <span class="sc">|&gt;</span> </span>
-<span id="cb7-3"><a></a>  <span class="fu">filter</span>(ATC2 <span class="sc">==</span> <span class="st">"A10"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb7-4"><a></a>  <span class="fu">summarise</span>(<span class="at">Scripts =</span> <span class="fu">sum</span>(Scripts), <span class="at">Cost =</span> <span class="fu">sum</span>(Cost))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">library</span>(fpp3)</span>
+<span id="cb8-2"><a></a>aus_accommodation_total <span class="ot">&lt;-</span> fpp3<span class="sc">::</span>aus_accommodation <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a></a>  <span class="fu">summarise</span>(<span class="at">Takings =</span> <span class="fu">sum</span>(Takings), <span class="at">Occupancy =</span> <span class="fu">mean</span>(Occupancy))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -909,22 +947,22 @@
 </div></div>
 
 <img data-src="../backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-26" class="slide level2">
+<section id="section-27" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <h3 id="forecasting-with-regression-2">Forecasting with regression</h3>
 <p>Regression can also incorporate other covariates. For example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>pbs_a10 <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a></a>  <span class="fu">model</span>(</span>
-<span id="cb8-3"><a></a>    <span class="fu">TSLM</span>(Cost <span class="sc">~</span> <span class="fu">trend</span>() <span class="sc">+</span> <span class="fu">season</span>() <span class="sc">+</span> Scripts)</span>
-<span id="cb8-4"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>aus_accommodation_total <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a></a>  <span class="fu">model</span>(</span>
+<span id="cb9-3"><a></a>    <span class="fu">TSLM</span>(Takings <span class="sc">~</span> <span class="fu">trend</span>() <span class="sc">+</span> <span class="fu">season</span>() <span class="sc">+</span> Occupancy)</span>
+<span id="cb9-4"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A mable: 1 x 1
-  `TSLM(Cost ~ trend() + season() + Scripts)`
-                                      &lt;model&gt;
-1                                      &lt;TSLM&gt;</code></pre>
+  `TSLM(Takings ~ trend() + season() + Occupancy)`
+                                           &lt;model&gt;
+1                                           &lt;TSLM&gt;</code></pre>
 </div>
 </div>
 <div class="callout callout-important callout-titled callout-style-simple">
@@ -943,7 +981,7 @@
 </div></div>
 
 <img data-src="../backgrounds/isabela-kronemberger-OegFhZfw6Ok-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-27" class="slide level2">
+<section id="section-28" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -968,7 +1006,7 @@
 </div></div>
 
 <img data-src="../backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-28" class="slide level2">
+<section id="section-29" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -993,13 +1031,13 @@
 </div></div>
 
 <img data-src="../backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-29" class="slide level2">
+<section id="section-30" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <h3 id="exponential-smoothing-2">Exponential smoothing</h3>
-<p>The best ETS model can be chosen automatically.</p>
-<p>Simply not specify the right side of the formula.</p>
+<p>The best ETS model can be chosen automatically using AICc.</p>
+<p>Simply don’t specify the right side of the formula for automatic selection.</p>
 <div class="callout callout-tip callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
@@ -1019,18 +1057,18 @@
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Your turn</strong></p>
+<p><strong>Exercise 8</strong></p>
 </div>
 <div class="callout-content">
-<p>Estimate an ETS model for the <code>pbs_a10</code> Scripts.</p>
-<p>Does the automatic ETS model match the patterns you see in a time plot?</p>
+<p>Is the seasonality of total Australian accommodation takings from <code>aus_accommodation_total</code> additive or multiplicative?</p>
+<p>Estimate an ETS model for the data, does the automatic ETS model match the patterns you see in a time plot?</p>
 </div>
 </div>
 </div>
 </div></div>
 
 <img data-src="../backgrounds/vruyr-martirosyan-g5z53Jd6caY-unsplash.jpg" class="image-right r-stretch"></section>
-<section id="section-30" class="slide level2">
+<section id="section-31" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -1048,13 +1086,13 @@
 </div>
 <div class="callout-content">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>pbs_scripts <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a></a>  <span class="fu">ACF</span>(Scripts) <span class="sc">|&gt;</span> </span>
-<span id="cb10-3"><a></a>  <span class="fu">autoplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>pbs_scripts <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a></a>  <span class="fu">ACF</span>(Scripts) <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a></a>  <span class="fu">autoplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1065,7 +1103,7 @@
 </div></div>
 <p><img data-src="../backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg" class="image-left"></p>
 </section>
-<section id="section-31" class="slide level2">
+<section id="section-32" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -1081,7 +1119,7 @@
 </div></div>
 
 <img data-src="../backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-32" class="slide level2">
+<section id="section-33" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -1090,12 +1128,12 @@
 <h3 id="arima-2">ARIMA</h3>
 <p>Log transform the data to make multiplicative patterns additive.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>pbs_scripts <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a></a>  <span class="fu">autoplot</span>(<span class="fu">log</span>(Scripts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>pbs_scripts <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a></a>  <span class="fu">autoplot</span>(<span class="fu">log</span>(Scripts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1103,7 +1141,7 @@
 </div></div>
 <p><img data-src="../backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg" class="image-left"></p>
 </section>
-<section id="section-33" class="slide level2">
+<section id="section-34" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -1142,7 +1180,7 @@
 </div></div>
 
 <img data-src="../backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-34" class="slide level2">
+<section id="section-35" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -1155,10 +1193,10 @@
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Your turn</strong></p>
+<p><strong>Exercise 9</strong></p>
 </div>
 <div class="callout-content">
-<p>Identify if a transformation is necessary for the <code>pbs_a10</code> scripts.</p>
+<p>Identify if a transformation is necessary for the <code>aus_accommodation_total</code> Takings</p>
 <p>Then estimate an automatically selected ARIMA model for this data.</p>
 <p>Compare ARIMA forecasts with the automatic ETS model, how do they differ?</p>
 </div>
@@ -1167,7 +1205,7 @@
 </div></div>
 
 <img data-src="../backgrounds/daryan-shamkhali-FwnImRn57VA-unsplash.jpg" class="image-left r-stretch"></section>
-<section id="section-35" class="slide level2">
+<section id="section-36" class="slide level2">
 <h2></h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -1189,6 +1227,22 @@
 <li>ETS directly captures multiplicative patterns.</li>
 <li>ARIMA can forecast cyclical patterns.</li>
 </ul>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment fade-in">
+<div class="callout callout-tip callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Evaluating accuracy</strong></p>
+</div>
+<div class="callout-content">
+<p>We can determine which model works best on a specific dataset using accuracy evaluation…</p>
+<p><span class="fragment fade-in">Fortunately, that’s up next!</span></p>
 </div>
 </div>
 </div>
