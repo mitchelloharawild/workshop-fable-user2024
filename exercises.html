@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -215,10 +181,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   const initializeWebRTimerStart = performance.now();
 
   // Determine if we need to install R packages
-  var installRPackagesList = ['fable', 'tsibbledata', 'tsibble', 'feasts'];
+  var installRPackagesList = ['fpp3', 'readr'];
   // Check to see if we have an empty array, if we do set to skip the installation.
   var setupRPackages = !(installRPackagesList.indexOf("") !== -1);
-  var autoloadRPackages = true;
+  var autoloadRPackages = false;
 
   // Display a startup message?
   var showStartupMessage = true;
@@ -492,6 +458,7 @@ check_answer <- function(.code) {
 
 
 <meta name="twitter:title" content="Exercises – Tidy time series &amp; forecasting in R">
+<meta name="twitter:description" content="Homepage for time series analysis and forecasting workshop at useR! 2024">
 <meta name="twitter:image" content="https://workshop.nectric.com.au/user2024/images/twitter-card.png">
 <meta name="twitter:creator" content="@mitchoharawild">
 <meta name="twitter:image-height" content="654">
@@ -581,6 +548,7 @@ check_answer <- function(.code) {
    
   <ul>
   <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link active" data-scroll-target="#exercise-1">Exercise 1</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/mitchelloharawild/workshop-fable-user2024/edit/main/exercises.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mitchelloharawild/workshop-fable-user2024/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -618,26 +586,252 @@ check_answer <- function(.code) {
 
 <section id="exercise-1" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<p>The <code>pedestrian</code> dataset contains hourly pedestrian counts from 2015-01-01 to 2016-12-31 at 4 sensors in the city of Melbourne.</p>
+<p>The data is shown below:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(feasts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: fabletools</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Registered S3 method overwritten by 'tsibble':
-  method               from 
-  as_tibble.grouped_df dplyr</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as_tsibble</span>(USAccDeaths) <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>(value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="exercises_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 66,037 × 5
+   Sensor         Date_Time           Date        Time Count
+   &lt;chr&gt;          &lt;dttm&gt;              &lt;date&gt;     &lt;int&gt; &lt;int&gt;
+ 1 Birrarung Marr 2015-01-01 00:00:00 2015-01-01     0  1630
+ 2 Birrarung Marr 2015-01-01 01:00:00 2015-01-01     1   826
+ 3 Birrarung Marr 2015-01-01 02:00:00 2015-01-01     2   567
+ 4 Birrarung Marr 2015-01-01 03:00:00 2015-01-01     3   264
+ 5 Birrarung Marr 2015-01-01 04:00:00 2015-01-01     4   139
+ 6 Birrarung Marr 2015-01-01 05:00:00 2015-01-01     5    77
+ 7 Birrarung Marr 2015-01-01 06:00:00 2015-01-01     6    44
+ 8 Birrarung Marr 2015-01-01 07:00:00 2015-01-01     7    56
+ 9 Birrarung Marr 2015-01-01 08:00:00 2015-01-01     8   113
+10 Birrarung Marr 2015-01-01 09:00:00 2015-01-01     9   166
+# ℹ 66,027 more rows</code></pre>
 </div>
 </div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Your turn!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Identify the <code>index</code> variable, <code>key</code> variable(s), and measured variable(s) of this dataset.</p>
+</div>
+</div>
+</section>
+<div class="columns">
+<div class="column" style="width:30%;">
+<section id="index-variable" class="level2">
+<h2 class="anchored" data-anchor-id="index-variable"><code>index</code> variable</h2>
+<div id="qforms-quiz-1" class="radio-group">
+</div>
+
+<script>
+  var compareArrays = (a, b) =>
+    a.length === b.length && a.every((element, index) => element === b[index]);
+  var quiz_container = document.getElementById("qforms-quiz-1");
+  var questions = "Sensor,Date_Time,Date,Time,Count";
+  var hints = "x,o,x,x,x"
+  console.log("hints", hints)
+  questions = questions.split(",");
+  hints = hints.split(",");
+
+    for([index, question] of questions.entries()) {
+      var radio_row = document.createElement("div");
+
+      var label = document.createElement("label");
+      label.setAttribute("class", "radio-label");
+      label.setAttribute("for", question);
+      label.textContent = question;
+
+      var input_elem = document.createElement("input");
+      input_elem.setAttribute("type", "radio");
+      input_elem.setAttribute("class", "quiz-radio");
+      input_elem.setAttribute("name", `qforms-quiz-name-1`);
+      input_elem.setAttribute("value", (index+1));
+
+      radio_row.append(input_elem, label);
+      quiz_container.append(radio_row);
+  }
+
+
+  var result_section = document.createElement("p")
+  result_section.setAttribute("id", "qforms-quiz-results-1")
+  result_section.setAttribute("class", "result-section")
+
+  var submit_btn = document.createElement("input")
+  submit_btn.setAttribute("type", "button")
+  submit_btn.setAttribute("id", "qforms-quiz-submit-1")
+  submit_btn.setAttribute("class", "submit-btn")
+  submit_btn.setAttribute("value", "Submit")
+  submit_btn.addEventListener("click", event => {
+    var selected = document.querySelectorAll('input[name=qforms-quiz-name-1]:checked')
+    var values = Array.from(selected).map(element => element.value);
+    var results = document.getElementById("qforms-quiz-results-1")
+    var solutions = "2".split(",")
+    if(selected != undefined) {
+      var success = compareArrays(values, solutions)
+      results.classList.toggle(success ? "success": "failure")
+      results.textContent = success ? "✅ That's correct!": "❌ Incorrect, try again!"
+    }
+
+  })
+  quiz_container.append(submit_btn)
+
+  quiz_container.append(result_section)
+</script>
+
+<style>
+  input.quiz-radio {
+    margin: 0.4rem;
+  }
+</style>
+
+
+</section>
+</div><div class="column" style="width:30%;">
+<section id="key-variables" class="level2">
+<h2 class="anchored" data-anchor-id="key-variables"><code>key</code> variable(s)</h2>
+<div id="qforms-quiz-2" class="radio-group">
+</div>
+
+<script>
+  var compareArrays = (a, b) =>
+    a.length === b.length && a.every((element, index) => element === b[index]);
+  var quiz_container = document.getElementById("qforms-quiz-2");
+  var questions = "Sensor,Date_Time,Date,Time,Count";
+  var hints = "o,x,x,x,x"
+  console.log("hints", hints)
+  questions = questions.split(",");
+  hints = hints.split(",");
+
+    for([index, question] of questions.entries()) {
+      var radio_row = document.createElement("div");
+
+      var label = document.createElement("label");
+      label.setAttribute("class", "radio-label");
+      label.setAttribute("for", question);
+      label.textContent = question;
+
+      var input_elem = document.createElement("input");
+      input_elem.setAttribute("type", "checkbox");
+      input_elem.setAttribute("class", "quiz-radio");
+      input_elem.setAttribute("name", `qforms-quiz-name-2`);
+      input_elem.setAttribute("value", (index+1));
+
+      radio_row.append(input_elem, label);
+      quiz_container.append(radio_row);
+  }
+
+
+  var result_section = document.createElement("p")
+  result_section.setAttribute("id", "qforms-quiz-results-2")
+  result_section.setAttribute("class", "result-section")
+
+  var submit_btn = document.createElement("input")
+  submit_btn.setAttribute("type", "button")
+  submit_btn.setAttribute("id", "qforms-quiz-submit-2")
+  submit_btn.setAttribute("class", "submit-btn")
+  submit_btn.setAttribute("value", "Submit")
+  submit_btn.addEventListener("click", event => {
+    var selected = document.querySelectorAll('input[name=qforms-quiz-name-2]:checked')
+    var values = Array.from(selected).map(element => element.value);
+    var results = document.getElementById("qforms-quiz-results-2")
+    var solutions = "1".split(",")
+    if(selected != undefined) {
+      var success = compareArrays(values, solutions)
+      results.classList.toggle(success ? "success": "failure")
+      results.textContent = success ? "✅ That's correct!": "❌ Incorrect, try again!"
+    }
+
+  })
+  quiz_container.append(submit_btn)
+
+  quiz_container.append(result_section)
+</script>
+
+<style>
+  input.quiz-radio {
+    margin: 0.4rem;
+  }
+</style>
+
+
+</section>
+</div><div class="column" style="width:40%;">
+<section id="measured-variables" class="level2">
+<h2 class="anchored" data-anchor-id="measured-variables">measured variable(s)</h2>
+<div id="qforms-quiz-3" class="radio-group">
+</div>
+
+<script>
+  var compareArrays = (a, b) =>
+    a.length === b.length && a.every((element, index) => element === b[index]);
+  var quiz_container = document.getElementById("qforms-quiz-3");
+  var questions = "Sensor,Date_Time,Date,Time,Count";
+  var hints = "x,x,x,x,o"
+  console.log("hints", hints)
+  questions = questions.split(",");
+  hints = hints.split(",");
+
+    for([index, question] of questions.entries()) {
+      var radio_row = document.createElement("div");
+
+      var label = document.createElement("label");
+      label.setAttribute("class", "radio-label");
+      label.setAttribute("for", question);
+      label.textContent = question;
+
+      var input_elem = document.createElement("input");
+      input_elem.setAttribute("type", "checkbox");
+      input_elem.setAttribute("class", "quiz-radio");
+      input_elem.setAttribute("name", `qforms-quiz-name-3`);
+      input_elem.setAttribute("value", (index+1));
+
+      radio_row.append(input_elem, label);
+      quiz_container.append(radio_row);
+  }
+
+
+  var result_section = document.createElement("p")
+  result_section.setAttribute("id", "qforms-quiz-results-3")
+  result_section.setAttribute("class", "result-section")
+
+  var submit_btn = document.createElement("input")
+  submit_btn.setAttribute("type", "button")
+  submit_btn.setAttribute("id", "qforms-quiz-submit-3")
+  submit_btn.setAttribute("class", "submit-btn")
+  submit_btn.setAttribute("value", "Submit")
+  submit_btn.addEventListener("click", event => {
+    var selected = document.querySelectorAll('input[name=qforms-quiz-name-3]:checked')
+    var values = Array.from(selected).map(element => element.value);
+    var results = document.getElementById("qforms-quiz-results-3")
+    var solutions = "5".split(",")
+    if(selected != undefined) {
+      var success = compareArrays(values, solutions)
+      results.classList.toggle(success ? "success": "failure")
+      results.textContent = success ? "✅ That's correct!": "❌ Incorrect, try again!"
+    }
+
+  })
+  quiz_container.append(submit_btn)
+
+  quiz_container.append(result_section)
+</script>
+
+<style>
+  input.quiz-radio {
+    margin: 0.4rem;
+  }
+</style>
+
+
+</section>
+</div>
+</div>
+<section id="exercise-2" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
 <div id="qwebr-interactive-area-1" class="qwebr-interactive-area">
   <button class="btn btn-default qwebr-button qwebr-button-run" disabled="" type="button" id="qwebr-button-run-1">🟡 Loading
     webR...</button>
@@ -663,10 +857,15 @@ check_answer <- function(.code) {
   const editorDiv = document.getElementById("qwebr-editor-1");
   const outputGraphDiv = document.getElementById("qwebr-output-graph-area-1");
   const webrCode = `
-library(feasts)
-as_tsibble(USAccDeaths) |> 
-  autoplot(___)
-  `
+library(___)
+
+aus_accommodation <- readr::read_csv(
+  "https://workshop.nectric.com.au/user2024/data/aus_accommodation.csv"
+) |> 
+  as_tsibble(
+    key = ___,
+    index = ___
+  )`
 
   // Load the Monaco Editor and create an instance
   let editor;
@@ -933,7 +1132,16 @@ as_tsibble(USAccDeaths) |>
     executeCode(
 `teachr_tests <- function(.code, .printed, .errored, .warned) {
   
-c("You should specify the column to plot" = !search_ast(.code, .expr = autoplot(value)))
+checks <- c(
+  "You need to save the dataset as \`aus_accommodation\`" = !exists("aus_accommodation"),
+  "You need to use the as_tsibble() function to convert the data into a tsibble." = !search_ast(.code, .fn = as_tsibble)
+  
+)
+  
+if(any(checks)) return(checks)
+
+if(!is_yearquarter(aus_accommodation$Date)) cat("Great, you've got a tsibble! Although something doesn't look right - check the frequency of the data, why isn't it quarterly?")
+FALSE
 }
 check_answer(r"(` + editor.getValue() + `)")`
     );
@@ -941,10 +1149,15 @@ check_answer(r"(` + editor.getValue() + `)")`
   
   solveButton.onclick = function () {
     editor.setValue(`
-library(feasts)
-as_tsibble(USAccDeaths) |> 
-  autoplot(value)
-  `);
+library(fpp3)
+
+aus_accommodation <- readr::read_csv(
+  "https://workshop.nectric.com.au/user2024/data/aus_accommodation.csv"
+) |> 
+  as_tsibble(
+    key = State,
+    index = Date
+  )`);
   };
   
   resetButton.onclick = function () {

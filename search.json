@@ -154,223 +154,6 @@
     "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos\n\n\n\n\n\nSander Weeteling: Photo\nKasia Gajek: Photo\nNASA: United States seen from orbit\nBalint Mendlik: Photo\nSander Weeteling: Photo"
   },
   {
-    "objectID": "slides/analysis/index.html#section",
-    "href": "slides/analysis/index.html#section",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Tidy time series analysis and forecasting\n\n\nTime series data and patterns\n\n\n10th June 2024 @ UseR! 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-1",
-    "href": "slides/analysis/index.html#section-1",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Mitchell O’Hara‑Wild\nMonash + Nectric\n @mitchelloharawild\n @mitchelloharawild\n\nWelcome, who am I?\n\n🎓 PhD candidate at Monash University\n📊 Data consulting and workshops at Nectric\n📈 Specialised in time series analysis\n📦 Develops R packages (fable, vitae, etc.)\n🤒 Produced COVID-19 forecasts for Australia\n🤖 DIYs IoT devices for home automation\n🌱 Permaculturist (🐝, 🐣, 🍄, 🌞)"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-2",
-    "href": "slides/analysis/index.html#section-2",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "🎯 Today’s goals\n\n\n\nLearn about time series data.\nVisualise common time series patterns.\nProduce forecasts from a statistical models.\nEvaluate the forecasting accuracy.\n\n\n\n\n\n\n\n\n🌻 Expectations\n\n\n\nFollow the code of conduct.\nAsk relevant questions any time, Q&A during breaks.\nBe kind and respectful.\nMake mistakes and learn!"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-3",
-    "href": "slides/analysis/index.html#section-3",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Tidy time series analysis\nThis workshop is about tidy time series in R.\n\nWe’ll be using these packages!\n\n\n\n\n\n\n\n\n\nInstall them all with install.packages(\"fpp3\")"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-4",
-    "href": "slides/analysis/index.html#section-4",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Design of the forecast package\n\n\n\n\n\nForecasting individual time series\nRegular and infrequent observations (monthly, quarterly or annually)\nPoint forecasts and intervals\nConsistent with ts models\n\n\n\n\nDesign of the fable package\n\n\n\n\n\nForecasting many time series\nObservations at any time (sub-daily, irregular, monthly, etc.)\nForecast distributions\nConsistent with the tidyverse"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-5",
-    "href": "slides/analysis/index.html#section-5",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Time series data\n\nFour-yearly Olympic winning times\nAnnual Google profits\nQuarterly Australian beer production\nMonthly pharmaceutical subsidies\nWeekly retail sales\nDaily COVID-19 infections\nHourly electricity demand\nMinutely blood glucose measurements\nTime-stamped stock transaction data"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-6",
-    "href": "slides/analysis/index.html#section-6",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Time series data\nComes in all shapes and sizes!\nLike all data, we hope it’s tidy 🧹\n\n\n\n\n\n\n\nAll time series data contain…\n\n\n\nThe time of the observation (index)\nOne or more observations (measurements)\n\n\nSome datasets have identifying metadata,\n\nIdentifying variables for the series (key)"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-7",
-    "href": "slides/analysis/index.html#section-7",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "The tsibble data format\n\nA tsibble is a tibble for time series!\nThe quarterly visitors to Australia are found in the tourism dataset.\n\nlibrary(fpp3)\ntourism\n\n# A tsibble: 24,320 x 5 [1Q]\n# Key:       Region, State, Purpose [304]\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# i 24,310 more rows"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-8",
-    "href": "slides/analysis/index.html#section-8",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "# A tsibble: 24,320 x 5 [1Q]\n# Key:       Region, State, Purpose [304]\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# i 24,310 more rows\n\n\n\n\n\n\n\n\nYour turn!\n\n\nIn this dataset, which columns are:\n\nindex variable(s)?\nkey variable(s)?\nmeasured variable(s)?"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-9",
-    "href": "slides/analysis/index.html#section-9",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Representing time (the index)\nTime is surprisingly tricky to represent!\n\nfrequency\ngranularity\ntime zones\ncalendars\nleap years (and seconds?!)\nholidays\ncivil/absolute time\ntime periods"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-10",
-    "href": "slides/analysis/index.html#section-10",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Representing time (the index)\nCommon time index variables can be created with these functions:\n\n\n\n\n\nFrequency\nFunction\n\n\n\n\nAnnual\nstart:end\n\n\nQuarterly\nyearquarter()\n\n\nMonthly\nyearmonth()\n\n\nWeekly\nyearweek()\n\n\nDaily\nas_date(), ymd()\n\n\nSub-daily\nas_datetime()"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-11",
-    "href": "slides/analysis/index.html#section-11",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Creating a tsibble\n\nTidy the data into a long format\nAppropriately class the time variable\nConvert to tsibble with as_tibble(), identifying the index and key variable(s).\n\n\n\n\n\n\n\nFollow along\n\n\nLet’s convert the PBS dataset into a tsibble.\n\nlibrary(fpp3)\nreadr::read_csv(\n  \"https://workshop.nectric.com.au/user2024/data/pbs.csv\"\n)"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-12",
-    "href": "slides/analysis/index.html#section-12",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Manipulating time series data\nTidy time series data uses tidyverse tools!\n\n\n\n\n\n\nYour turn\n\n\nTry calculating the total monthly cost of “A10” prescriptions (ATC2 classification) in Australia with dplyr.\nHow do concessional subsidies compare to general subsidies?"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-13",
-    "href": "slides/analysis/index.html#section-13",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Manipulating time series data\nHowever there are some differences when working with time…\nThe time index is always preserved (implicit group_by()).\n\n\n\n\n\n\nGrouping across time\n\n\nSometimes you want to summarise over time.\nSummarising over all of time is no longer a time series, so first convert to a tibble with as_tibble().\nTo re-index by a new variable, use index_by()."
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-14",
-    "href": "slides/analysis/index.html#section-14",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Visualising time series\nTime series visualisation helps us identify time series patterns.\nThese patterns include:\n\ntrends\nseasonalities\ncycles\ncovariates\nevents\n\nThey also help identify anomalies/outliers.\n\n:::"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-15",
-    "href": "slides/analysis/index.html#section-15",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Time plots\n\n\nThe most common time series graphic is the “time plot”, created with autoplot().\n\npbs_scripts &lt;- PBS |&gt;\n  summarise(Scripts = sum(Scripts))\npbs_scripts |&gt;\n  autoplot(Scripts)\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-16",
-    "href": "slides/analysis/index.html#section-16",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Seasonal plots\n\n\nThe gg_season() plots help identify peaks and troughs in seasonal patterns.\n\npbs_scripts |&gt;\n  gg_season(Scripts)\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-17",
-    "href": "slides/analysis/index.html#section-17",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "Seasonal sub-series plots\n\n\nThe gg_subseries() plots help identify changes in seasonal patterns.\n\npbs_scripts |&gt;\n  gg_subseries(Scripts)\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
-  },
-  {
-    "objectID": "slides/analysis/index.html#section-18",
-    "href": "slides/analysis/index.html#section-18",
-    "title": "Tidy time series & forecasting in R",
-    "section": "",
-    "text": "ACF plots\n\n\nThe ACF() |&gt; autoplot() plots help identify autocorrelations.\n\npbs_scripts |&gt;\n  ACF(Scripts) |&gt; \n  autoplot()\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
-  },
-  {
-    "objectID": "slides/analysis/index.html#seasonal-or-cyclical",
-    "href": "slides/analysis/index.html#seasonal-or-cyclical",
-    "title": "Tidy time series & forecasting in R",
-    "section": "Seasonal or Cyclical?",
-    "text": "Seasonal or Cyclical?\nThese common patterns are commonly confused, can you tell them apart?"
-  },
-  {
-    "objectID": "slides/analysis/index.html#time-for-a-break",
-    "href": "slides/analysis/index.html#time-for-a-break",
-    "title": "Tidy time series & forecasting in R",
-    "section": "⏰ Time for a break!",
-    "text": "⏰ Time for a break!\n\n\n\n\n\n\n\n\nUp next…\n\n\n\nSimplifying patterns with transformations,\nSpecifying time series models,\nTraining models on data,\nForecasting the future!\n\n\n\n\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
-  },
-  {
-    "objectID": "slides/analysis/index.html#unsplash-credits",
-    "href": "slides/analysis/index.html#unsplash-credits",
-    "title": "Tidy time series & forecasting in R",
-    "section": "Unsplash credits",
-    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos\n\n\n\n\n\nSander Weeteling: Photo\nJohn Fowler: Taken near sunset at White Sands National Monumen…\nBalint Mendlik: Photo\nDavid Pisnoy: Photo\nChris Lee: Behind the leaves.\nJon Tyson: Photo\nRandy Fath: Photo\nNathan Dumlao: Photo\nSander Weeteling: Photo"
-  },
-  {
-    "objectID": "license.html",
-    "href": "license.html",
-    "title": "License",
-    "section": "",
-    "text": "This work is licensed under a Creative Commons Attribution 4.0 International License."
-  },
-  {
-    "objectID": "index.html#course-overview",
-    "href": "index.html#course-overview",
-    "title": "Tidy time series analysis and forecasting",
-    "section": "Course Overview",
-    "text": "Course Overview\nOrganisations of all types collect vast amounts of time series data, and there is a growing need for time series analytics to understand how things change in our fast-moving world. This tutorial provides a practical introduction to time series analytics and forecasting using R, utilising the tidyverse and tidy time series tools to enable analysis across many time series. Attendees will learn about commonly seen time series patterns, and how to find them with specialised time series graphics created with ggplot2. Then we will use fable to capture these patterns with statistical time series models, and produce probabilistic forecasts. Finally, participants will gain insights into evaluating model performance, ensuring the accuracy and reliability of their forecasts. Through a combination of foundational concepts and practical demonstrations, this tutorial equips participants with the skills to extract meaningful insights from time series data for informed decision-making in various domains.\nThis workshop will run in-person at useR! 2024 in Salzburg, Australia on July 8th 2024."
-  },
-  {
-    "objectID": "index.html#registration",
-    "href": "index.html#registration",
-    "title": "Tidy time series analysis and forecasting",
-    "section": "Registration",
-    "text": "Registration\nIf you’re attending UseR! 2024 in person, there is still time to register - it’s free!\nTo add this tutorial to your registration, log in to your existing registration, click the Modify Registration button, and navigate to the Reg Options page (page 4). Finally, select the tutorial you want to attend (this one!)."
-  },
-  {
-    "objectID": "index.html#learning-objectives",
-    "href": "index.html#learning-objectives",
-    "title": "Tidy time series analysis and forecasting",
-    "section": "Learning objectives",
-    "text": "Learning objectives\nParticipants will learn how to:\n\nHow to wrangle time series data with familiar tidy tools.\nHow to visualize common time series patterns.\nHow to select a good forecasting algorithm for your time series.\nHow to evaluate the accuracy of forecasts."
-  },
-  {
-    "objectID": "index.html#instructor",
-    "href": "index.html#instructor",
-    "title": "Tidy time series analysis and forecasting",
-    "section": "Instructor",
-    "text": "Instructor\n Mitchell O’Hara-Wild (he/him) is a PhD candidate at Monash University, creating new techniques and tools for forecasting large collections of time series with Rob Hyndman and George Athanasopoulos. He is the lead developer of the tidy time-series forecasting tools fable and feasts, and has co-developed the widely used forecast package since 2015. He is an award-winning educator, and has taught applied forecasting at Monash University and various forecasting workshops around the world."
-  },
-  {
-    "objectID": "index.html#required-equipment",
-    "href": "index.html#required-equipment",
-    "title": "Tidy time series analysis and forecasting",
-    "section": "Required equipment",
-    "text": "Required equipment\nPlease bring your own laptop capable of running R."
-  },
-  {
-    "objectID": "index.html#required-software",
-    "href": "index.html#required-software",
-    "title": "Tidy time series analysis and forecasting",
-    "section": "Required software",
-    "text": "Required software\nTo be able to complete the exercises of this workshop, please install a suitable IDE (such as RStudio), a recent version of R (4.1+) and the following packages.\n\nTime series packages and extensions\n\nfpp3\n\n\nThe following code will install the main packages needed for the workshop.\ninstall.packages(c(\"fpp3\"))\nPlease have the required software installed and pre-work completed before attending the workshop."
-  },
-  {
-    "objectID": "exercises.html",
-    "href": "exercises.html",
-    "title": "Exercises",
-    "section": "",
-    "text": "library(feasts)\n\nLoading required package: fabletools\n\n\nRegistered S3 method overwritten by 'tsibble':\n  method               from \n  as_tibble.grouped_df dplyr\n\nas_tsibble(USAccDeaths) |&gt; \n  autoplot(value)\n\n\n\n\n\n\n\n\n\n  🟡 Loading\n    webR...\n  💡 Check answer\n  ✅ Show solution\n  💥 Reset code"
-  },
-  {
-    "objectID": "exercises.html#exercise-1",
-    "href": "exercises.html#exercise-1",
-    "title": "Exercises",
-    "section": "",
-    "text": "library(feasts)\n\nLoading required package: fabletools\n\n\nRegistered S3 method overwritten by 'tsibble':\n  method               from \n  as_tibble.grouped_df dplyr\n\nas_tsibble(USAccDeaths) |&gt; \n  autoplot(value)\n\n\n\n\n\n\n\n\n\n  🟡 Loading\n    webR...\n  💡 Check answer\n  ✅ Show solution\n  💥 Reset code"
-  },
-  {
     "objectID": "slides/modelling/index.html#section",
     "href": "slides/modelling/index.html#section",
     "title": "Tidy time series & forecasting in R",
@@ -572,5 +355,278 @@
     "title": "Tidy time series & forecasting in R",
     "section": "Unsplash credits",
     "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos\n\n\n\n\n\nSander Weeteling: Photo\nKasia Gajek: Photo\nNicole Avagliano: Photo\nDavid Becker: This was one of my first startrails. I took abou…\nRock’n Roll Monkey: Photo\nNicole Avagliano: Photo\nIsabela Kronemberger: set of tools\nVruyr Martirosyan: Painted Ripples\nDaryan Shamkhali: View from Shibuya Scramble Square Jan 2020\namjd rdwan: beautiful colors\nSander Weeteling: Photo"
+  },
+  {
+    "objectID": "license.html",
+    "href": "license.html",
+    "title": "License",
+    "section": "",
+    "text": "This work is licensed under a Creative Commons Attribution 4.0 International License."
+  },
+  {
+    "objectID": "index.html#course-overview",
+    "href": "index.html#course-overview",
+    "title": "Tidy time series analysis and forecasting",
+    "section": "Course Overview",
+    "text": "Course Overview\nOrganisations of all types collect vast amounts of time series data, and there is a growing need for time series analytics to understand how things change in our fast-moving world. This tutorial provides a practical introduction to time series analytics and forecasting using R, utilising the tidyverse and tidy time series tools to enable analysis across many time series. Attendees will learn about commonly seen time series patterns, and how to find them with specialised time series graphics created with ggplot2. Then we will use fable to capture these patterns with statistical time series models, and produce probabilistic forecasts. Finally, participants will gain insights into evaluating model performance, ensuring the accuracy and reliability of their forecasts. Through a combination of foundational concepts and practical demonstrations, this tutorial equips participants with the skills to extract meaningful insights from time series data for informed decision-making in various domains.\nThis workshop will run in-person at useR! 2024 in Salzburg, Australia on July 8th 2024."
+  },
+  {
+    "objectID": "index.html#registration",
+    "href": "index.html#registration",
+    "title": "Tidy time series analysis and forecasting",
+    "section": "Registration",
+    "text": "Registration\nIf you’re attending UseR! 2024 in person, there is still time to register - it’s free!\nTo add this tutorial to your registration, log in to your existing registration, click the Modify Registration button, and navigate to the Reg Options page (page 4). Finally, select the tutorial you want to attend (this one!)."
+  },
+  {
+    "objectID": "index.html#learning-objectives",
+    "href": "index.html#learning-objectives",
+    "title": "Tidy time series analysis and forecasting",
+    "section": "Learning objectives",
+    "text": "Learning objectives\nParticipants will learn how to:\n\nHow to wrangle time series data with familiar tidy tools.\nHow to visualize common time series patterns.\nHow to select a good forecasting algorithm for your time series.\nHow to evaluate the accuracy of forecasts."
+  },
+  {
+    "objectID": "index.html#instructor",
+    "href": "index.html#instructor",
+    "title": "Tidy time series analysis and forecasting",
+    "section": "Instructor",
+    "text": "Instructor\n Mitchell O’Hara-Wild (he/him) is a PhD candidate at Monash University, creating new techniques and tools for forecasting large collections of time series with Rob Hyndman and George Athanasopoulos. He is the lead developer of the tidy time-series forecasting tools fable and feasts, and has co-developed the widely used forecast package since 2015. He is an award-winning educator, and has taught applied forecasting at Monash University and various forecasting workshops around the world."
+  },
+  {
+    "objectID": "index.html#required-equipment",
+    "href": "index.html#required-equipment",
+    "title": "Tidy time series analysis and forecasting",
+    "section": "Required equipment",
+    "text": "Required equipment\nPlease bring your own laptop capable of running R."
+  },
+  {
+    "objectID": "index.html#required-software",
+    "href": "index.html#required-software",
+    "title": "Tidy time series analysis and forecasting",
+    "section": "Required software",
+    "text": "Required software\nTo be able to complete the exercises of this workshop, please install a suitable IDE (such as RStudio), a recent version of R (4.1+) and the following packages.\n\nTime series packages and extensions\n\nfpp3\n\n\nThe following code will install the main packages needed for the workshop.\ninstall.packages(c(\"fpp3\"))\nPlease have the required software installed and pre-work completed before attending the workshop."
+  },
+  {
+    "objectID": "exercises.html",
+    "href": "exercises.html",
+    "title": "Exercises",
+    "section": "",
+    "text": "The pedestrian dataset contains hourly pedestrian counts from 2015-01-01 to 2016-12-31 at 4 sensors in the city of Melbourne.\nThe data is shown below:\n\n\n# A tibble: 66,037 × 5\n   Sensor         Date_Time           Date        Time Count\n   &lt;chr&gt;          &lt;dttm&gt;              &lt;date&gt;     &lt;int&gt; &lt;int&gt;\n 1 Birrarung Marr 2015-01-01 00:00:00 2015-01-01     0  1630\n 2 Birrarung Marr 2015-01-01 01:00:00 2015-01-01     1   826\n 3 Birrarung Marr 2015-01-01 02:00:00 2015-01-01     2   567\n 4 Birrarung Marr 2015-01-01 03:00:00 2015-01-01     3   264\n 5 Birrarung Marr 2015-01-01 04:00:00 2015-01-01     4   139\n 6 Birrarung Marr 2015-01-01 05:00:00 2015-01-01     5    77\n 7 Birrarung Marr 2015-01-01 06:00:00 2015-01-01     6    44\n 8 Birrarung Marr 2015-01-01 07:00:00 2015-01-01     7    56\n 9 Birrarung Marr 2015-01-01 08:00:00 2015-01-01     8   113\n10 Birrarung Marr 2015-01-01 09:00:00 2015-01-01     9   166\n# ℹ 66,027 more rows\n\n\n\n\n\n\n\n\nYour turn!\n\n\n\nIdentify the index variable, key variable(s), and measured variable(s) of this dataset."
+  },
+  {
+    "objectID": "exercises.html#exercise-1",
+    "href": "exercises.html#exercise-1",
+    "title": "Exercises",
+    "section": "",
+    "text": "The pedestrian dataset contains hourly pedestrian counts from 2015-01-01 to 2016-12-31 at 4 sensors in the city of Melbourne.\nThe data is shown below:\n\n\n# A tibble: 66,037 × 5\n   Sensor         Date_Time           Date        Time Count\n   &lt;chr&gt;          &lt;dttm&gt;              &lt;date&gt;     &lt;int&gt; &lt;int&gt;\n 1 Birrarung Marr 2015-01-01 00:00:00 2015-01-01     0  1630\n 2 Birrarung Marr 2015-01-01 01:00:00 2015-01-01     1   826\n 3 Birrarung Marr 2015-01-01 02:00:00 2015-01-01     2   567\n 4 Birrarung Marr 2015-01-01 03:00:00 2015-01-01     3   264\n 5 Birrarung Marr 2015-01-01 04:00:00 2015-01-01     4   139\n 6 Birrarung Marr 2015-01-01 05:00:00 2015-01-01     5    77\n 7 Birrarung Marr 2015-01-01 06:00:00 2015-01-01     6    44\n 8 Birrarung Marr 2015-01-01 07:00:00 2015-01-01     7    56\n 9 Birrarung Marr 2015-01-01 08:00:00 2015-01-01     8   113\n10 Birrarung Marr 2015-01-01 09:00:00 2015-01-01     9   166\n# ℹ 66,027 more rows\n\n\n\n\n\n\n\n\nYour turn!\n\n\n\nIdentify the index variable, key variable(s), and measured variable(s) of this dataset."
+  },
+  {
+    "objectID": "exercises.html#index-variable",
+    "href": "exercises.html#index-variable",
+    "title": "Exercises",
+    "section": "index variable",
+    "text": "index variable"
+  },
+  {
+    "objectID": "exercises.html#key-variables",
+    "href": "exercises.html#key-variables",
+    "title": "Exercises",
+    "section": "key variable(s)",
+    "text": "key variable(s)"
+  },
+  {
+    "objectID": "exercises.html#measured-variables",
+    "href": "exercises.html#measured-variables",
+    "title": "Exercises",
+    "section": "measured variable(s)",
+    "text": "measured variable(s)"
+  },
+  {
+    "objectID": "exercises.html#exercise-2",
+    "href": "exercises.html#exercise-2",
+    "title": "Exercises",
+    "section": "Exercise 2",
+    "text": "Exercise 2\n\n  🟡 Loading\n    webR...\n  💡 Check answer\n  ✅ Show solution\n  💥 Reset code"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section",
+    "href": "slides/analysis/index.html#section",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Tidy time series analysis and forecasting\n\n\nTime series data and patterns\n\n\n10th June 2024 @ UseR! 2024\n\nMitchell O’Hara-Wild, Nectric\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-1",
+    "href": "slides/analysis/index.html#section-1",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "🎯 Today’s goals\n\n\n\nLearn about time series data.\nVisualise common time series patterns.\nProduce forecasts from a statistical models.\nEvaluate the forecasting accuracy.\n\n\n\n\n\n\n\n\n🌻 Expectations\n\n\n\nFollow the code of conduct.\nAsk relevant questions any time, Q&A during breaks.\nBe kind and respectful.\nMake mistakes and learn!"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-2",
+    "href": "slides/analysis/index.html#section-2",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Mitchell O’Hara‑Wild\nMonash + Nectric\n @mitchelloharawild\n @mitchelloharawild\n\nWelcome, who am I?\n\n🎓 PhD candidate at Monash University\n📊 Data consulting and workshops at Nectric\n📈 Specialised in time series analysis\n📦 Develops R packages (fable, vitae, etc.)\n🤖 DIYs IoT devices for home automation\n🌱 Permaculturist (🐝, 🐣, 🍄, 🌞)"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-3",
+    "href": "slides/analysis/index.html#section-3",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "You!\nUseR! attendee\n\n🙋 Hi, who are you?\nHands up if…\n\n\n🧑‍💻 You’ve used R\n📊 You’ve analysed data\n🫧 Used tidyverse packages (dplyr, ggplot2…)\n📈 You’ve worked with time series data before\n🔮 You’ve produced a forecast before\n🤩 You’ve used fable!"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-4",
+    "href": "slides/analysis/index.html#section-4",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Tidy time series analysis\nThis workshop is about tidy time series in R.\n\nWe’ll be using these packages!\n\n\n\n\n\n\n\n\n\nInstall them all with install.packages(\"fpp3\")"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-5",
+    "href": "slides/analysis/index.html#section-5",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Design of the forecast package\n\n\n\n\n\nForecasting individual time series\nRegular and infrequent observations (monthly, quarterly or annually)\nPoint forecasts and intervals\nConsistent with ts models\n\n\n\n\nDesign of the fable package\n\n\n\n\n\nForecasting many time series\nObservations at any time (sub-daily, irregular, monthly, etc.)\nForecast distributions\nConsistent with the tidyverse"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-6",
+    "href": "slides/analysis/index.html#section-6",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Tidy time series packages\n# Data manipulation\nlibrary(dplyr)\n# Plotting functions\nlibrary(ggplot2)\n# Time and date manipulation\nlibrary(lubridate)\n# Time series class\nlibrary(tsibble)\n# Tidy time series data\nlibrary(tsibbledata)\n# Time series graphics and statistics\nlibrary(feasts)\n# Forecasting functions\nlibrary(fable)\n\n\n# All of the above\nlibrary(fpp3)"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-7",
+    "href": "slides/analysis/index.html#section-7",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Time series data\n\nFour-yearly Olympic winning times\nAnnual Google profits\nQuarterly Australian beer production\nMonthly pharmaceutical subsidies\nWeekly retail sales\nDaily COVID-19 infections\nHourly electricity demand\nMinutely blood glucose measurements\nTime-stamped stock transaction data"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-8",
+    "href": "slides/analysis/index.html#section-8",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Time series data\nComes in all shapes and sizes!\nLike all data, we hope it’s tidy 🧹\n\n\n\n\n\n\n\nAll time series data contain…\n\n\n\nThe time of the observation (index)\nOne or more observations (measurements)\n\n\nSome datasets have identifying metadata,\n\nIdentifying variables for the series (key)"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-9",
+    "href": "slides/analysis/index.html#section-9",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "The tsibble data format\n\nA tsibble is a tibble for time series!\nThe quarterly visitors to Australia are found in the tourism dataset.\n\nlibrary(fpp3)\ntourism\n\n# A tsibble: 24,320 x 5 [1Q]\n# Key:       Region, State, Purpose [304]\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# i 24,310 more rows"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-10",
+    "href": "slides/analysis/index.html#section-10",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "# A tibble: 24,320 × 5\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# ℹ 24,310 more rows\n\n\n\n\n\n\n\n\nColumn types\n\n\nIn this dataset, the column types are:\n\nindex variable: Quarter\nkey variable(s): Region, State, and Purpose\nmeasured variable(s): Trips"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-11",
+    "href": "slides/analysis/index.html#section-11",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "pedestrian\n\n\n\n# A tibble: 66,037 x 5\n   Sensor         Date_Time           Date        Time Count\n   &lt;chr&gt;          &lt;dttm&gt;              &lt;date&gt;     &lt;int&gt; &lt;int&gt;\n 1 Birrarung Marr 2015-01-01 00:00:00 2015-01-01     0  1630\n 2 Birrarung Marr 2015-01-01 01:00:00 2015-01-01     1   826\n 3 Birrarung Marr 2015-01-01 02:00:00 2015-01-01     2   567\n 4 Birrarung Marr 2015-01-01 03:00:00 2015-01-01     3   264\n 5 Birrarung Marr 2015-01-01 04:00:00 2015-01-01     4   139\n 6 Birrarung Marr 2015-01-01 05:00:00 2015-01-01     5    77\n 7 Birrarung Marr 2015-01-01 06:00:00 2015-01-01     6    44\n 8 Birrarung Marr 2015-01-01 07:00:00 2015-01-01     7    56\n 9 Birrarung Marr 2015-01-01 08:00:00 2015-01-01     8   113\n10 Birrarung Marr 2015-01-01 09:00:00 2015-01-01     9   166\n# i 66,027 more rows\n\n\n\n\n\n\n\n\nExercise 1\n\n\nIn this dataset, which columns are:\n\nindex variable(s)?\nkey variable(s)?\nmeasured variable(s)?"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-12",
+    "href": "slides/analysis/index.html#section-12",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Our first tsibble\nA tsibble is a time series tibble.\nIt is most commonly created using as_tsibble().\n\n\n# A tsibble: 24,320 x 5 [1Q]\n# Key:       Region, State, Purpose [304]\n   Quarter Region   State           Purpose  Trips\n     &lt;qtr&gt; &lt;chr&gt;    &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;\n 1 1998 Q1 Adelaide South Australia Business  135.\n 2 1998 Q2 Adelaide South Australia Business  110.\n 3 1998 Q3 Adelaide South Australia Business  166.\n 4 1998 Q4 Adelaide South Australia Business  127.\n 5 1999 Q1 Adelaide South Australia Business  137.\n 6 1999 Q2 Adelaide South Australia Business  200.\n 7 1999 Q3 Adelaide South Australia Business  169.\n 8 1999 Q4 Adelaide South Australia Business  134.\n 9 2000 Q1 Adelaide South Australia Business  154.\n10 2000 Q2 Adelaide South Australia Business  169.\n# ℹ 24,310 more rows\n\n\n\n\n\n\n\n\nExercise 2\n\n\nIdentify the index and key variables of the aus_accommodation dataset, then convert it into a tsibble with as_tsibble().\n\nlibrary(fpp3)\nreadr::read_csv(\n  \"https://workshop.nectric.com.au/user2024/data/aus_accommodation.csv\"\n)"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-13",
+    "href": "slides/analysis/index.html#section-13",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Representing time (the index)\nTime is surprisingly tricky to represent!\n\nfrequency\ngranularity\ntime zones\ncalendars\nleap years (and seconds?!)\nholidays\ncivil/absolute time\ntime periods"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-14",
+    "href": "slides/analysis/index.html#section-14",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Representing time (the index)\nCommon time index variables can be created with these functions:\n\n\n\n\n\nGranularity\nFunction\n\n\n\n\nAnnual\nstart:end\n\n\nQuarterly\nyearquarter()\n\n\nMonthly\nyearmonth()\n\n\nWeekly\nyearweek()\n\n\nDaily\nas_date(), ymd()\n\n\nSub-daily\nas_datetime()"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-15",
+    "href": "slides/analysis/index.html#section-15",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Creating a tsibble\n\nTidy the data into a long format\nAppropriately class the time variable\nConvert to tsibble with as_tibble(), identifying the index and key variable(s).\n\n\n\n\n\n\n\nFollow along\n\n\nLet’s convert the PBS dataset into a tsibble.\n\nlibrary(fpp3)\nreadr::read_csv(\n  \"https://workshop.nectric.com.au/user2024/data/pbs.csv\"\n)"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-16",
+    "href": "slides/analysis/index.html#section-16",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Manipulating time series data\nTidy time series data uses tidyverse tools!\n\n\n\n\n\n\nYour turn\n\n\nTry calculating the total monthly cost of “A10” prescriptions (ATC2 classification) in Australia with dplyr.\nHint: use filter() to keep only “A10” prescriptions, then summarise() to calculate the total cost.\nHow do concessional subsidies compare to general subsidies?"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-17",
+    "href": "slides/analysis/index.html#section-17",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Manipulating time series data\nHowever there are some differences when working with time…\nThe time index is always preserved (implicit group_by()).\n\n\n\n\n\n\nGrouping across time\n\n\nSometimes you want to summarise over time.\nSummarising over all of time is no longer a time series, so first convert to a tibble with as_tibble().\nTo re-index by a new variable, use index_by()."
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-18",
+    "href": "slides/analysis/index.html#section-18",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Visualising time series\nTime series visualisation helps us identify time series patterns.\nThese patterns include:\n\ntrends\nseasonalities\ncycles\ncovariates\nevents\n\nThey also help identify anomalies/outliers.\n\n:::"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-19",
+    "href": "slides/analysis/index.html#section-19",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Time plots\n\n\nThe most common time series graphic is the “time plot”, created with autoplot().\n\npbs_scripts &lt;- PBS |&gt;\n  summarise(Scripts = sum(Scripts))\npbs_scripts |&gt;\n  autoplot(Scripts)\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-20",
+    "href": "slides/analysis/index.html#section-20",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Seasonal plots\n\n\nThe gg_season() plots help identify peaks and troughs in seasonal patterns.\n\npbs_scripts |&gt;\n  gg_season(Scripts)\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-21",
+    "href": "slides/analysis/index.html#section-21",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "Seasonal sub-series plots\n\n\nThe gg_subseries() plots help identify changes in seasonal patterns.\n\npbs_scripts |&gt;\n  gg_subseries(Scripts)\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
+  },
+  {
+    "objectID": "slides/analysis/index.html#section-22",
+    "href": "slides/analysis/index.html#section-22",
+    "title": "Tidy time series & forecasting in R",
+    "section": "",
+    "text": "ACF plots\n\n\nThe ACF() |&gt; autoplot() plots help identify autocorrelations.\n\npbs_scripts |&gt;\n  ACF(Scripts) |&gt; \n  autoplot()\n\n\n\n\n\n\n\n\n\n\n\n\n:::"
+  },
+  {
+    "objectID": "slides/analysis/index.html#seasonal-or-cyclical",
+    "href": "slides/analysis/index.html#seasonal-or-cyclical",
+    "title": "Tidy time series & forecasting in R",
+    "section": "Seasonal or Cyclical?",
+    "text": "Seasonal or Cyclical?\nThese common patterns are commonly confused, can you tell them apart?"
+  },
+  {
+    "objectID": "slides/analysis/index.html#time-for-a-break",
+    "href": "slides/analysis/index.html#time-for-a-break",
+    "title": "Tidy time series & forecasting in R",
+    "section": "⏰ Time for a break!",
+    "text": "⏰ Time for a break!\n\n\n\n\n\n\n\n\nUp next…\n\n\n\nSimplifying patterns with transformations,\nSpecifying time series models,\nTraining models on data,\nForecasting the future!\n\n\n\n\n\n\n\n\n\n\n\nUseful links\n\n\n social.mitchelloharawild.com\n workshop.nectric.com.au/user2024/\n mitchelloharawild/workshop-fable-user2024"
+  },
+  {
+    "objectID": "slides/analysis/index.html#unsplash-credits",
+    "href": "slides/analysis/index.html#unsplash-credits",
+    "title": "Tidy time series & forecasting in R",
+    "section": "Unsplash credits",
+    "text": "Unsplash credits\n\n\n\n\n\n\n\nThanks to these Unsplash contributors for their photos\n\n\n\n\n\nSander Weeteling: Photo\nJohn Fowler: Taken near sunset at White Sands National Monumen…\nBalint Mendlik: Photo\nDavid Pisnoy: Photo\nChris Lee: Behind the leaves.\nJon Tyson: Photo\nRandy Fath: Photo\nNathan Dumlao: Photo\nSander Weeteling: Photo"
   }
 ]
