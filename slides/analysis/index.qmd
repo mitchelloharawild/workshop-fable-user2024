@@ -60,40 +60,6 @@ Time series data and patterns
 
 ![](../backgrounds/sander-weeteling-KABfjuSOx74-unsplash.jpg){.image-left}
 
-## {}
-
-
-
-::: columns
-::: {.column width="35%"}
-
-### Mitchell O'Hara‑Wild
-
-#### Monash + Nectric
-
-[![](resources/github.svg){.icon} @mitchelloharawild](https://github.com/mitchelloharawild)
-
-[![](resources/linkedin.svg){.icon} @mitchelloharawild](https://www.linkedin.com/in/mitchelloharawild/)
-
-
-:::
-
-::: {.column width="65%"}
-
-### Welcome, who am I?
-
-- :mortar_board: PhD candidate at Monash University
-- :bar_chart: Data consulting and workshops at Nectric
-- :chart_with_upwards_trend: Specialised in time series analysis
-- :package: Develops R packages (**fable**, vitae, etc.)
-- :face_with_thermometer: Produced COVID-19 forecasts for Australia
-- :robot: DIYs IoT devices for home automation
-- :seedling: Permaculturist (:bee:, :hatching_chick:, :mushroom:, :sun_with_face:)
-
-:::
-:::
-
-![](../backgrounds/john-fowler-RsRTIofe0HE-unsplash.jpg){.image-left}
 
 ## {}
 
@@ -119,10 +85,77 @@ Time series data and patterns
 4. Make mistakes and learn!
 :::
 
+[<https://workshop.nectric.com.au/user2024/>]{.fragment}
+
 :::
 :::
 
 ![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+::: {.column width="35%"}
+
+### Mitchell O'Hara‑Wild
+
+#### Monash + Nectric
+
+[![](resources/github.svg){.icon} @mitchelloharawild](https://github.com/mitchelloharawild)
+
+[![](resources/linkedin.svg){.icon} @mitchelloharawild](https://www.linkedin.com/in/mitchelloharawild/)
+
+
+:::
+
+::: {.column width="65%"}
+
+### Welcome, who am I?
+
+- :mortar_board: PhD candidate at Monash University
+- :bar_chart: Data consulting and workshops at Nectric
+- :chart_with_upwards_trend: Specialised in time series analysis
+- :package: Develops R packages (**fable**, vitae, etc.)
+- :robot: DIYs IoT devices for home automation
+- :seedling: Permaculturist (:bee:, :hatching_chick:, :mushroom:, :sun_with_face:)
+
+:::
+:::
+
+![](../backgrounds/john-fowler-RsRTIofe0HE-unsplash.jpg){.image-left}
+
+## {}
+
+
+
+::: columns
+::: {.column width="35%"}
+
+### You!
+
+#### UseR! attendee
+
+:::
+
+::: {.column width="65%"}
+
+### :raising_hand: Hi, who are you?
+
+Hands up if...
+
+::: {.incremental}
+* :technologist: You've used R
+* :bar_chart: You've analysed data
+* :bubbles: Used tidyverse packages (dplyr, ggplot2...)
+* :chart_with_upwards_trend: You've worked with time series data before
+* :crystal_ball: You've produced a forecast before
+* :star_struck: You've used fable!
+:::
+
+:::
+:::
+
+![](../backgrounds/john-fowler-RsRTIofe0HE-unsplash.jpg){.image-left}
 
 
 ## {}
@@ -190,6 +223,48 @@ Install them all with `install.packages("fpp3")`
 
 ![](../backgrounds/david-pisnoy-46juD4zY1XA-unsplash.jpg){.image-right}
 
+
+
+## {}
+
+::: columns
+::: {.column width="60%"}
+
+### Tidy time series packages
+
+```r
+# Data manipulation
+library(dplyr)
+# Plotting functions
+library(ggplot2)
+# Time and date manipulation
+library(lubridate)
+# Time series class
+library(tsibble)
+# Tidy time series data
+library(tsibbledata)
+# Time series graphics and statistics
+library(feasts)
+# Forecasting functions
+library(fable)
+```
+
+::: {.fragment .fade-in}
+
+![](resources/fpp3.svg){style="height:200px;float:right;padding-left:10px;margin-top:-50px"}
+```r
+# All of the above
+library(fpp3)
+```
+:::
+
+
+
+
+:::
+:::
+
+![](../backgrounds/david-pisnoy-46juD4zY1XA-unsplash.jpg){.image-right}
 
 ## {}
 
@@ -294,11 +369,46 @@ tourism
 ```{r}
 #| message: false
 library(fpp3)
-tourism
+as_tibble(tourism)
+```
+
+:::{.callout-tip}
+## Column types
+
+In this dataset, the column types are:
+
+* `index` variable: [`Quarter`]{.fragment .fade-in}
+* `key` variable(s): [`Region`, `State`, and `Purpose`]{.fragment .fade-in}
+* measured variable(s): [`Trips`]{.fragment .fade-in}
+
+:::
+
+:::
+:::
+
+![](../backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+```{r}
+#| eval: false
+#| echo: true
+pedestrian
+```
+```{r}
+#| message: false
+as_tibble(pedestrian)
 ```
 
 :::{.callout-caution}
-## Your turn!
+## Exercise 1
 
 In this dataset, which columns are:
 
@@ -312,6 +422,72 @@ In this dataset, which columns are:
 :::
 
 ![](../backgrounds/chris-lee-70l1tDAI6rM-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Our first tsibble
+
+A **ts**ibble is a ***t**ime **s**eries* tibble.
+
+It is created with `as_tsibble()`.
+
+```{r}
+#| echo: true
+tourism |> 
+  as_tsibble(
+    key = c(Region, State, Purpose),
+    index = Quarter
+  )
+```
+
+:::
+:::
+
+![](../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Our first tsibble
+
+::: {.callout-caution}
+## Exercise 2
+
+Identify the `index` and `key` variables of the `aus_accommodation` dataset.
+
+Then use `as_tsibble()` to convert it into a tsibble.
+
+```{r}
+#| eval: false
+#| echo: true
+library(fpp3)
+read.csv(
+  "https://workshop.nectric.com.au/user2024/data/aus_accommodation.csv"
+)
+```
+
+:::
+
+:::
+:::
+
+![](../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
+
 
 ## {}
 
@@ -356,7 +532,7 @@ Common time index variables can be created with these functions:
 
 ```{r}
 tribble(
-  ~`Frequency`, ~Function,
+  ~`Granularity`, ~Function,
   "Annual", "`start:end`",
   "Quarterly", "`yearquarter()`",
   "Monthly", "`yearmonth()`",
@@ -392,16 +568,47 @@ tribble(
 ::: {.callout-caution}
 ## Follow along
 
-Let's convert the PBS dataset into a tsibble.
+Let's convert the tourism dataset into a tsibble.
 
 ```{r}
 #| eval: false
 #| echo: true
 library(fpp3)
-readr::read_csv(
-  "https://workshop.nectric.com.au/user2024/data/pbs.csv"
+read.csv(
+  "https://workshop.nectric.com.au/user2024/data/tourism.csv"
 )
 ```
+
+:::
+
+:::
+:::
+
+![](../backgrounds/jon-tyson-FlHdnPO6dlw-unsplash.jpg){.image-left}
+
+
+
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Creating a tsibble
+
+1. Tidy the data into a long format
+2. Appropriately class the time variable
+3. Convert to tsibble with `as_tibble()`, identifying the `index` and `key` variable(s).
+
+::: {.callout-caution}
+## Exercise 3
+
+Redo the previous exercise, but this time use the appropriate time class for the index variable.
+
+You should see the frequency of the tsibble matches the quarterly frequency of the measurements.
 
 :::
 
@@ -422,12 +629,11 @@ readr::read_csv(
 Tidy time series data uses tidyverse tools!
 
 ::: {.callout-caution}
-## Your turn
+## Exercise 4
 
-Try calculating the total monthly cost of "A10" prescriptions (ATC2 classification) in Australia with dplyr.
+Try calculating the total tourists visiting Victoria from the `tourism` dataset.
 
-How do concessional subsidies compare to general subsidies?
-
+*Hint: use `filter()` to keep only visitors to "Victoria", then `summarise()` to calculate the total trips.*
 
 :::
 
@@ -595,7 +801,7 @@ pbs_scripts |>
 ::: {.callout}
 ## ACF plots
 
-The `ACF() |> autoplot()` plots help identify autocorrelations.
+The `ACF() |> autoplot()` plots show autocorrelations, helping to identify trends, seasons and cycles.
 
 ```{r}
 #| echo: true
@@ -612,13 +818,98 @@ pbs_scripts |>
 
 ![](../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
 
+## {}
+
+::: columns
+
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### Visualising time series
+
+::: {.callout-caution}
+## Exercise 5
+
+Visualise and describe the temporal patterns of visitors to Victoria in the `tourism` dataset.
+
+Here's some code to get you started:
+
+```{r}
+#| echo: true
+vic_tourism <- tourism |> 
+  filter(State == "Victoria") |> 
+  summarise(Trips = sum(Trips))
+vic_tourism |> 
+  autoplot(Trips)
+```
+
+
+:::
+
+:::
+:::
+
+![](../backgrounds/nathan-dumlao-5Hl5reICevY-unsplash.jpg){.image-left}
+
+
+## Seasonal or Cyclical?
+
+These common patterns are commonly confused, can you tell them apart?
+
+::: {.callout-tip}
+## What's the difference?
+
+
+Seasonal patterns have...
+
+* **Consistent** and predictable shape,
+* Repeats with a **fixed time period**
+
+Cyclical patterns have...
+
+* **Inconsistent** shape and amplitude,
+* Repeats with a **variable time period**
+
+:::
+
 ## Seasonal or Cyclical?
 
 These common patterns are commonly confused, can you tell them apart?
 
 ```{r}
 library(patchwork)
-((autoplot(as_tsibble(USAccDeaths), value)+ylab(NULL))/autoplot(ACF(as_tsibble(USAccDeaths), value))) | ((autoplot(pelt, Lynx)+ylab(NULL))/autoplot(ACF(pelt, Lynx)))
+(autoplot(as_tsibble(USAccDeaths), value)+ylab(NULL))/autoplot(ACF(as_tsibble(USAccDeaths), value))
+```
+
+
+## Seasonal or Cyclical?
+
+These common patterns are commonly confused, can you tell them apart?
+
+```{r}
+library(patchwork)
+(autoplot(pelt, Lynx)+ylab(NULL))/autoplot(ACF(pelt, Lynx))
+```
+
+## Seasonal or Cyclical?
+
+These common patterns are commonly confused, can you tell them apart?
+
+```{r}
+library(patchwork)
+(autoplot(as_tsibble(sunspot.year), value)+ylab(NULL))/autoplot(ACF(as_tsibble(sunspot.year), value))
+```
+
+
+## Seasonal or Cyclical?
+
+These common patterns are commonly confused, can you tell them apart?
+
+```{r}
+library(patchwork)
+(autoplot(aus_production, Beer)+ylab(NULL))/autoplot(ACF(aus_production, Beer))
 ```
 
 ## :alarm_clock: Time for a break!

@@ -2,6 +2,7 @@ project:
   type: website
   resources:
     - "images/twitter-card.png"
+    - "data"
   render:
     - "*.qmd"
     - "!README.qmd"
@@ -42,6 +43,8 @@ website:
           href: slides/accuracy/
     - text: Feedback
       href: https://feedback.nectric.com.au/pZ26
+    - text: Exercises
+      href: exercises.qmd
     right:
       - icon: download
         text: Downloads

@@ -1,0 +1,934 @@
+---
+title: "Exercises"
+editor: source
+engine: knitr
+filters:
+  - webr-teachr
+  - quiz-teachr
+webr:
+  packages: ["fpp3", "urca"]
+  autoload-packages: false
+---
+
+# Time series data and patterns
+
+## Exercise 1
+
+The `pedestrian` dataset contains hourly pedestrian counts from 2015-01-01 to 2016-12-31 at 4 sensors in the city of Melbourne.
+
+The data is shown below:
+
+```{r}
+#| echo: false
+#| message: false
+library(tibble)
+as_tibble(tsibble::pedestrian)
+```
+
+::: {.callout-caution}
+## Your turn!
+
+Identify the `index` variable, `key` variable(s), and measured variable(s) of this dataset.
+:::
+
+::: {.callout-tip}
+## Hint
+
+* The `index` variable contains the complete time information
+* The `key` variable(s) identify each time series
+* The measured variable(s) are what you want to explore/forecast.
+:::
+
+::: columns
+
+::: {.column width="30%"}
+
+## `index` variable
+:::{.quiz-singlechoice}
+- [ ] [Sensor]{hint="x"}
+- [X] [Date_Time]{hint="o"}
+- [ ] [Date]{hint="x"}
+- [ ] [Time]{hint="x"}
+- [ ] [Count]{hint="x"}
+:::
+:::
+
+::: {.column width="30%"}
+
+## `key` variable(s)
+:::{.quiz-multichoice}
+- [X] [Sensor]{hint="o"}
+- [ ] [Date_Time]{hint="x"}
+- [ ] [Date]{hint="x"}
+- [ ] [Time]{hint="x"}
+- [ ] [Count]{hint="x"}
+:::
+:::
+
+::: {.column width="40%"}
+
+## measured variable(s)
+:::{.quiz-multichoice}
+- [ ] [Sensor]{hint="x"}
+- [ ] [Date_Time]{hint="x"}
+- [ ] [Date]{hint="x"}
+- [ ] [Time]{hint="x"}
+- [X] [Count]{hint="o"}
+:::
+:::
+:::
+
+## Exercise 2
+
+The `aus_accommodation` dataset contains quarterly data on Australian tourist accommodation from short-term non-residential accommodation with 15 or more rooms, 1998 Q1 - 2016 Q2.
+
+The units of the measured variables are as follows:
+
+* Takings are in millions of Australian dollars
+* Occupancy is a percentage of rooms occupied
+* CPI is an index with value 100 in 2012 Q1.
+
+::: {.callout-caution}
+## Your turn!
+
+Complete the code to convert this dataset into a tsibble.
+:::
+
+```{webr-teachr}
+library(<<fpp3>>)
+
+aus_accommodation <- read.csv(
+  "https://workshop.nectric.com.au/user2024/data/aus_accommodation.csv"
+) |> 
+  mutate(Date = as.Date(Date)) |>
+  as_tsibble(
+    <<key = State, index = Date>>
+  )
+???
+
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+checks <- c(
+  "You need to save the dataset as `aus_accommodation`" = !exists("aus_accommodation"),
+  "You need to use the as_tsibble() function to convert the data into a tsibble." = !search_ast(.code, .fn = as_tsibble),
+  "You should specify which column provides the time of the measurements with `index`." = !search_ast(.code, .fn = as_tsibble, index = Date),
+  "You need to specify the key variables that identify each time series" = exists_in(.errored, grepl, pattern = "distinct rows", fixed = TRUE)
+)
+  
+if(any(checks)) return(checks)
+
+if(!is_yearquarter(aus_accommodation$Date)) cat("Great, you've got a tsibble!\nAlthough something doesn't look right - check the frequency of the data, why isn't it quarterly?\n")
+FALSE
+```
+
+
+## Exercise 3
+
+:::{.callout-important}
+## Temporal granularity
+
+The previous exercise produced a dataset with daily frequency - although clearly the data is quarterly! This is because we are using a daily granularity which is inappropriate for this data.
+:::
+
+Common temporal granularities can be created with these functions:
+
+```{r}
+#| echo: false
+tribble(
+  ~`Granularity`, ~Function,
+  "Annual", "`as.integer()`",
+  "Quarterly", "`yearquarter()`",
+  "Monthly", "`yearmonth()`",
+  "Weekly", "`yearweek()`",
+  "Daily", "`as_date()`, `ymd()`",
+  "Sub-daily", "`as_datetime()`"
+) |>
+  knitr::kable(booktabs = TRUE)
+```
+
+
+::: {.callout-caution}
+## Your turn!
+
+Use the appropriate granularity for the `aus_accommodation` dataset, and verify that the frequency is now quarterly.
+:::
+
+
+```{webr-teachr}
+aus_accommodation <- read.csv(
+  "https://workshop.nectric.com.au/user2024/data/aus_accommodation.csv"
+) |> 
+  mutate(<<Quarter = yearquarter(Date)>>) |>
+  as_tsibble(
+    key = State, index = <<Quarter>>
+  )
+???
+
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "You need to save the dataset as `aus_accommodation`" = !exists("aus_accommodation"),
+  "You need to use the as_tsibble() function to convert the data into a tsibble." = !search_ast(.code, .fn = as_tsibble),
+  "You need to specify the key variables that identify each time series" = exists_in(.errored, grepl, pattern = "distinct rows", fixed = TRUE),
+  "You should use `yearquarter()` to change the time column into a quarterly granularity" = !is_yearquarter(aus_accommodation[[index_var(aus_accommodation)]])
+)
+```
+
+## Exercise 4
+
+The `tourism` dataset contains the quarterly overnight trips from 1998 Q1 to 2016 Q4 across Australia. 
+
+It is disaggregated by 3 key variables: 
+
+* `State`: States and territories of Australia
+* `Region`: The tourism regions are formed through the aggregation of Statistical Local Areas (SLAs) which are defined by the various State and Territory tourism authorities according to their research and marketing needs
+* `Purpose`: Stopover purpose of visit: "Holiday", "Visiting friends and relatives", "Business", "Other reason".
+
+::: {.callout-caution}
+## Your turn!
+
+Calculate the total quarterly tourists visiting Victoria from the `tourism` dataset.
+:::
+
+::: {.callout-tip}
+## Tidy tools
+
+To achieve this we will use functions from [dplyr](https://dplyr.tidyverse.org/).
+
+* Use `filter()` to keep only data where the `State` is `"Victoria"`.
+
+* Use `summarise()` to calculate the total trips in Victoria, regardless of `Region` and `Purpose`.
+:::
+
+```{webr-teachr}
+tourism |> 
+  filter(<<State == "Victoria">>) |> 
+  summarise(<<Trips = sum(Trips)>>)
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "The filter() function should compare if `State` is \\\"Victoria\\\" with `State == \\\"Victoria\\\"" = !search_ast(.code, .expr = filter(State == "Victoria")),
+  "The summarise() function should add the total number of trips using `sum()`." = !any(c(
+    search_ast(.code, .expr = summarise(Trips = sum(Trips))),
+    search_ast(.code, .expr = summarize(Trips = sum(Trips))),
+    search_ast(.code, .expr = summarise(sum(Trips))),
+    search_ast(.code, .expr = summarize(sum(Trips)))
+  )),
+  "There is no need to group_by(), the time index is implictly grouped with tsibble" = search_ast(.code, .fn = group_by),
+  "The result isn't quite right - try filtering the data first then summarising it." = !exists_in(.printed, identical, summarise(filter(tourism, State == "Victoria"), Trips = sum(Trips)))
+)
+```
+
+::: {.callout-caution}
+## Bonus task
+
+If you finish early, try also using `group_by()` to find the quarterly trips to Victoria for each `Purpose`.
+:::
+
+
+```{webr-teachr}
+tourism |> 
+  filter(<<State == "Victoria">>) |> 
+  <<group_by(Purpose)>> |> 
+  summarise(<<Trips = sum(Trips)>>)
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "The filter() function should compare if `State` is \\\"Victoria\\\" with `State == \\\"Victoria\\\"" = !search_ast(.code, .expr = filter(State == "Victoria")),
+  "The group_by() function should group `Purpose`" = !search_ast(.code, .expr = group_by(Purpose)),
+  "The summarise() function should add the total number of trips using `sum()`." = !any(c(
+    search_ast(.code, .expr = summarise(Trips = sum(Trips))),
+    search_ast(.code, .expr = summarize(Trips = sum(Trips))),
+    search_ast(.code, .expr = summarise(sum(Trips))),
+    search_ast(.code, .expr = summarize(sum(Trips)))
+  )),
+  "The result isn't quite right - try filtering the data first then summarising it." = !exists_in(.printed, identical, summarise(group_by(filter(tourism, State == "Victoria"), Purpose), Trips = sum(Trips)))
+)
+```
+
+## Exercise 5
+
+Visualise and describe the temporal patterns of visitors to Victoria in the `tourism` dataset.
+
+::: {.callout-caution}
+## Your turn
+
+Use `autoplot()` to produce a time plot of the visitors to Victoria, and describe the temporal patterns.
+:::
+
+
+```{webr-teachr}
+vic_tourism <- tourism |> 
+  filter(State == "Victoria") |> 
+  summarise(Trips = sum(Trips))
+<<vic_tourism>> |> 
+  <<autoplot>>(<<Trips>>)
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+compare_ggplot <- function(x, y) if(is.ggplot(x)) identical(ggplot2::ggplot_build(x)$data, ggplot2::ggplot_build(y)$data) else FALSE
+
+c(
+  "You should plot the `vic_tourism` dataset." = !search_ast(.code, .expr = autoplot(vic_tourism)),
+  "The autoplot() function should specify the measured variable to plot." = !search_ast(.code, .expr = autoplot(Trips)),
+  "The result isn't quite right - try again with `autoplot(data, variable)`." = !exists_in(.printed, compare_ggplot, autoplot(vic_tourism, Trips))
+)
+```
+
+
+::: columns
+
+::: {.column width="33%"}
+
+**Overall trend**
+
+:::{.quiz-singlechoice}
+- [X] [Increasing trend]{hint=""}
+- [ ] [No trend]{hint=""}
+- [ ] [Decreasing trend]{hint=""}
+:::
+
+:::
+
+::: {.column width="33%"}
+
+**Seasonality**
+
+:::{.quiz-singlechoice}
+- [ ] [No seasonality]{hint=""}
+- [X] [Annual seasonality]{hint=""}
+- [ ] [Monthly seasonality]{hint=""}
+:::
+:::
+
+::: {.column width="33%"}
+
+**Cycles**
+
+:::{.quiz-singlechoice}
+- [X] [No cycles evident]{hint=""}
+- [ ] [Cycle(s) evident]{hint=""}
+:::
+:::
+:::
+
+::: {.callout-caution}
+## Your turn
+
+Use `gg_season()` to take a closer look at the shape of the seasonal pattern.
+
+At what time of year is the seasonal peak and trough?
+:::
+
+
+```{webr-teachr}
+<<vic_tourism>> |> 
+  <<gg_season>>(<<Trips>>)
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+compare_ggplot <- function(x, y) if(is.ggplot(x)) identical(ggplot2::ggplot_build(x)$data, ggplot2::ggplot_build(y)$data) else FALSE
+
+c(
+  "You should plot the `vic_tourism` dataset." = !search_ast(.code, .expr = gg_season(vic_tourism)),
+  "The gg_season() function should specify the measured variable to plot." = !search_ast(.code, .expr = gg_season(Trips)),
+  "The result isn't quite right - try again with `gg_season(data, variable)`." = !exists_in(.printed, compare_ggplot, gg_season(vic_tourism, Trips))
+)
+```
+
+
+::: columns
+
+::: {.column width="48%"}
+
+**Seasonal peak**
+
+The seasonal maximum is:
+
+:::{.quiz-singlechoice}
+- [X] [Q1]{hint=""}
+- [ ] [Q2]{hint=""}
+- [ ] [Q3]{hint=""}
+- [ ] [Q4]{hint=""}
+:::
+
+:::
+
+::: {.column width="48%"}
+
+**Seasonal trough**
+
+The seasonal minimum is:
+
+:::{.quiz-singlechoice}
+- [ ] [Q1]{hint=""}
+- [ ] [Q2]{hint=""}
+- [X] [Q3]{hint=""}
+- [ ] [Q4]{hint=""}
+:::
+:::
+
+:::
+
+
+::: {.callout-caution}
+## Your turn
+
+Use `gg_subseries()` to see if the seasonal shape changes over time.
+:::
+
+
+```{webr-teachr}
+<<vic_tourism>> |> 
+  <<gg_subseries>>(<<Trips>>)
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+compare_ggplot <- function(x, y) if(is.ggplot(x)) identical(ggplot2::ggplot_build(x)$data, ggplot2::ggplot_build(y)$data) else FALSE
+
+c(
+  "You should plot the `vic_tourism` dataset." = !search_ast(.code, .expr = gg_subseries(vic_tourism)),
+  "The gg_subseries() function should specify the measured variable to plot." = !search_ast(.code, .expr = gg_subseries(Trips)),
+  "The result isn't quite right - try again with `gg_subseries(data, variable)`." = !exists_in(.printed, compare_ggplot, gg_subseries(vic_tourism, Trips))
+)
+```
+
+**Changing seasonality**
+
+Is the seasonal pattern changing over time?
+
+:::{.quiz-singlechoice}
+- [ ] [Yes]{hint=""}
+- [X] [No]{hint=""}
+:::
+
+::: {.callout-caution}
+## Your turn
+
+Use `ACF() |> autoplot()` to look at the autocorrelations.
+
+Can you identify the trend and seasonality in this plot?
+:::
+
+
+```{webr-teachr}
+<<vic_tourism>> |> 
+  <<ACF>>(<<Trips>>) |> 
+  <<autoplot>>()
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+compare_ggplot <- function(x, y) if(is.ggplot(x)) identical(ggplot2::ggplot_build(x)$data, ggplot2::ggplot_build(y)$data) else FALSE
+
+c(
+  "You should plot the `vic_tourism` dataset." = !search_ast(.code, .expr = ACF(vic_tourism)),
+  "The ACF() function should specify the measured variable to plot." = !search_ast(.code, .expr = ACF(Trips)),
+  "The result isn't quite right - try again with `data |> ACF(variable) |> autoplot()`." = !exists_in(.printed, compare_ggplot, autoplot(ACF(vic_tourism, Trips)))
+)
+```
+
+::: {.callout-caution}
+## Bonus task
+
+If you have extra time, repeat the above time series exploration for each `Purpose` of travel to Victoria. Do the patterns vary by purpose of travel?
+:::
+
+```{webr-teachr}
+vic_tourism_purpose <- tourism |> 
+  filter(State == "Victoria") |> 
+  group_by(<<Purpose>>) |> 
+  summarise(Trips = sum(Trips))
+<<vic_tourism_purpose>> |> 
+  <<autoplot>>(<<Trips>>)
+<<vic_tourism_purpose>> |> 
+  <<gg_season>>(<<Trips>>)
+<<vic_tourism_purpose>> |> 
+  <<gg_subseries>>(<<Trips>>)
+<<vic_tourism_purpose>> |> 
+  <<ACF>>(<<Trips>>) |> 
+  <<autoplot>>()
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+compare_ggplot <- function(x, y) if(is.ggplot(x)) identical(ggplot2::ggplot_build(x)$data, y$data) else FALSE
+
+c(
+  "You haven't produced a time plot with `autoplot()`. Try again with `autoplot(data, variable)`." = !exists_in(.printed, compare_ggplot, ggplot2::ggplot_build(autoplot(vic_tourism_purpose, Trips))),
+  "You haven't produced a seasonal plot with `gg_season()`. Try again with `gg_season(data, variable)`." = !exists_in(.printed, compare_ggplot, ggplot2::ggplot_build(autoplot(vic_tourism_purpose, Trips))),
+  "You haven't produced a subseries plot with `gg_subseries()`. Try again with `autoplot(data, variable)`." = !exists_in(.printed, compare_ggplot, ggplot2::ggplot_build(gg_subseries(vic_tourism_purpose, Trips))),
+  "You haven't produced a ACF plot`. Try again with `data |> ACF(variable) |> autoplot()`." = !exists_in(.printed, compare_ggplot, ggplot2::ggplot_build(autoplot(ACF(vic_tourism_purpose, Trips))))
+)
+```
+
+
+# Modelling and forecasting
+
+## Exercise 6
+
+Earlier we used visualisation to identify temporal patterns with visitors to Victoria in the `tourism` dataset. Now we'll use this to specify, estimate, and forecast the data!
+
+::: {.callout-caution}
+## Your turn!
+
+Specify all simple forecasting models for the total number of tourists arriving in Victoria.
+
+Estimate them with `model()` and produce forecasts for the next **5 years** with `forecast()`.
+
+Plot the forecasts, and visually evaluate their suitability.
+:::
+
+```{webr-teachr}
+vic_tourism <- tourism |> 
+  filter(State == "Victoria") |> 
+  summarise(Trips = sum(Trips))
+vic_tourism |> 
+  <<model>>(
+    naive = <<NAIVE(Trips)>>,
+    snaive = <<SNAIVE(Trips)>>,
+    naive_drift = <<NAIVE(Trips ~ drift())>>,
+    snaive_drift = <<SNAIVE(Trips ~ drift())>>
+  ) |> 
+  <<forecast>>(h = <<"5 years">>) |> 
+  <<autoplot(vic_tourism)>>
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "You should pipe `vic_tourism` into the model() function to train the simple models on the Victorian tourism data." = !search_ast(.code, .fn = model),
+  "You haven't specified the NAIVE model correctly, it should be NAIVE(Trips) inside model()." = !search_ast(.code, .expr = NAIVE(Trips)),
+  "You haven't specified the SNAIVE model correctly, it should be SNAIVE(Trips) inside model()." = !search_ast(.code, .expr = SNAIVE(Trips)),
+  "You haven't specified the NAIVE with drift model correctly, it should be NAIVE(Trips ~ drift()) inside model()." = !search_ast(.code, .expr = NAIVE(Trips ~ drift())),
+  "You haven't specified the SNAIVE with drift model correctly, it should be SNAIVE(Trips ~ drift()) inside model()." = !search_ast(.code, .expr = SNAIVE(Trips ~ drift())),
+  "You haven't produced forecasts with a 5 year horizon, you can either set `h = \\\"5 years\\\"` or `h=60`." = !(search_ast(.code, .expr = forecast(h = "5 years")) || search_ast(.code, .expr = forecast(h = 60))),
+  "You haven't plotted the historical data along with the forecasts, you should use autoplot(vic_tourism) to show the additional contextual data." = !search_ast(.code, .expr = autoplot(vic_tourism))
+)
+```
+
+Which simple forecasting model is most appropriate for this data?
+
+:::{.quiz-singlechoice}
+- [ ] [NAIVE]{hint=""}
+- [ ] [SNAIVE]{hint=""}
+- [ ] [NAIVE with drift]{hint=""}
+- [X] [SNAIVE with drift]{hint=""}
+:::
+
+::: {.callout-caution}
+## Bonus task
+
+If you finish early, try also producing forecasts of the quarterly trips to Victoria for each `Purpose`.
+:::
+
+```{webr-teachr}
+vic_tourism_purpose <- tourism |> 
+  filter(State == "Victoria") |> 
+  <<group_by(Purpose)>> |> 
+  summarise(Trips = sum(Trips))
+vic_tourism_purpose |> 
+  <<model>>(
+    naive = <<NAIVE(Trips)>>,
+    snaive = <<SNAIVE(Trips)>>,
+    naive_drift = <<NAIVE(Trips ~ drift())>>,
+    snaive_drift = <<SNAIVE(Trips ~ drift())>>
+  ) |> 
+  <<forecast>>(h = <<"5 years">>) |> 
+  <<autoplot(vic_tourism_purpose)>>
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "You should pipe `vic_tourism` into the model() function to train the simple models on the Victorian tourism data." = !search_ast(.code, .fn = model),
+  "Group by Purpose with `group_by()` to produce forecasts of Victorian tourist trips for each purpose of travel." = !search_ast(.code, .expr = group_by(Purpose)),
+  "You haven't specified the NAIVE model correctly, it should be NAIVE(Trips) inside model()." = !search_ast(.code, .expr = NAIVE(Trips)),
+  "You haven't specified the SNAIVE model correctly, it should be SNAIVE(Trips) inside model()." = !search_ast(.code, .expr = SNAIVE(Trips)),
+  "You haven't specified the NAIVE with drift model correctly, it should be NAIVE(Trips ~ drift()) inside model()." = !search_ast(.code, .expr = NAIVE(Trips ~ drift())),
+  "You haven't specified the SNAIVE with drift model correctly, it should be SNAIVE(Trips ~ drift()) inside model()." = !search_ast(.code, .expr = SNAIVE(Trips ~ drift())),
+  "You haven't produced forecasts with a 5 year horizon, you can either set `h = \\\"5 years\\\"` or `h=60`." = !(search_ast(.code, .expr = forecast(h = "5 years")) || search_ast(.code, .expr = forecast(h = 60))),
+  "You haven't plotted the historical data along with the forecasts, you should use autoplot(vic_tourism_purpose) to show the additional contextual data." = !search_ast(.code, .expr = autoplot(vic_tourism_purpose))
+)
+```
+
+## Exercise 7
+
+::: {.callout-caution}
+## Your turn!
+Produce forecasts for total Takings of Australian tourist accommodation over the next 5 years from `aus_accommodation` using linear regression.
+:::
+
+```{webr-teachr}
+aus_accommodation_total <- fpp3::aus_accommodation |> 
+  summarise(Takings = sum(Takings), Occupancy = mean(Occupancy))
+aus_accommodation_total |> 
+  model(
+    <<TSLM(Takings ~ trend() + season())>>
+  ) |> 
+  forecast(h = <<"5 years">>)
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "You haven't specified the TSLM model correctly, it should be TSLM(Takings ~ trend() + season()) inside model()." = !(search_ast(.code, .expr = TSLM(Takings ~ trend() + season())) || search_ast(.code, .expr = TSLM(Takings ~ season() + trend()))),
+  "You haven't produced forecasts with a 5 year horizon, you can either set `h = \\\"5 years\\\"` or `h=60`." = !(search_ast(.code, .expr = forecast(h = "5 years")) || search_ast(.code, .expr = forecast(h = 60)))
+)
+```
+
+
+::: {.callout-caution}
+## Bonus task
+
+Try producing forecasts from the regression model which also uses `Occupancy` as a regressor.
+
+Why doesn't this work?
+:::
+
+```{webr-teachr}
+aus_accommodation_total |> 
+  model(
+    <<TSLM(Takings ~ trend() + season() + Occupancy)>>
+  ) |> 
+  forecast(h = <<"5 years">>)
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "Try adding Occupancy to the model" = length(.errored)>0
+)
+```
+
+
+## Exercise 8
+
+An ETS model can capture a wide range of time series patterns, and most usefully it can adapt to changes in these patterns over time.
+
+::: {.callout-tip}
+## Additive or multiplicative?
+
+Additive components have constant variance, while multiplicative components have *variation proportionate to the level/scale of the data*.
+:::
+
+::: {.callout-caution}
+## Your turn!
+
+Is the seasonality of total Australian accommodation takings from `aus_accommodation_total` additive or multiplicative?
+
+Estimate an ETS model for the data, does the automatic ETS model match the patterns you see in a time plot?
+:::
+
+Identify the nature of each of the ETS components.
+
+::: columns
+
+::: {.column width="33%"}
+
+**Error**
+
+:::{.quiz-singlechoice}
+- [ ] [Additive]{hint=""}
+- [X] [Multiplicative]{hint=""}
+:::
+
+:::
+
+::: {.column width="33%"}
+
+**Trend**
+
+:::{.quiz-singlechoice}
+- [ ] [No trend]{hint=""}
+- [X] [Additive]{hint=""}
+- [ ] [Multiplicative]{hint=""}
+:::
+:::
+
+::: {.column width="33%"}
+
+**Seasonality**
+
+:::{.quiz-singlechoice}
+- [ ] [No seasonality]{hint=""}
+- [ ] [Additive]{hint=""}
+- [X] [Multiplicative]{hint=""}
+:::
+:::
+:::
+
+```{webr-teachr}
+fit <- aus_accommodation_total |> 
+  model(
+    <<ETS(Takings)>>
+  )
+
+# Look at the mable to identify the automatically chosen model
+fit
+
+fit |> 
+  forecast(h = "5 years") |> 
+  autoplot(aus_accommodation_total)
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "You haven't specified the ETS model correctly, it should be ETS(Takings) inside model()." = !(search_ast(.code, .expr = ETS(Takings)))
+)
+```
+
+## Exercise 9
+
+An ARIMA model captures a many time series pattern using autocorrelations. It requires data with a constant variance, so transformations might be necessary.
+
+::: {.callout-tip}
+## Transforming the data
+
+We can use `log()` to transform multiplicative patterns into additive ones. This is done inside the model specification, applied to the response variable. For exxample: `ARIMA(log(y))`.
+
+Multiplicative patterns aren't always *exactly* multiplicative - for this we often use power transformations via `box_cox(y, lambda)`. More information: <https://otexts.com/fpp3/transformations.html>
+:::
+
+::: {.callout-caution}
+## Your turn!
+
+Identify if a transformation is necessary for the `aus_accommodation_total` Takings
+
+Then estimate an automatically selected ARIMA model for this data.
+
+Compare ARIMA forecasts with the automatic ETS model, how do they differ? 
+:::
+
+```{webr-teachr}
+fit <- aus_accommodation_total |> 
+  model(
+    <<ARIMA(log(Takings))>>
+  )
+
+# Look at the mable to identify the automatically chosen model
+fit
+
+fit |> 
+  forecast(h = "5 years") |> 
+  autoplot(aus_accommodation_total)
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "You haven't specified the ARIMA model correctly, it should be ARIMA(log(Takings)) inside model()." = !(search_ast(.code, .expr = ARIMA(log(Takings))))
+)
+```
+
+The ARIMA and ETS forecasts are...
+
+:::{.quiz-singlechoice}
+- [ ] [Similar]{hint=""}
+- [ ] [Different (ETS forecasts higher Takings)]{hint=""}
+- [X] [Different (ARIMA forecasts higher Takings)]{hint=""}
+:::
+
+# Accuracy evaluation
+
+## Exercise 10
+
+Which model is better, ETS or ARIMA? It depends on the data!
+
+::: {.callout-caution}
+## Your turn!
+
+Let's see which model works best for forecasting total Takings of Australian tourist accommodation.
+
+Estimate ETS and ARIMA models for total Takings of Australian tourist accommodation (`aus_accommodation_total`), then use `accuracy()` to find their in-sample accuracy.
+
+Which model is most accurate?
+:::
+
+```{webr-teachr}
+fit <- aus_accommodation_total |> 
+  model(
+    <<ETS(Takings)>>,
+    <<ARIMA(log(Takings))>>
+  )
+
+# Evaluate the accuracy of the model
+<<accuracy>>(fit)
+
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+# acc_ans <- aus_accommodation_total |> 
+#   model(
+#     ETS(Takings),
+#     ARIMA(log(Takings))
+#   ) |> 
+#   accuracy()
+
+c(
+  "You haven't specified the ARIMA model correctly, it should be ARIMA(log(Takings)) inside model()." = !(search_ast(.code, .expr = ARIMA(log(Takings)))),
+  "You haven't specified the ETS model correctly, it should be ETS(Takings) inside model()." = !(search_ast(.code, .expr = ETS(Takings))),
+  "You haven't printed the correct accuracy() output. You should use accuracy(fit) to compute the accuracy of the estimated models stored in `fit`." = !exists_in(.printed, function(.) identical(.$.type, c("Training", "Training")))
+)
+```
+
+Between ARIMA and ETS, which model is most accurate for this data?
+
+:::{.quiz-singlechoice}
+- [ ] [ETS]{hint=""}
+- [X] [ARIMA]{hint=""}
+:::
+
+
+## Exercise 11
+
+In-sample forecast accuracy is unrealistic - the model has seen the future!
+
+Produce out-of-sample forecasts to evaluate which model is the most accurate.
+
+::: {.callout-caution}
+## Your turn!
+
+Evaluate ETS and ARIMA forecast accuracy for total Takings of Australian tourist accommodation (`aus_accommodation_total`).
+
+1. Withhold 4 years of data for forecast evaluation,
+2. Estimate ETS and ARIMA models on the filtered data,
+3. Produce forecasts for the 4 years of withheld data,
+4. Evaluate forecast accuracy using `accuracy()`.
+
+Which model is more accurate for forecasting?
+
+Does this differ from the in-sample model accuracy?
+:::
+
+```{webr-teachr}
+# Estimate models on the training data
+fit <- aus_accommodation_total |> 
+  filter(Date <= yearquarter(<<"2012 Q2">>)) |> 
+  model(
+    ETS(Takings),
+    ARIMA(log(Takings))
+  )
+
+# Produce forecasts for the next 4 years (test data)
+fc <- fit |> 
+  forecast(h = "4 years")
+
+# Evaluate the forecast accuracy of the model on the test set
+accuracy(<<fc>>, <<aus_accommodation_total>>)
+
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "The training data should end at 2012 Q2 to retain just 4 years of data as the test set for comparison." = identical(max(response(fit)$Date), yearquarter("2012 Q2")),
+  "You haven't specified the ARIMA model correctly, it should be ARIMA(log(Takings)) inside model()." = !(search_ast(.code, .expr = ARIMA(log(Takings)))),
+  "You haven't specified the ETS model correctly, it should be ETS(Takings) inside model()." = !(search_ast(.code, .expr = ETS(Takings))),
+  "You haven't printed the correct accuracy() output. You should use accuracy(fc, data) to compute the accuracy of the forecasts stored in `fc`." = !exists_in(.printed, function(.) identical(.$.type, c("Test", "Test")))
+)
+```
+
+Between ARIMA and ETS, which model is most accurate for this data based on the test set accuracy?
+
+:::{.quiz-singlechoice}
+- [X] [ETS]{hint=""}
+- [ ] [ARIMA]{hint=""}
+:::
+
+## Exercise 12
+
+Evaluating out-of-sample forecasts on a small test-set is highly sensitive to just a few observations.
+
+Let's use cross-validation to get a reliable estimate of forecast accuracy.
+
+::: {.callout-caution}
+## Your turn!
+
+Calculate cross-validated forecast accuracy for total Takings of Australian tourist accommodation (`aus_accommodation_total`). Use an initial fold size of 10 years, and increment the length of data by 4 years in each fold.
+
+How do these results differ from the forecast accuracy calculated earlier?
+
+*Hint: Use `stretch_tsibble()` after `filter()` to create cross-validation folds of the data.*
+:::
+
+```{webr-teachr}
+# Estimate models on the training data
+fit <- aus_accommodation_total |> 
+  filter(Date <= yearquarter("2012 Q2")) |> 
+  <<stretch_tsibble(.step = 16, .init = 40)>> |> 
+  model(
+    ETS(Takings),
+    ARIMA(log(Takings))
+  )
+
+# Produce forecasts for the next 4 years (test data)
+fc <- fit |> 
+  forecast(h = "4 years")
+
+# Evaluate the forecast accuracy of the model on the test set
+accuracy(<<fc>>, <<aus_accommodation_total>>)
+
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "The training data should end at 2012 Q2 to retain just 4 years of data as the test set for comparison." = identical(max(response(fit)$Date), yearquarter("2012 Q2")),
+  "You haven't set up the cross-validation folds correctly, use `stretch_tsibble()` after `filter()` and pay close attention to the step size (`.step=16`) and initial size (`.init` = 40)." = !(search_ast(.code, .expr = stretch_tsibble(.step = 16, .init = 40))),
+  "You haven't specified the ARIMA model correctly, it should be ARIMA(log(Takings)) inside model()." = !(search_ast(.code, .expr = ARIMA(log(Takings)))),
+  "You haven't specified the ETS model correctly, it should be ETS(Takings) inside model()." = !(search_ast(.code, .expr = ETS(Takings))),
+  "You haven't printed the correct accuracy() output. You should use accuracy(fc, data) to compute the accuracy of the cross-validated forecasts stored in `fc`." = !exists_in(.printed, function(.) identical(.$.type, c("Test", "Test")))
+)
+```
+
+Between ARIMA and ETS, which model is most accurate for this data based on the cross-validated accuracy?
+
+:::{.quiz-singlechoice}
+- [X] [ETS]{hint=""}
+- [ ] [ARIMA]{hint=""}
+:::
+
+## Exercise 13
+
+Accuracy provides useful comparison between models and indicative forecasting performance.
+
+Residual diagnostics reveals opportunities to improve your model, and indicates the statistical appropriateness of your model.
+
+::: {.callout-caution}
+## Follow along
+
+Let's check the model assumptions for our ETS and ARIMA models on total Australian accommodation Takings.
+:::
+
+
+```{webr-teachr}
+# Estimate models on the full data
+fit <- aus_accommodation_total |> 
+  model(
+    ETS(Takings),
+    ARIMA(log(Takings))
+  )
+
+# Check the residuals of the ETS model
+fit |> 
+  select(`ETS(Takings)`) |> 
+  gg_tsresiduals()
+
+# Check the residuals of the ARIMA model
+fit |> 
+  select(`ARIMA(log(Takings))`) |> 
+  gg_tsresiduals()
+
+???
+  
+if(!("fpp3" %in% .packages())) return(c("You need to load the fpp3 package!" = TRUE))
+
+c(
+  "No checks" = FALSE
+)
+```

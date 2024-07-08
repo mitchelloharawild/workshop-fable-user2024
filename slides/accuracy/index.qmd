@@ -20,9 +20,8 @@ editor_options:
 ```{r}
 #| include: false
 library(fpp3)
-pbs_a10 <- PBS |> 
-  filter(ATC2 == "A10") |> 
-  summarise(Scripts = sum(Scripts), Cost = sum(Cost))
+aus_accommodation_total <- fpp3::aus_accommodation |> 
+  summarise(Takings = sum(Takings), Occupancy = mean(Occupancy))
 ```
 
 ## {}
@@ -89,12 +88,13 @@ Good models capture all patterns in the data.
 #| echo: true
 #| eval: false
 library(fpp3)
-pbs_scripts <- PBS |> 
-  summarise(Scripts = sum(Scripts))
-fit <- pbs_scripts |> 
+vic_tourism <- tourism |> 
+  filter(State == "Victoria") |> 
+  summarise(Trips = sum(Trips))
+fit <- vic_tourism |> 
   model(
-    ETS(Scripts), 
-    ARIMA(log(Scripts))
+    ETS(Trips), 
+    ARIMA(log(Trips))
   )
 augment(fit)
 ```
@@ -121,12 +121,13 @@ augment(fit)
 #| echo: false
 #| eval: true
 library(fpp3)
-pbs_scripts <- PBS |> 
-  summarise(Scripts = sum(Scripts))
-fit <- pbs_scripts |> 
+vic_tourism <- tourism |> 
+  filter(State == "Victoria") |> 
+  summarise(Trips = sum(Trips))
+fit <- vic_tourism |> 
   model(
-    ETS(Scripts), 
-    ARIMA(log(Scripts))
+    ETS(Trips), 
+    ARIMA(log(Trips))
   )
 augment(fit)
 ```
@@ -158,8 +159,8 @@ augment(fit)
 ```{r}
 #| echo: true
 #| eval: true
-pbs_scripts |> 
-  autoplot(Scripts) + 
+vic_tourism |> 
+  autoplot(Trips) + 
   autolayer(augment(fit), .fitted)
 ```
 
@@ -225,6 +226,32 @@ These point forecast accuracy measures are:
 
 ![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
 
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+
+### Summarising model accuracy
+
+::: {.callout-caution}
+## Exercise 10
+
+Evaluate ETS and ARIMA forecast accuracy for total Takings of Australian tourist accommodation (`aus_accommodation_total`).
+
+```{r}
+aus_accommodation_total <- fpp3::aus_accommodation |> 
+  summarise(Takings = sum(Takings), Occupancy = mean(Occupancy))
+```
+:::
+
+:::
+:::
+
+![](../backgrounds/balint-mendlik-4-ORHffEh3I-unsplash.jpg){.image-right}
+
+
 ## {}
 
 ::: columns
@@ -242,12 +269,12 @@ Evaluating out-of-sample forecasts gives more realistic forecast accuracy result
 ::: {.fragment .fade-in}
 ```{r}
 #| echo: true
-fc <- pbs_scripts |> 
+fc <- vic_tourism |> 
   # Keep some data for evaluating forecasts
-  filter(Month < yearmonth("2006 Jan")) |> 
+  filter(Quarter < yearquarter("2016 Q1")) |> 
   model(
-    ETS(Scripts), 
-    ARIMA(log(Scripts))
+    ETS(Trips), 
+    ARIMA(log(Trips))
   ) |> 
   forecast(h = "2 years")
 ```
@@ -261,13 +288,13 @@ fc <- pbs_scripts |>
 ## {}
 
 ```{r}
-p1 <- pbs_scripts |> 
-  autoplot(Scripts)
+p1 <- vic_tourism |> 
+  autoplot(Trips)
 p2 <- p1 + 
-  autolayer(filter(pbs_scripts, Month < yearmonth("2006 Jan")), colour = "steelblue")
+  autolayer(filter(vic_tourism, Quarter < yearquarter("2016 Q1")), colour = "steelblue")
 p3 <- fc |> 
-  autoplot(pbs_scripts) +
-  autolayer(filter(pbs_scripts, Month < yearmonth("2006 Jan")), Scripts, colour = "steelblue")
+  autoplot(vic_tourism) +
+  autolayer(filter(vic_tourism, Quarter < yearquarter("2016 Q1")), Trips, colour = "steelblue")
 p <- patchwork::align_patches(p1, p2, p3)
 p[[1]]
 ```
@@ -297,7 +324,7 @@ Then we can again use `accuracy()` with our forecasts:
 
 ```{r}
 #| echo: true
-accuracy(fc, pbs_scripts)
+accuracy(fc, vic_tourism)
 ```
 
 ::: {.callout-tip}
@@ -325,13 +352,13 @@ i.e. `accuracy(<forecasts>, <full_data>)`.
 ### Forecasting accuracy
 
 ::: {.callout-caution}
-## Your turn
+## Exercise 11
 
-Evaluate ETS and ARIMA forecast accuracy of A10 scripts (`pbs_a10`).
+Evaluate ETS and ARIMA forecast accuracy for total Takings of Australian tourist accommodation (`aus_accommodation_total`).
 
-1. Withhold 2 years of data for forecast evaluation,
+1. Withhold 4 years of data for forecast evaluation,
 2. Estimate ETS and ARIMA models on the filtered data,
-3. Produce forecasts for the 2 years of withheld data,
+3. Produce forecasts for the 4 years of withheld data,
 4. Evaluate forecast accuracy using `accuracy()`.
 
 Which model is more accurate for forecasting?
@@ -404,14 +431,14 @@ The `stretch_tsibble()` function can be added after `filter()` to create time-se
 ::: {.fragment .fade-in}
 ```{r}
 #| echo: true
-fc_cv <- pbs_scripts |> 
+fc_cv <- vic_tourism |> 
   # Keep some data for evaluating forecasts
-  filter(Month < yearmonth("2006 Jan")) |> 
+  filter(Quarter < yearquarter("2016 Q1")) |> 
   # Cross-validate the remaining data
-  stretch_tsibble(.step = 24, .init = 48) |> 
+  stretch_tsibble(.step = 4*2, .init = 4*10) |> 
   model(
-    ETS(Scripts), 
-    ARIMA(log(Scripts))
+    ETS(Trips), 
+    ARIMA(log(Trips))
   ) |> 
   forecast(h = "2 years")
 ```
@@ -428,20 +455,20 @@ fc_cv <- pbs_scripts |>
 ## {}
 
 ```{r}
-pbs_scripts_cv <- pbs_scripts |> 
+vic_tourism_cv <- vic_tourism |> 
   # Keep some data for evaluating forecasts
-  filter(Month < yearmonth("2006 Jan")) |> 
+  filter(Quarter < yearquarter("2016 Q1")) |> 
   # Cross-validate the remaining data
-  stretch_tsibble(.step = 24, .init = 48) |> 
+  stretch_tsibble(.step = 4*2, .init = 4*10) |> 
   mutate(.id = forcats::fct_rev(factor(.id)))
-p1 <- pbs_scripts |> 
-  autoplot(Scripts)
+p1 <- vic_tourism |> 
+  autoplot(Trips)
 p2 <- p1 + 
-  autolayer(pbs_scripts_cv, Scripts)
+  autolayer(vic_tourism_cv, Trips)
 p3 <- fc_cv |> 
   as_fable(key = .model) |> 
-  autoplot(pbs_scripts) +
-  autolayer(filter(pbs_scripts, Month < yearmonth("2006 Jan")), Scripts, colour = "steelblue")
+  autoplot(vic_tourism) +
+  autolayer(filter(vic_tourism, Quarter < yearquarter("2016 Q1")), Trips, colour = "steelblue")
 p <- patchwork::align_patches(p1, p2, p3)
 p[[1]]
 ```
@@ -471,13 +498,13 @@ Once more, we again use `accuracy()` with our forecasts:
 
 ```{r}
 #| echo: true
-accuracy(fc_cv, pbs_scripts)
+accuracy(fc_cv, vic_tourism)
 ```
 
 ::: {.callout-caution}
-## Your turn
+## Exercise 12
 
-Calculate cross-validated forecast accuracy on A10 Scripts (from `pbs_a10`).
+Calculate cross-validated forecast accuracy for total Takings of Australian tourist accommodation (`aus_accommodation_total`).
 
 How do these results differ from the forecast accuracy calculated earlier?
 :::
@@ -551,8 +578,8 @@ Consider a regression model without seasonality.
 
 ```{r}
 #| echo: true
-fit <- pbs_scripts |> 
-  model(TSLM(Scripts ~ trend()))
+fit <- vic_tourism |> 
+  model(TSLM(Trips ~ trend()))
 augment(fit) |> 
   gg_season(.innov)
 ```
@@ -580,19 +607,14 @@ augment(fit) |>
 Here we can see that the seasonality wasn't captured by this model, and can still be found in the residuals.
 :::
 
-::: {.callout-caution}
-## Your turn
-
-Look for any patterns in the residuals from your ARIMA and ETS models on A10 scripts.
+::: {.fragment .fade-in}
 
 ```{r}
 #| echo: true
-fit <- pbs_a10 |> 
-  model(
-    ETS(Scripts),
-    ARIMA(log(Scripts))
-  )
-augment(fit)
+fit <- vic_tourism |> 
+  model(TSLM(Trips ~ trend() + season()))
+augment(fit) |> 
+  gg_season(.innov)
 ```
 
 :::
@@ -623,6 +645,25 @@ All model's we've seen today assume $\varepsilon_t \overset{\mathrm{iid}}{\sim} 
 To check this, we can use `gg_tsresiduals()`.
 :::
 
+::: {.callout-caution}
+## Exercise 13
+
+**Follow along**
+
+Let's check the model assumptions for our ETS and ARIMA models on total Australian accommodation Takings.
+
+```{r}
+#| output: false
+#| echo: true
+fit <- aus_accommodation_total |> 
+  model(
+    ETS(Takings),
+    ARIMA(log(Takings))
+  )
+```
+
+
+:::
 
 :::
 :::
@@ -643,7 +684,7 @@ To check this, we can use `gg_tsresiduals()`.
 ```{r}
 #| echo: true
 fit |> 
-  select(`ETS(Scripts)`) |> 
+  select(`ETS(Takings)`) |> 
   gg_tsresiduals()
 ```
 
@@ -668,7 +709,7 @@ fit |>
 ```{r}
 #| echo: true
 fit |> 
-  select(`ARIMA(log(Scripts))`) |> 
+  select(`ARIMA(log(Takings))`) |> 
   gg_tsresiduals()
 ```
 

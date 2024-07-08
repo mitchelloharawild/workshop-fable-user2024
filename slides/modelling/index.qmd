@@ -223,9 +223,7 @@ Forecasts (usually) assume that interventions won't occur, e.g. COVID-19 measure
 
 How would you forecast visitors to Australia?
 
-Put some suggestions in the chat.
-
-*Hint: Consider the patterns seen in the data, and how math can mimic the trend, seasonality, etc.*
+*Hint: Consider the patterns seen in the data, and how statistics/code can mimic the trend, seasonality, etc.*
 :::
 
 :::
@@ -400,6 +398,8 @@ Forecasts are made using `forecast()`:
 
 ```{r}
 #| echo: true
+pbs_scripts <- PBS |>
+  summarise(Scripts = sum(Scripts))
 pbs_scripts |> 
   model(
     NAIVE(Scripts),
@@ -483,6 +483,49 @@ pbs_scripts |>
 
 ::: columns
 
+::: {.column width="40%"}
+:::
+
+::: {.column width="60%"}
+
+### The forecasting workflow
+
+```{r}
+#| echo: true
+#| eval: false
+# Tidied / prepared data here, e.g.
+vic_tourism |> 
+  # Estimate the models using the data
+  model(
+    # Model specifications here, e.g.
+    SNAIVE(Trips)
+  ) |> 
+  # Produce forecasts
+  forecast(h = "2 years") |> 
+  # Visualise forecasts
+  autoplot(pbs_scripts)
+```
+
+::: {.callout-caution}
+## Exercise 6
+
+Specify appropriate model(s) for the total number of tourists arriving in Victoria.
+
+Estimate them with `model()` and produce forecasts for the next 5 years with `forecast()`.
+
+Plot the forecasts, and visually evaluate their suitability.
+:::
+
+:::
+:::
+
+![](../backgrounds/nicole-avagliano-TeLjs2pL5fA-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
 ::: {.column width="60%"}
 
 ### Forecasting with regression
@@ -519,16 +562,15 @@ $$y_t = \beta_0 + \beta_1 t + \sum_{i=1}^m \beta_{s_i} s_{it} + \varepsilon_t$$
 :::
 
 ::: {.callout-caution}
-## Your turn!
+## Exercise 7
 
-Produce forecasts for A10 scripts using regression.
+Produce forecasts for total Takings of Australian tourist accommodation from `aus_accommodation` using linear regression.
 
 ```{r}
 #| echo: true
 library(fpp3)
-pbs_a10 <- PBS |> 
-  filter(ATC2 == "A10") |> 
-  summarise(Scripts = sum(Scripts), Cost = sum(Cost))
+aus_accommodation_total <- fpp3::aus_accommodation |> 
+  summarise(Takings = sum(Takings), Occupancy = mean(Occupancy))
 ```
 
 :::
@@ -551,9 +593,9 @@ Regression can also incorporate other covariates. For example:
 
 ```{r}
 #| echo: true
-pbs_a10 |>
+aus_accommodation_total |>
   model(
-    TSLM(Cost ~ trend() + season() + Scripts)
+    TSLM(Takings ~ trend() + season() + Occupancy)
   )
 ```
 
@@ -630,9 +672,9 @@ $$y_t = (\ell_{t-1} + b_{t-1})s_{t-m} + \varepsilon_t$$
 
 ### Exponential smoothing
 
-The best ETS model can be chosen automatically.
+The best ETS model can be chosen automatically using AICc.
 
-Simply not specify the right side of the formula.
+Simply don't specify the right side of the formula for automatic selection.
 
 ::: {.callout-tip}
 ## Specifying ETS models
@@ -640,11 +682,11 @@ Simply not specify the right side of the formula.
 :::
 
 ::: {.callout-caution}
-## Your turn
+## Exercise 8
 
-Estimate an ETS model for the `pbs_a10` Scripts.
+Is the seasonality of total Australian accommodation takings from `aus_accommodation_total` additive or multiplicative?
 
-Does the automatic ETS model match the patterns you see in a time plot?
+Estimate an ETS model for the data, does the automatic ETS model match the patterns you see in a time plot?
 :::
 
 :::
@@ -780,9 +822,9 @@ More information: <https://otexts.com/fpp3/transformations.html>
 ### ARIMA
 
 ::: {.callout-caution}
-## Your turn
+## Exercise 9
 
-Identify if a transformation is necessary for the `pbs_a10` scripts.
+Identify if a transformation is necessary for the `aus_accommodation_total` Takings
 
 Then estimate an automatically selected ARIMA model for this data.
 
@@ -814,6 +856,15 @@ Which model is better?
 * ETS directly captures multiplicative patterns.
 * ARIMA can forecast cyclical patterns.
 :::
+
+::: {.callout-tip .fragment .fade-in}
+## Evaluating accuracy
+
+We can determine which model works best on a specific dataset using accuracy evaluation...
+
+[Fortunately, that's up next!]{.fragment .fade-in}
+:::
+
 
 :::
 :::
